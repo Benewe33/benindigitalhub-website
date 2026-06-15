@@ -44,7 +44,7 @@ nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(12px);box-sha
 .nav-menu{display:none;background:none;border:none;cursor:pointer;padding:4px}
 
 /* HERO */
-.hero{min-height:100vh;background:var(--vd);display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 5% 80px}
+.hero{min-height:100vh;background:linear-gradient(rgba(11,61,46,.82),rgba(11,61,46,.88)),url('/banner.jpg') center/cover no-repeat,var(--vd);display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 5% 80px}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(26,107,60,.6) 0%,transparent 60%)}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:60px 60px;opacity:.5}
 .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
@@ -262,9 +262,9 @@ footer{background:var(--vd);padding:64px 5% 32px;color:rgba(255,255,255,.7)}
         <p style="margin-top:8px">Plateforme de santé numérique — téléconsultation et dossiers patients</p>
       </div>
       <div class="hero-stats">
-        <div class="stat-card"><div class="stat-num">5+</div><div class="stat-label">Projets livrés</div></div>
-        <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Secteurs</div></div>
-        <div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Local</div></div>
+        <div class="stat-card"><div class="stat-num" data-target="5" data-suffix="+">0</div><div class="stat-label">Projets livrés</div></div>
+        <div class="stat-card"><div class="stat-num" data-target="3" data-suffix="">0</div><div class="stat-label">Secteurs</div></div>
+        <div class="stat-card"><div class="stat-num" data-target="100" data-suffix="%">0</div><div class="stat-label">Local</div></div>
       </div>
     </div>
   </div>
@@ -813,6 +813,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, { threshold: 0.1 });
+
+  // Compteur animé des chiffres du hero (0 -> valeur cible)
+  const animerCompteur = (el) => {
+    const cible = parseInt(el.getAttribute('data-target'), 10);
+    const suffixe = el.getAttribute('data-suffix') || '';
+    const duree = 1500; // ms
+    const debut = performance.now();
+    const etape = (maintenant) => {
+      const progres = Math.min((maintenant - debut) / duree, 1);
+      // courbe douce (ease-out)
+      const eased = 1 - Math.pow(1 - progres, 3);
+      el.textContent = Math.round(cible * eased) + suffixe;
+      if (progres < 1) requestAnimationFrame(etape);
+      else el.textContent = cible + suffixe;
+    };
+    requestAnimationFrame(etape);
+  };
+
+  const compteurObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animerCompteur(e.target);
+        obs.unobserve(e.target); // on n'anime qu'une fois
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => compteurObserver.observe(el));
 
   // Cartes : fondu + glissement vers le haut
   document.querySelectorAll('.service-card, .project-card, .team-card, .stat-item').forEach(el => {
