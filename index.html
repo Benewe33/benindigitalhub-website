@@ -473,25 +473,29 @@ footer{background:var(--vd);padding:64px 5% 32px;color:rgba(255,255,255,.7)}
     <p class="section-sub" style="color:rgba(255,255,255,.75)">Nous lançons le premier hub numérique du Bénin dédié à l'IA, aux startups et aux compétences digitales. Voici ce que nous construisons — rejoignez-nous dès le début.</p>
 
     <div class="services-grid" style="margin-top:48px">
-      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px">
+      <div class="hub-card" onclick="openHubModal('formation')" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px;cursor:pointer;transition:all .25s">
         <div style="font-size:30px;margin-bottom:14px">🎓</div>
         <h3 style="color:#fff;font-size:18px;font-weight:700;margin-bottom:8px">Formation</h3>
         <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.6">Programmes intensifs en développement, data et outils numériques pour la jeunesse béninoise.</p>
+        <span style="color:var(--or);font-size:13px;font-weight:700;margin-top:14px;display:inline-block">En savoir plus →</span>
       </div>
-      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px">
+      <div class="hub-card" onclick="openHubModal('incubation')" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px;cursor:pointer;transition:all .25s">
         <div style="font-size:30px;margin-bottom:14px">🚀</div>
         <h3 style="color:#fff;font-size:18px;font-weight:700;margin-bottom:8px">Incubation de startups</h3>
         <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.6">Accompagnement des porteurs de projets : mentorat, technique et mise en relation.</p>
+        <span style="color:var(--or);font-size:13px;font-weight:700;margin-top:14px;display:inline-block">En savoir plus →</span>
       </div>
-      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px">
+      <div class="hub-card" onclick="openHubModal('communaute')" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px;cursor:pointer;transition:all .25s">
         <div style="font-size:30px;margin-bottom:14px">🤝</div>
         <h3 style="color:#fff;font-size:18px;font-weight:700;margin-bottom:8px">Communauté & Événements</h3>
         <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.6">Meetups, ateliers et rencontres pour connecter développeurs, entrepreneurs et talents.</p>
+        <span style="color:var(--or);font-size:13px;font-weight:700;margin-top:14px;display:inline-block">En savoir plus →</span>
       </div>
-      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px">
+      <div class="hub-card" onclick="openHubModal('emploi')" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px;cursor:pointer;transition:all .25s">
         <div style="font-size:30px;margin-bottom:14px">💼</div>
         <h3 style="color:#fff;font-size:18px;font-weight:700;margin-bottom:8px">Emploi & Talents</h3>
         <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.6">Un pont entre les entreprises et les talents tech formés localement.</p>
+        <span style="color:var(--or);font-size:13px;font-weight:700;margin-top:14px;display:inline-block">En savoir plus →</span>
       </div>
     </div>
 
@@ -973,6 +977,101 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW error:', err));
   });
 }
+</script>
+
+<!-- MODAL DÉTAIL PILIERS DU HUB -->
+<div id="hub-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(11,61,46,.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeHubModal()">
+  <div id="hub-modal-box" style="background:#fff;border-radius:20px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:40px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3);transform:scale(.94);opacity:0;transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .35s ease">
+    <button onclick="closeHubModal()" aria-label="Fermer" style="position:absolute;top:20px;right:20px;background:var(--vl);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--vd);display:flex;align-items:center;justify-content:center">✕</button>
+    <div id="hub-modal-icon" style="font-size:40px;margin-bottom:16px"></div>
+    <span class="section-tag">En lancement 2026</span>
+    <h3 id="hub-modal-title" style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--vd);margin:8px 0 16px"></h3>
+    <div id="hub-modal-body" style="color:var(--g600);font-size:15px;line-height:1.7"></div>
+    <a href="#contact" onclick="closeHubModal()" class="btn-primary" style="margin-top:28px">Rejoindre la communauté →</a>
+  </div>
+</div>
+
+<script>
+const HUB_CONTENT = {
+  formation: {
+    icon: '🎓',
+    title: 'Formation',
+    body: `<p>Des programmes pensés pour rendre la jeunesse béninoise opérationnelle sur les métiers du numérique.</p>
+      <p style="margin-top:14px"><strong>Ce que nous prévoyons :</strong></p>
+      <ul style="margin-top:10px;padding-left:20px;line-height:2">
+        <li>Développement web & mobile (du débutant à l'avancé)</li>
+        <li>Data, IA et outils numériques modernes</li>
+        <li>Formats courts (ateliers) et intensifs (bootcamps)</li>
+        <li>Projets pratiques basés sur des cas réels béninois</li>
+      </ul>
+      <p style="margin-top:14px">Sessions en présentiel à Cotonou et en ligne. Les premières cohortes ouvriront au lancement du Hub.</p>`
+  },
+  incubation: {
+    icon: '🚀',
+    title: 'Incubation de startups',
+    body: `<p>Un accompagnement pour transformer une idée en produit, puis en entreprise.</p>
+      <p style="margin-top:14px"><strong>Ce que reçoit chaque porteur de projet :</strong></p>
+      <ul style="margin-top:10px;padding-left:20px;line-height:2">
+        <li>Mentorat individuel (technique, produit, business)</li>
+        <li>Appui au développement du MVP</li>
+        <li>Mise en relation avec partenaires et investisseurs</li>
+        <li>Accès à la communauté et aux événements du Hub</li>
+      </ul>
+      <p style="margin-top:14px">Ouvert aux fondateurs early-stage portant un projet à impact pour le Bénin et la sous-région.</p>`
+  },
+  communaute: {
+    icon: '🤝',
+    title: 'Communauté & Événements',
+    body: `<p>Un lieu de rencontre pour celles et ceux qui font le numérique au Bénin.</p>
+      <p style="margin-top:14px"><strong>Au programme :</strong></p>
+      <ul style="margin-top:10px;padding-left:20px;line-height:2">
+        <li>Meetups thématiques (dev, IA, design, entrepreneuriat)</li>
+        <li>Ateliers pratiques et hackathons</li>
+        <li>Rencontres entre développeurs, entrepreneurs et talents</li>
+        <li>Partage d'opportunités, d'offres et de retours d'expérience</li>
+      </ul>
+      <p style="margin-top:14px">La communauté est le cœur du Hub — rejoignez-la dès les premiers événements.</p>`
+  },
+  emploi: {
+    icon: '💼',
+    title: 'Emploi & Talents',
+    body: `<p>Un pont entre les entreprises qui recrutent et les talents tech formés localement.</p>
+      <p style="margin-top:14px"><strong>Pour les entreprises :</strong> accès à un vivier de profils formés et évalués.</p>
+      <p style="margin-top:10px"><strong>Pour les talents :</strong> visibilité, opportunités de stage et d'emploi, accompagnement.</p>
+      <p style="margin-top:14px">Notre objectif : garder et valoriser les compétences numériques au Bénin.</p>`
+  }
+};
+
+function openHubModal(key) {
+  const data = HUB_CONTENT[key];
+  if (!data) return;
+  document.getElementById('hub-modal-icon').textContent = data.icon;
+  document.getElementById('hub-modal-title').textContent = data.title;
+  document.getElementById('hub-modal-body').innerHTML = data.body;
+  const modal = document.getElementById('hub-modal');
+  const box = document.getElementById('hub-modal-box');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => {
+    box.style.transform = 'scale(1)';
+    box.style.opacity = '1';
+  });
+}
+
+function closeHubModal() {
+  const modal = document.getElementById('hub-modal');
+  const box = document.getElementById('hub-modal-box');
+  box.style.transform = 'scale(.94)';
+  box.style.opacity = '0';
+  setTimeout(() => {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }, 300);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeHubModal();
+});
 </script>
 
 </body>
