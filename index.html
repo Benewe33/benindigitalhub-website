@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
 <title>Bénin Digital Hub — Agence digitale & hub d'innovation au Bénin</title>
 <meta name="description" content="Bénin Digital Hub : agence digitale et hub d'innovation à Cotonou. Développement web & mobile, IA, formation tech et incubation de startups au Bénin.">
 <meta name="theme-color" content="#030a03">
@@ -419,6 +420,14 @@ footer{background:#020602;padding:28px 60px;display:flex;align-items:center;
   .hero-photo::after{background:linear-gradient(180deg,rgba(3,10,3,0.85),rgba(3,10,3,0.93));}
   .pfeature .pmc{padding:28px 22px;}
   .mtrack{font-size:34px;}
+  /* cartes services : empiler proprement, retirer layout 2 colonnes */
+  .sv{padding:26px 22px;}
+  .sv.hero-sv{grid-column:span 1;display:block;}
+  .sv.hero-sv > div[style]{padding-right:0!important;}
+  .sv.hero-sv h3{font-size:21px;}
+  .sv-visual{display:none;}
+  .sv-arrow{top:18px;right:18px;width:30px;height:30px;}
+  .sv h3{padding-right:40px;}
 }
 </style>
 </head>
@@ -431,8 +440,8 @@ footer{background:#020602;padding:28px 60px;display:flex;align-items:center;
     <a href="#services">Services</a><a href="#projets">Projets</a>
     <a href="#hub">Le Hub</a><a href="#ailabs">AI Lab</a><a href="#equipe">Équipe</a>
   </div>
-  <button class="nav-btn"><span>Contact</span></button>
-  <button class="nav-cta">Démarrer →</button>
+  <button class="nav-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><span>Contact</span></button>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Démarrer →</button>
 </nav>
 
 <div id="hero">
@@ -620,8 +629,8 @@ footer{background:#020602;padding:28px 60px;display:flex;align-items:center;
       <p>Que ce soit pour un projet, un partenariat ou juste une question — nous répondons dans les 24h.</p>
       <div class="crows">
         <div class="crow"><div class="cic">📍</div><div><strong>Adresse</strong><span>Tokan, Togba · Abomey-Calavi, Bénin</span></div></div>
-        <div class="crow"><div class="cic">📱</div><div><strong>WhatsApp / Téléphone</strong><span>+229 01 57 02 12 69</span></div></div>
-        <div class="crow"><div class="cic">📧</div><div><strong>Email</strong><span>contact@benindigitalhub.tech</span></div></div>
+        <div class="crow"><div class="cic">📱</div><div><strong>WhatsApp / Téléphone</strong><a href="https://wa.me/2290157021269" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:block;">+229 01 57 02 12 69</a></div></div>
+        <div class="crow"><div class="cic">📧</div><div><strong>Email</strong><a href="mailto:contact@benindigitalhub.tech" style="color:inherit;text-decoration:none;display:block;">contact@benindigitalhub.tech</a></div></div>
         <div class="crow"><div class="cic">🕐</div><div><strong>Horaires</strong><span>Lundi – Samedi : 8h00 – 18h00</span></div></div>
       </div>
     </div>
