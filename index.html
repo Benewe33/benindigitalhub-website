@@ -322,6 +322,7 @@ p.ss{font-size:15px;color:#777;line-height:1.75;max-width:540px;}
 .tc-av{height:120px;display:flex;align-items:center;justify-content:center;font-size:44px;}
 .tc-av.f{background:linear-gradient(135deg,#0a1f0a,#1e4d2b);}
 .tc-av.o{background:#f5f5f5;}
+.tc-av .pfp{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.9);box-shadow:0 8px 22px rgba(0,0,0,0.3);}
 .tc-info{padding:20px;background:#fff;}
 .tc-info h4{font-size:14px;font-weight:800;margin-bottom:3px;}
 .tc-info .role{font-size:11px;color:var(--g);font-weight:700;margin-bottom:8px;}
@@ -355,6 +356,11 @@ p.ss{font-size:15px;color:#777;line-height:1.75;max-width:540px;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{
   border-color:var(--g);box-shadow:0 0 0 4px rgba(22,163,74,0.1);background:#fff;transform:scale(1.01);}
 .fg textarea{resize:none;min-height:100px;}
+.filebox{display:flex;align-items:center;gap:10px;border:1.5px dashed #cfcfcf;border-radius:12px;
+  padding:12px 16px;font-size:13px;color:#888;cursor:pointer;transition:all .2s;background:#fafafa;}
+.filebox:hover{border-color:var(--g);color:#555;background:#f4fbf6;}
+.filebox.has{border-style:solid;border-color:var(--g);color:#16a34a;background:#f0fbf3;}
+.fileico{font-size:16px;}
 .sbtn{width:100%;margin-top:16px;background:linear-gradient(135deg,var(--g),#22c55e);
   color:#fff;border:none;border-radius:12px;padding:16px;font-size:14px;font-weight:700;
   cursor:pointer;font-family:inherit;position:relative;overflow:hidden;
@@ -382,6 +388,38 @@ footer{background:#020602;padding:28px 60px;display:flex;align-items:center;
 .d1{transition-delay:.05s!important;}.d2{transition-delay:.12s!important;}
 .d3{transition-delay:.19s!important;}.d4{transition-delay:.26s!important;}
 .d5{transition-delay:.33s!important;}.d6{transition-delay:.40s!important;}
+/* ============ RESPONSIVE / MOBILE ============ */
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;gap:40px;}
+  .sg{grid-template-columns:1fr 1fr;}
+  .pgrid{grid-template-columns:1fr;}
+  .pfeature{grid-column:span 1;grid-template-columns:1fr;}
+  .ngrid{grid-template-columns:1fr 1fr;}
+  .hgrid{grid-template-columns:1fr;gap:32px;}
+  .cgrid{grid-template-columns:1fr;gap:36px;}
+  .tgrid{grid-template-columns:1fr 1fr;}
+  .psteps{grid-template-columns:1fr 1fr;gap:30px 0;}
+}
+@media (max-width:640px){
+  .nav-c{display:none;}
+  #nav,nav#nav{padding:0 18px;}
+  #hero{height:auto;min-height:0;padding:118px 0 64px;}
+  .hero-in{padding:0 18px;grid-template-columns:1fr;}
+  .hero-in h1{font-size:clamp(40px,12vw,62px)!important;line-height:1.03;}
+  .st{font-size:clamp(30px,8.5vw,42px)!important;line-height:1.08;}
+  .float-stats{grid-template-columns:1fr 1fr;gap:12px;}
+  .sg{grid-template-columns:1fr;}
+  .ngrid{grid-template-columns:1fr;}
+  .tgrid{grid-template-columns:1fr;}
+  .hcards{grid-template-columns:1fr;}
+  .psteps{grid-template-columns:1fr;}
+  .frow{grid-template-columns:1fr;}
+  .hero-btns{flex-direction:column;align-items:stretch;}
+  .hero-btns .btn-glow,.hero-btns .btn-outline{width:100%;text-align:center;justify-content:center;}
+  .hero-photo::after{background:linear-gradient(180deg,rgba(3,10,3,0.85),rgba(3,10,3,0.93));}
+  .pfeature .pmc{padding:28px 22px;}
+  .mtrack{font-size:34px;}
+}
 </style>
 </head>
 <body>
@@ -567,7 +605,7 @@ footer{background:#020602;padding:28px 60px;display:flex;align-items:center;
     <h2 class="st" style="text-align:center;">Des experts passionnés</h2>
   </div>
   <div class="tgrid">
-    <div class="tc rv d1"><div class="tc-av f" style="padding:0;overflow:hidden;"><img src="/eboun.jpg" alt="EWEDJE Eboun Benjamin" style="width:100%;height:100%;object-fit:cover;"></div><div class="tc-info"><h4>EWEDJE Eboun Benjamin</h4><div class="role">CEO & Fondateur</div><p>Entrepreneur digital, passionné de tech et de développement économique au Bénin.</p></div></div>
+    <div class="tc rv d1"><div class="tc-av f"><img class="pfp" src="/eboun.jpg" alt="EWEDJE Eboun Benjamin"></div><div class="tc-info"><h4>EWEDJE Eboun Benjamin</h4><div class="role">CEO & Fondateur</div><p>Entrepreneur digital, passionné de tech et de développement économique au Bénin.</p></div></div>
     <div class="tc rv d2"><div class="tc-av o">＋</div><div class="tc-info"><h4>Développeur Web/Mobile</h4><div class="role"><span class="ob">POSTE OUVERT</span></div><p>Vous maîtrisez React, Flutter ou Node.js ? Rejoignez l'aventure.</p></div></div>
     <div class="tc rv d3"><div class="tc-av o">＋</div><div class="tc-info"><h4>Designer UX/UI</h4><div class="role"><span class="ob">POSTE OUVERT</span></div><p>Créatif et orienté expérience utilisateur ? On a besoin de vous.</p></div></div>
     <div class="tc rv d4"><div class="tc-av o">＋</div><div class="tc-info"><h4>Commercial Digital</h4><div class="role"><span class="ob">POSTE OUVERT</span></div><p>Réseau et passion pour le digital ? Développons ensemble notre clientèle.</p></div></div>
@@ -597,6 +635,10 @@ footer{background:#020602;padding:28px 60px;display:flex;align-items:center;
         <div class="fg"><label>SERVICE</label><select id="c-service"><option>Développement Web</option><option>Application Mobile</option><option>Conseil Digital</option><option>Formation Tech</option></select></div>
       </div>
       <div class="fg" style="margin-bottom:0;"><label>VOTRE PROJET *</label><textarea id="c-message" placeholder="Décrivez votre idée ou besoin..."></textarea></div>
+      <div class="fg" style="margin-top:14px;"><label>PIÈCE JOINTE (CAHIER DES CHARGES, MAQUETTE…)</label>
+        <label for="c-file" class="filebox" id="c-filelabel"><span class="fileico">📎</span><span id="c-filetext">Choisir un fichier (PDF, image, doc — max 10 Mo)</span></label>
+        <input type="file" id="c-file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" style="display:none;">
+      </div>
       <button class="sbtn" id="c-submit">Envoyer le message →</button>
     </div>
   </div>
@@ -706,6 +748,17 @@ function toast(msg,type){
   setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';setTimeout(()=>t.remove(),300);},4000);
 }
 
+const fileInput=document.getElementById('c-file');
+const fileText=document.getElementById('c-filetext');
+const fileLabel=document.getElementById('c-filelabel');
+if(fileInput){
+  fileInput.addEventListener('change',()=>{
+    const f=fileInput.files[0];
+    if(f){fileText.textContent=f.name;fileLabel.classList.add('has');}
+    else{fileText.textContent='Choisir un fichier (PDF, image, doc — max 10 Mo)';fileLabel.classList.remove('has');}
+  });
+}
+
 const submitBtn=document.getElementById('c-submit');
 if(submitBtn){
   submitBtn.addEventListener('click',async()=>{
@@ -714,18 +767,32 @@ if(submitBtn){
     const tel=document.getElementById('c-tel').value.trim();
     const service=document.getElementById('c-service').value;
     const message=document.getElementById('c-message').value.trim();
+    const file=fileInput?fileInput.files[0]:null;
     if(!nom||!email||!message){toast('Merci de remplir nom, email et message.','err');return;}
+    if(file&&file.size>10*1024*1024){toast('Le fichier dépasse 10 Mo.','err');return;}
     submitBtn.textContent='⏳ Envoi en cours...';submitBtn.disabled=true;
     try{
+      let fichier_url=null;
+      if(file){
+        const ext=file.name.split('.').pop();
+        const path='contacts/'+Date.now()+'_'+nom.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,'')+'.'+ext;
+        const up=await fetch(SUPA_URL+'/storage/v1/object/bdh-contacts/'+path,{
+          method:'POST',
+          headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':file.type||'application/octet-stream','x-upsert':'true'},
+          body:file
+        });
+        if(up.ok)fichier_url=SUPA_URL+'/storage/v1/object/public/bdh-contacts/'+path;
+      }
       const res=await fetch(SUPA_URL+'/rest/v1/contacts',{
         method:'POST',
         headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
-        body:JSON.stringify({nom,email,telephone:tel,service,message,fichier_url:null})
+        body:JSON.stringify({nom,email,telephone:tel,service,message,fichier_url})
       });
       if(!res.ok)throw new Error('http '+res.status);
       toast('✅ Message envoyé ! Nous vous répondons dans les 24h.','ok');
       document.getElementById('c-nom').value='';document.getElementById('c-email').value='';
       document.getElementById('c-tel').value='';document.getElementById('c-message').value='';
+      if(fileInput){fileInput.value='';fileText.textContent='Choisir un fichier (PDF, image, doc — max 10 Mo)';fileLabel.classList.remove('has');}
     }catch(err){
       toast('Une erreur est survenue. Réessayez ou écrivez-nous directement.','err');
     }
