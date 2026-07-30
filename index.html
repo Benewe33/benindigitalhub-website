@@ -327,7 +327,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
         <div class="trust-item"><svg><use href="#i-check"/></svg>Confiance</div>
       </div>
     </div>
-    <div class="hero-visual" aria-hidden="true">
+    <div class="hero-visual" id="heroVisualArea" aria-hidden="true">
       <div class="hv-blob"></div>
       <div class="hv-laptop">
         <div class="hv-screen"><div class="mark" id="heroLogoMark">BH</div></div>
@@ -750,7 +750,7 @@ document.getElementById('c-submit').addEventListener('click',async()=>{
   const SETTINGS_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
   try{
     const res = await fetch(`${SETTINGS_URL}/rest/v1/site_settings?select=*&limit=1`, {
-      headers: { apikey: SETTINGS_KEY, Authorization: `Bearer ${SETTINGS_KEY}` }
+      headers: { apikey: SETTINGS_KEY, Authorization: `Bearer ${SETTINGS_KEY}` }, cache: 'no-store'
     });
     if(!res.ok) return; // pas de policy de lecture ou table absente : on garde le contenu par défaut
     const rows = await res.json();
@@ -790,6 +790,14 @@ document.getElementById('c-submit').addEventListener('click',async()=>{
       const link = document.getElementById('faviconLink');
       if(link) link.href = s.favicon_url;
     }
+    if(s.banner_url){
+      const area = document.getElementById('heroVisualArea');
+      if(area) area.innerHTML = `<img src="${s.banner_url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:16px;box-shadow:0 20px 40px rgba(13,39,72,0.25);">`;
+    }
+    if(s.banner_url){
+      const area = document.getElementById('heroVisualArea');
+      if(area) area.innerHTML = `<img src="${s.banner_url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:24px;box-shadow:0 20px 40px rgba(13,39,72,0.18);">`;
+    }
   }catch(err){
     // silencieux : le site public garde son contenu par défaut si Supabase est injoignable
     console.warn('Réglages du site non chargés depuis Supabase :', err.message);
@@ -806,7 +814,7 @@ document.getElementById('c-submit').addEventListener('click',async()=>{
   const HEADERS_ = { apikey: KEY_, Authorization: `Bearer ${KEY_}` };
 
   async function fetchTable(table){
-    const res = await fetch(`${URL_}/rest/v1/${table}?select=*`, { headers: HEADERS_ });
+    const res = await fetch(`${URL_}/rest/v1/${table}?select=*`, { headers: HEADERS_, cache: 'no-store' });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return res.json();
   }
@@ -850,10 +858,13 @@ document.getElementById('c-submit').addEventListener('click',async()=>{
       const grid = document.getElementById('teamGrid');
       grid.innerHTML = team.map(m => {
         const initials = (m.name || '?').split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+        const photoBlock = m.photo_url
+          ? `<div class="team-photo"><img src="${m.photo_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;"></div>`
+          : `<div class="team-photo" style="background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.4rem;">${initials}</div>`;
         if(m.status === 'Actif'){
           return `
             <div class="team-card reveal in">
-              <div class="team-photo" style="background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.4rem;">${initials}</div>
+              ${photoBlock}
               <div class="team-info"><h4>${m.name}</h4><div class="team-role">${m.role || ''}</div><p>${m.bio || ''}</p></div>
             </div>`;
         }
