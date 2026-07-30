@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Services — Administration Bénin Digital Hub</title>
+<title>Pages — Administration Bénin Digital Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -234,6 +234,7 @@ img{display:block;max-width:100%;}
 }
 </style>
 
+
 </head>
 <body>
 
@@ -284,7 +285,7 @@ img{display:block;max-width:100%;}
       <div class="side-group">
         <div class="side-group-label">Gestion</div>
         <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
-        <a href="services.html" class="side-link active"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
+        <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <a href="technologies.html" class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></a>
         <a href="blog.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></a>
         <a href="temoignages.html" class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></a>
@@ -299,7 +300,7 @@ img{display:block;max-width:100%;}
       </div>
       <div class="side-group">
         <div class="side-group-label">Contenu</div>
-        <a href="pages.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Pages</span></a>
+        <a href="pages.html" class="side-link active"><svg><use href="#i-file"/></svg><span class="grow">Pages</span></a>
         <a href="medias.html" class="side-link"><svg><use href="#i-image"/></svg><span class="grow">Médias</span></a>
         <a href="documents.html" class="side-link"><svg><use href="#i-folder"/></svg><span class="grow">Documents</span></a>
         <a href="actualites.html" class="side-link"><svg><use href="#i-news"/></svg><span class="grow">Actualités</span></a>
@@ -338,86 +339,53 @@ img{display:block;max-width:100%;}
       </div>
     </header>
 
+    
     <main class="content">
       <div class="page-head">
         <div>
-          <h1>Services</h1>
-          <p>Gérez les services proposés par Bénin Digital Hub.</p>
+          <h1>Pages</h1>
+          <p>Gérez les pages du site benindigitalhub.tech.</p>
         </div>
-        <button class="btn-primary" id="openAddBtn"><svg><use href="#i-plus"/></svg>Ajouter un service</button>
+        <button class="btn-primary" id="openAddBtn"><svg><use href="#i-plus"/></svg>Ajouter une page</button>
       </div>
 
       <div class="mini-stats">
-        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-layers"/></svg></div><div><div class="v" id="statTotal">0</div><div class="l">Total services</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#16a34a"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statActifs">0</div><div class="l">Actifs</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#94a3b8"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statInactifs">0</div><div class="l">Inactifs</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#f97316"><svg><use href="#i-folder"/></svg></div><div><div class="v" id="statCategories">0</div><div class="l">Catégories</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-file"/></svg></div><div><div class="v" id="stat0">0</div><div class="l">Total pages</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#16a34a"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="stat1">0</div><div class="l">Publiées</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#94a3b8"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="stat2">0</div><div class="l">Brouillons</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#f97316"><svg><use href="#i-folder"/></svg></div><div><div class="v" id="stat3">0</div><div class="l">Dernière modif.</div></div></div>
       </div>
 
       <div class="card">
         <div class="toolbar">
           <div class="search-wrap">
             <svg><use href="#i-search"/></svg>
-            <input type="text" id="searchInput" placeholder="Rechercher un service...">
+            <input type="text" id="searchInput" placeholder="Rechercher...">
           </div>
-          <select id="statusFilter">
-            <option value="">Tous les statuts</option>
-            <option value="Actif">Actif</option>
-            <option value="Inactif">Inactif</option>
-          </select>
-          <select id="catFilter">
-            <option value="">Toutes les catégories</option>
-          </select>
+          <select id="statusFilter"><option value="">Tous les statuts</option><option value="Publiée">Publiée</option><option value="Brouillon">Brouillon</option></select>
         </div>
 
         <table class="ptable">
-          <thead>
-            <tr>
-              <th>Service</th>
-              <th>Catégorie</th>
-              <th>Tarif indicatif</th>
-              <th>Statut</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="servicesBody"></tbody>
+          <thead><tr><th>Titre</th><th>URL</th><th>Statut</th><th>Dernière modification</th><th></th></tr></thead>
+          <tbody id="tbody"></tbody>
         </table>
-        <div class="table-empty" id="emptyState" style="display:none;">Aucun service ne correspond à votre recherche.</div>
+        <div class="table-empty" id="emptyState" style="display:none;">Aucun résultat ne correspond à votre recherche.</div>
       </div>
     </main>
   </div>
 </div>
 
-<!-- ============ MODAL ============ -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box">
     <div class="modal-head">
-      <h3 id="modalTitle">Ajouter un service</h3>
+      <h3 id="modalTitle">Ajouter une page</h3>
       <button class="modal-close" id="modalCloseBtn"><svg><use href="#i-close"/></svg></button>
     </div>
-    <form id="serviceForm">
-      <div class="field"><label>Nom du service *</label><input type="text" id="fName" required placeholder="Ex. Développement Web"></div>
-      <div class="field-row">
-        <div class="field"><label>Catégorie *</label>
-          <select id="fCategory" required>
-            <option value="">Choisir...</option>
-            <option>Développement</option>
-            <option>Intelligence Artificielle</option>
-            <option>Cloud & Infrastructure</option>
-            <option>Formation</option>
-            <option>Conseil</option>
-            <option>Support</option>
-          </select>
-        </div>
-        <div class="field"><label>Statut *</label>
-          <select id="fStatus" required>
-            <option>Actif</option>
-            <option>Inactif</option>
-          </select>
-        </div>
-      </div>
-      <div class="field"><label>Tarif indicatif *</label><input type="text" id="fPrice" required placeholder="Ex. À partir de 250 000 FCFA"></div>
-      <div class="field"><label>Description</label><textarea id="fDesc" placeholder="Décrivez le service en quelques mots..."></textarea></div>
+    <form id="itemForm">
+      <div class="field"><label>Titre *</label><input type="text" id="fTitle" required placeholder="Ex. À propos"></div>
+      <div class="field"><label>URL (slug) *</label><input type="text" id="fSlug" required placeholder="Ex. a-propos"></div>
+      <div class="field"><label>Statut *</label><select id="fStatus" required><option>Publiée</option><option>Brouillon</option></select></div>
+      <div class="field"><label>Dernière modification *</label><input type="date" id="fUpdated" required placeholder=""></div>
       <div class="modal-actions">
         <button type="button" class="btn-ghost-modal" id="modalCancelBtn">Annuler</button>
         <button type="submit" class="btn-primary" id="modalSaveBtn">Enregistrer</button>
@@ -431,60 +399,49 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let services = [
-  { id:1, name:"Développement Web", category:"Développement", price:"À partir de 250 000 FCFA", status:"Actif", desc:"Sites vitrines, marketplaces et applications web performantes." },
-  { id:2, name:"Applications Mobiles", category:"Développement", price:"À partir de 400 000 FCFA", status:"Actif", desc:"iOS & Android natif avec Flutter, paiement Mobile Money intégré." },
-  { id:3, name:"Assistants & Chatbots IA", category:"Intelligence Artificielle", price:"Sur devis", status:"Actif", desc:"Automatisation de tâches métier et assistants conversationnels." },
-  { id:4, name:"IA en langues locales", category:"Intelligence Artificielle", price:"Sur devis", status:"Inactif", desc:"Modèles adaptés au Fon, au Yoruba et aux réalités locales." },
-  { id:5, name:"Infrastructure Cloud", category:"Cloud & Infrastructure", price:"À partir de 80 000 FCFA/mois", status:"Actif", desc:"Hébergement, déploiement continu et bases de données sécurisées." },
-  { id:6, name:"Formation Tech", category:"Formation", price:"À partir de 50 000 FCFA", status:"Actif", desc:"Programmes pratiques en développement web, mobile et outils digitaux." },
-  { id:7, name:"Conseil Digital", category:"Conseil", price:"Sur devis", status:"Actif", desc:"Audit, stratégie de transformation numérique et roadmap." },
-  { id:8, name:"Support & Maintenance", category:"Support", price:"À partir de 30 000 FCFA/mois", status:"Actif", desc:"Maintenance continue, mises à jour et support réactif 6j/7." },
-];
-let nextId = 9;
-let editingId = null;
-
-function populateCategoryFilter(){
-  const sel = document.getElementById('catFilter');
-  const current = sel.value;
-  const cats = [...new Set(services.map(s => s.category))].sort();
-  sel.innerHTML = '<option value="">Toutes les catégories</option>' + cats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
+function formatDate(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y}`;
 }
 
+let list = [{"id": 1, "title": "Accueil", "slug": "", "status": "Publiée", "updated": "2026-07-29"}, {"id": 2, "title": "Services", "slug": "services", "status": "Publiée", "updated": "2026-07-20"}, {"id": 3, "title": "Réalisations", "slug": "realisations", "status": "Publiée", "updated": "2026-07-18"}, {"id": 4, "title": "À propos", "slug": "a-propos", "status": "Publiée", "updated": "2026-06-30"}, {"id": 5, "title": "Contact", "slug": "contact", "status": "Publiée", "updated": "2026-07-29"}, {"id": 6, "title": "Mentions légales", "slug": "mentions-legales", "status": "Publiée", "updated": "2026-05-10"}, {"id": 7, "title": "Politique de confidentialité", "slug": "politique-de-confidentialite", "status": "Brouillon", "updated": "2026-05-10"}];
+let nextId = 8;
+let editingId = null;
+const fieldMap = {
+    fTitle: "title",
+    fSlug: "slug",
+    fStatus: "status",
+    fUpdated: "updated"
+};
+
+
+
 function updateStats(){
-  document.getElementById('statTotal').textContent = services.length;
-  document.getElementById('statActifs').textContent = services.filter(s=>s.status==='Actif').length;
-  document.getElementById('statInactifs').textContent = services.filter(s=>s.status==='Inactif').length;
-  document.getElementById('statCategories').textContent = new Set(services.map(s=>s.category)).size;
+  document.getElementById("stat0").textContent = list.length;
+  document.getElementById("stat1").textContent = list.filter(r=>r.status==='Publiée').length;
+  document.getElementById("stat2").textContent = list.filter(r=>r.status==='Brouillon').length;
+  document.getElementById("stat3").textContent = list.length ? formatDate(list.map(r=>r.updated).sort().slice(-1)[0]) : '—';
 }
 
 function render(){
   const search = document.getElementById('searchInput').value.toLowerCase();
-  const status = document.getElementById('statusFilter').value;
-  const cat = document.getElementById('catFilter').value;
-
-  const filtered = services.filter(s => {
-    const matchSearch = !search || s.name.toLowerCase().includes(search);
-    const matchStatus = !status || s.status === status;
-    const matchCat = !cat || s.category === cat;
-    return matchSearch && matchStatus && matchCat;
+  const filtered = list.filter(r => {
+    const matchSearch = !search || r.title.toLowerCase().includes(search) || r.slug.toLowerCase().includes(search);
+    return matchSearch && (!document.getElementById("statusFilter").value || r.status === document.getElementById("statusFilter").value);
   });
 
-  const tbody = document.getElementById('servicesBody');
-  tbody.innerHTML = filtered.map(s => `
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = filtered.map(r => `
     <tr>
-      <td>
-        <div class="p-name-cell">
-          <div><div class="n">${s.name}</div><div class="d" style="font-size:0.76rem;color:#94a3b8;max-width:360px;">${s.desc || ''}</div></div>
-        </div>
-      </td>
-      <td><span class="cat-chip">${s.category}</span></td>
-      <td>${s.price}</td>
-      <td><span class="status-pill ${s.status === 'Actif' ? 'termine' : 'annule'}">${s.status}</span></td>
+      <td>${r.title}</td>
+      <td><span class="cat-chip">/${r.slug}</span></td>
+      <td><span class="status-pill ${r.status==='Publiée'?'termine':'attente'}">${r.status}</span></td>
+      <td>${formatDate(r.updated)}</td>
       <td>
         <div class="row-actions">
-          <button onclick="openEdit(${s.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
-          <button class="danger" onclick="deleteService(${s.id})" title="Supprimer"><svg><use href="#i-trash"/></svg></button>
+          <button onclick="openEdit(${r.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
+          <button class="danger" onclick="delItem(${r.id})" title="Supprimer"><svg><use href="#i-trash"/></svg></button>
         </div>
       </td>
     </tr>
@@ -500,65 +457,61 @@ function openModal(title){
 }
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
-  document.getElementById('serviceForm').reset();
+  document.getElementById('itemForm').reset();
   editingId = null;
 }
 
 document.getElementById('openAddBtn').addEventListener('click', () => {
   editingId = null;
-  openModal('Ajouter un service');
+  openModal('Ajouter une page');
 });
 document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
 document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', (e) => { if(e.target.id === 'modalOverlay') closeModal(); });
 
 window.openEdit = function(id){
-  const s = services.find(x => x.id === id);
-  if(!s) return;
+  const r = list.find(x => x.id === id);
+  if(!r) return;
   editingId = id;
-  document.getElementById('fName').value = s.name;
-  document.getElementById('fCategory').value = s.category;
-  document.getElementById('fStatus').value = s.status;
-  document.getElementById('fPrice').value = s.price;
-  document.getElementById('fDesc').value = s.desc || '';
-  openModal('Modifier le service');
+  Object.keys(fieldMap).forEach(fid => {
+    const el = document.getElementById(fid);
+    if(el) el.value = r[fieldMap[fid]] ?? '';
+  });
+  openModal('Modifier');
 };
 
-window.deleteService = function(id){
-  const s = services.find(x => x.id === id);
-  if(!s) return;
-  if(confirm(`Supprimer le service "${s.name}" ?`)){
-    services = services.filter(x => x.id !== id);
-    populateCategoryFilter();
+window.delItem = function(id){
+  const r = list.find(x => x.id === id);
+  if(!r) return;
+  if(confirm(`Supprimer "${r.title}" ?`)){
+    list = list.filter(x => x.id !== id);
+    
     render();
   }
 };
 
-document.getElementById('serviceForm').addEventListener('submit', (e) => {
+document.getElementById('itemForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  const data = {
-    name: document.getElementById('fName').value.trim(),
-    category: document.getElementById('fCategory').value,
-    status: document.getElementById('fStatus').value,
-    price: document.getElementById('fPrice').value.trim(),
-    desc: document.getElementById('fDesc').value.trim(),
-  };
+  const data = {};
+  Object.keys(fieldMap).forEach(fid => {
+    const el = document.getElementById(fid);
+    data[fieldMap[fid]] = el.value.trim ? el.value.trim() : el.value;
+  });
   if(editingId){
-    const s = services.find(x => x.id === editingId);
-    Object.assign(s, data);
+    const r = list.find(x => x.id === editingId);
+    Object.assign(r, data);
   } else {
-    services.push({ id: nextId++, ...data });
+    list.push({ id: nextId++, ...data });
   }
-  populateCategoryFilter();
+  
   closeModal();
   render();
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
-document.getElementById('statusFilter').addEventListener('change', render);
-document.getElementById('catFilter').addEventListener('change', render);
+document.getElementById("statusFilter").addEventListener("change", render);
 
-populateCategoryFilter();
+
 render();
 </script>
 </body>

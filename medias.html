@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Services — Administration Bénin Digital Hub</title>
+<title>Médias — Administration Bénin Digital Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -233,6 +233,67 @@ img{display:block;max-width:100%;}
   .field-row{grid-template-columns:1fr;}
 }
 </style>
+<style>
+/* ===================== MEDIAS / ROLES / SAUVEGARDES / SEO ===================== */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.media-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;}
+.media-thumb{aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.6rem;font-weight:800;position:relative;}
+.media-thumb .del-btn{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:6px;background:rgba(0,0,0,0.35);color:#fff;display:flex;align-items:center;justify-content:center;}
+.media-thumb .del-btn:hover{background:rgba(220,38,38,0.85);}
+.media-thumb .del-btn svg{width:12px;height:12px;}
+.media-info{padding:10px 12px;}
+.media-info .n{font-size:0.8rem;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.media-info .s{font-size:0.72rem;color:#94a3b8;}
+.upload-drop{border:1.5px dashed var(--line);border-radius:12px;padding:30px;text-align:center;color:#94a3b8;font-size:0.88rem;margin-bottom:20px;cursor:pointer;}
+.upload-drop:hover{border-color:var(--blue);color:var(--blue);}
+.upload-drop svg{width:26px;height:26px;margin-bottom:8px;}
+
+.perm-table{width:100%;border-collapse:collapse;}
+.perm-table th, .perm-table td{padding:12px 14px;border-bottom:1px solid #f1f5f9;text-align:center;}
+.perm-table th{font-size:0.72rem;text-transform:uppercase;color:#94a3b8;font-weight:700;}
+.perm-table td:first-child, .perm-table th:first-child{text-align:left;}
+.perm-role-name{font-weight:700;font-size:0.9rem;}
+.perm-role-desc{font-size:0.76rem;color:#94a3b8;}
+.perm-check{width:18px;height:18px;accent-color:var(--blue);cursor:pointer;}
+
+.backup-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #f1f5f9;}
+.backup-row:last-child{border-bottom:none;}
+.backup-ic{width:38px;height:38px;border-radius:10px;background:#eff6ff;color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.backup-ic svg{width:18px;height:18px;}
+.backup-info{flex:1;min-width:0;}
+.backup-info .n{font-weight:600;font-size:0.9rem;}
+.backup-info .m{font-size:0.78rem;color:#94a3b8;}
+.backup-actions{display:flex;gap:6px;}
+.backup-actions button{padding:8px 12px;border-radius:7px;font-size:0.78rem;font-weight:600;color:#475569;background:#f8fafc;border:1px solid var(--line);}
+.backup-actions button:hover{background:#f1f5f9;}
+.backup-actions button.danger:hover{background:#fef2f2;color:#dc2626;border-color:#fecaca;}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #f1f5f9;}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-row .t{font-weight:600;font-size:0.9rem;}
+.toggle-row .d{font-size:0.78rem;color:#94a3b8;margin-top:2px;}
+.switch{position:relative;width:42px;height:24px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;}
+.switch .slider{position:absolute;inset:0;background:#e2e8f0;border-radius:100px;cursor:pointer;transition:.2s;}
+.switch .slider::before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.switch input:checked + .slider{background:var(--blue);}
+.switch input:checked + .slider::before{transform:translateX(18px);}
+
+.contact-card{border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px;}
+.contact-card.unread{border-left:3px solid var(--blue);background:#fbfdff;}
+.contact-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.contact-top .n{font-weight:700;font-size:0.95rem;}
+.contact-top .meta{font-size:0.78rem;color:#94a3b8;margin-top:2px;}
+.contact-service{font-size:0.72rem;font-weight:700;color:var(--blue);background:#eff6ff;padding:3px 9px;border-radius:100px;}
+.contact-msg{font-size:0.88rem;color:#334155;line-height:1.5;margin-bottom:12px;}
+.contact-actions{display:flex;gap:8px;}
+.contact-actions button{padding:7px 12px;border-radius:7px;font-size:0.76rem;font-weight:600;background:#f8fafc;border:1px solid var(--line);color:#475569;}
+.contact-actions button:hover{background:#f1f5f9;}
+.contact-actions a.file-link{padding:7px 12px;border-radius:7px;font-size:0.76rem;font-weight:600;background:#f8fafc;border:1px solid var(--line);color:var(--blue);display:inline-flex;align-items:center;gap:5px;}
+.state-box{text-align:center;padding:50px 20px;color:#94a3b8;font-size:0.9rem;}
+.state-box svg{width:32px;height:32px;margin-bottom:12px;color:#cbd5e1;}
+</style>
+
 
 </head>
 <body>
@@ -284,7 +345,7 @@ img{display:block;max-width:100%;}
       <div class="side-group">
         <div class="side-group-label">Gestion</div>
         <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
-        <a href="services.html" class="side-link active"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
+        <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <a href="technologies.html" class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></a>
         <a href="blog.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></a>
         <a href="temoignages.html" class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></a>
@@ -300,7 +361,7 @@ img{display:block;max-width:100%;}
       <div class="side-group">
         <div class="side-group-label">Contenu</div>
         <a href="pages.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Pages</span></a>
-        <a href="medias.html" class="side-link"><svg><use href="#i-image"/></svg><span class="grow">Médias</span></a>
+        <a href="medias.html" class="side-link active"><svg><use href="#i-image"/></svg><span class="grow">Médias</span></a>
         <a href="documents.html" class="side-link"><svg><use href="#i-folder"/></svg><span class="grow">Documents</span></a>
         <a href="actualites.html" class="side-link"><svg><use href="#i-news"/></svg><span class="grow">Actualités</span></a>
       </div>
@@ -338,91 +399,35 @@ img{display:block;max-width:100%;}
       </div>
     </header>
 
+    
     <main class="content">
       <div class="page-head">
         <div>
-          <h1>Services</h1>
-          <p>Gérez les services proposés par Bénin Digital Hub.</p>
+          <h1>Médias</h1>
+          <p>Gérez les images et fichiers médias du site.</p>
         </div>
-        <button class="btn-primary" id="openAddBtn"><svg><use href="#i-plus"/></svg>Ajouter un service</button>
+        <label class="btn-primary" for="uploadInput" style="cursor:pointer;"><svg><use href="#i-plus"/></svg>Ajouter un média</label>
+        <input type="file" id="uploadInput" accept="image/*" multiple style="display:none;">
       </div>
 
       <div class="mini-stats">
-        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-layers"/></svg></div><div><div class="v" id="statTotal">0</div><div class="l">Total services</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#16a34a"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statActifs">0</div><div class="l">Actifs</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#94a3b8"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statInactifs">0</div><div class="l">Inactifs</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#f97316"><svg><use href="#i-folder"/></svg></div><div><div class="v" id="statCategories">0</div><div class="l">Catégories</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-image"/></svg></div><div><div class="v" id="statTotal">0</div><div class="l">Total fichiers</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#16a34a"><svg><use href="#i-image"/></svg></div><div><div class="v" id="statImages">0</div><div class="l">Images</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#f97316"><svg><use href="#i-folder"/></svg></div><div><div class="v" id="statSize">0</div><div class="l">Espace utilisé (Mo, estimé)</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#7c3aed"><svg><use href="#i-folder"/></svg></div><div><div class="v" id="statRecent">0</div><div class="l">Ajoutés ce mois</div></div></div>
       </div>
 
       <div class="card">
         <div class="toolbar">
           <div class="search-wrap">
             <svg><use href="#i-search"/></svg>
-            <input type="text" id="searchInput" placeholder="Rechercher un service...">
+            <input type="text" id="searchInput" placeholder="Rechercher un fichier...">
           </div>
-          <select id="statusFilter">
-            <option value="">Tous les statuts</option>
-            <option value="Actif">Actif</option>
-            <option value="Inactif">Inactif</option>
-          </select>
-          <select id="catFilter">
-            <option value="">Toutes les catégories</option>
-          </select>
         </div>
-
-        <table class="ptable">
-          <thead>
-            <tr>
-              <th>Service</th>
-              <th>Catégorie</th>
-              <th>Tarif indicatif</th>
-              <th>Statut</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="servicesBody"></tbody>
-        </table>
-        <div class="table-empty" id="emptyState" style="display:none;">Aucun service ne correspond à votre recherche.</div>
+        <div class="media-grid" id="mediaGrid"></div>
+        <div class="table-empty" id="emptyState" style="display:none;">Aucun média ne correspond à votre recherche.</div>
       </div>
     </main>
-  </div>
-</div>
-
-<!-- ============ MODAL ============ -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="modalTitle">Ajouter un service</h3>
-      <button class="modal-close" id="modalCloseBtn"><svg><use href="#i-close"/></svg></button>
-    </div>
-    <form id="serviceForm">
-      <div class="field"><label>Nom du service *</label><input type="text" id="fName" required placeholder="Ex. Développement Web"></div>
-      <div class="field-row">
-        <div class="field"><label>Catégorie *</label>
-          <select id="fCategory" required>
-            <option value="">Choisir...</option>
-            <option>Développement</option>
-            <option>Intelligence Artificielle</option>
-            <option>Cloud & Infrastructure</option>
-            <option>Formation</option>
-            <option>Conseil</option>
-            <option>Support</option>
-          </select>
-        </div>
-        <div class="field"><label>Statut *</label>
-          <select id="fStatus" required>
-            <option>Actif</option>
-            <option>Inactif</option>
-          </select>
-        </div>
-      </div>
-      <div class="field"><label>Tarif indicatif *</label><input type="text" id="fPrice" required placeholder="Ex. À partir de 250 000 FCFA"></div>
-      <div class="field"><label>Description</label><textarea id="fDesc" placeholder="Décrivez le service en quelques mots..."></textarea></div>
-      <div class="modal-actions">
-        <button type="button" class="btn-ghost-modal" id="modalCancelBtn">Annuler</button>
-        <button type="submit" class="btn-primary" id="modalSaveBtn">Enregistrer</button>
-      </div>
-    </form>
   </div>
 </div>
 
@@ -431,134 +436,67 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let services = [
-  { id:1, name:"Développement Web", category:"Développement", price:"À partir de 250 000 FCFA", status:"Actif", desc:"Sites vitrines, marketplaces et applications web performantes." },
-  { id:2, name:"Applications Mobiles", category:"Développement", price:"À partir de 400 000 FCFA", status:"Actif", desc:"iOS & Android natif avec Flutter, paiement Mobile Money intégré." },
-  { id:3, name:"Assistants & Chatbots IA", category:"Intelligence Artificielle", price:"Sur devis", status:"Actif", desc:"Automatisation de tâches métier et assistants conversationnels." },
-  { id:4, name:"IA en langues locales", category:"Intelligence Artificielle", price:"Sur devis", status:"Inactif", desc:"Modèles adaptés au Fon, au Yoruba et aux réalités locales." },
-  { id:5, name:"Infrastructure Cloud", category:"Cloud & Infrastructure", price:"À partir de 80 000 FCFA/mois", status:"Actif", desc:"Hébergement, déploiement continu et bases de données sécurisées." },
-  { id:6, name:"Formation Tech", category:"Formation", price:"À partir de 50 000 FCFA", status:"Actif", desc:"Programmes pratiques en développement web, mobile et outils digitaux." },
-  { id:7, name:"Conseil Digital", category:"Conseil", price:"Sur devis", status:"Actif", desc:"Audit, stratégie de transformation numérique et roadmap." },
-  { id:8, name:"Support & Maintenance", category:"Support", price:"À partir de 30 000 FCFA/mois", status:"Actif", desc:"Maintenance continue, mises à jour et support réactif 6j/7." },
+let nextId = 7;
+let media = [
+  { id:1, name:"banner.jpg", type:"image", color:"linear-gradient(135deg,#2563eb,#16a34a)", size:"420 Ko", date:"2026-07-10" },
+  { id:2, name:"eboun.jpg", type:"image", color:"linear-gradient(135deg,#0d2748,#1c4b8c)", size:"180 Ko", date:"2026-05-01" },
+  { id:3, name:"yeyemarket-logo.png", type:"image", color:"linear-gradient(135deg,#16a34a,#22c55e)", size:"96 Ko", date:"2026-06-12" },
+  { id:4, name:"santebenin-logo.png", type:"image", color:"linear-gradient(135deg,#0e7490,#22d3ee)", size:"300 Ko", date:"2026-06-12" },
+  { id:5, name:"favicon-512.png", type:"image", color:"linear-gradient(135deg,#7c3aed,#a855f7)", size:"32 Ko", date:"2026-04-20" },
+  { id:6, name:"apple-touch-icon.png", type:"image", color:"linear-gradient(135deg,#f97316,#f59e0b)", size:"28 Ko", date:"2026-04-20" },
 ];
-let nextId = 9;
-let editingId = null;
-
-function populateCategoryFilter(){
-  const sel = document.getElementById('catFilter');
-  const current = sel.value;
-  const cats = [...new Set(services.map(s => s.category))].sort();
-  sel.innerHTML = '<option value="">Toutes les catégories</option>' + cats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
-}
 
 function updateStats(){
-  document.getElementById('statTotal').textContent = services.length;
-  document.getElementById('statActifs').textContent = services.filter(s=>s.status==='Actif').length;
-  document.getElementById('statInactifs').textContent = services.filter(s=>s.status==='Inactif').length;
-  document.getElementById('statCategories').textContent = new Set(services.map(s=>s.category)).size;
+  document.getElementById('statTotal').textContent = media.length;
+  document.getElementById('statImages').textContent = media.filter(m=>m.type==='image').length;
+  const totalKo = media.reduce((a,m) => a + parseInt(m.size), 0);
+  document.getElementById('statSize').textContent = (totalKo/1000).toFixed(1);
+  document.getElementById('statRecent').textContent = media.filter(m => m.date >= '2026-07-01').length;
 }
 
 function render(){
   const search = document.getElementById('searchInput').value.toLowerCase();
-  const status = document.getElementById('statusFilter').value;
-  const cat = document.getElementById('catFilter').value;
-
-  const filtered = services.filter(s => {
-    const matchSearch = !search || s.name.toLowerCase().includes(search);
-    const matchStatus = !status || s.status === status;
-    const matchCat = !cat || s.category === cat;
-    return matchSearch && matchStatus && matchCat;
-  });
-
-  const tbody = document.getElementById('servicesBody');
-  tbody.innerHTML = filtered.map(s => `
-    <tr>
-      <td>
-        <div class="p-name-cell">
-          <div><div class="n">${s.name}</div><div class="d" style="font-size:0.76rem;color:#94a3b8;max-width:360px;">${s.desc || ''}</div></div>
-        </div>
-      </td>
-      <td><span class="cat-chip">${s.category}</span></td>
-      <td>${s.price}</td>
-      <td><span class="status-pill ${s.status === 'Actif' ? 'termine' : 'annule'}">${s.status}</span></td>
-      <td>
-        <div class="row-actions">
-          <button onclick="openEdit(${s.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
-          <button class="danger" onclick="deleteService(${s.id})" title="Supprimer"><svg><use href="#i-trash"/></svg></button>
-        </div>
-      </td>
-    </tr>
+  const filtered = media.filter(m => !search || m.name.toLowerCase().includes(search));
+  const grid = document.getElementById('mediaGrid');
+  grid.innerHTML = filtered.map(m => `
+    <div class="media-card">
+      <div class="media-thumb" style="background:${m.color}">
+        <button class="del-btn" onclick="delMedia(${m.id})" title="Supprimer"><svg><use href="#i-close"/></svg></button>
+        ${m.name.split('.').pop().toUpperCase()}
+      </div>
+      <div class="media-info"><div class="n">${m.name}</div><div class="s">${m.size}</div></div>
+    </div>
   `).join('');
-
   document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
   updateStats();
 }
 
-function openModal(title){
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function closeModal(){
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.getElementById('serviceForm').reset();
-  editingId = null;
-}
-
-document.getElementById('openAddBtn').addEventListener('click', () => {
-  editingId = null;
-  openModal('Ajouter un service');
-});
-document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
-document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
-document.getElementById('modalOverlay').addEventListener('click', (e) => { if(e.target.id === 'modalOverlay') closeModal(); });
-
-window.openEdit = function(id){
-  const s = services.find(x => x.id === id);
-  if(!s) return;
-  editingId = id;
-  document.getElementById('fName').value = s.name;
-  document.getElementById('fCategory').value = s.category;
-  document.getElementById('fStatus').value = s.status;
-  document.getElementById('fPrice').value = s.price;
-  document.getElementById('fDesc').value = s.desc || '';
-  openModal('Modifier le service');
-};
-
-window.deleteService = function(id){
-  const s = services.find(x => x.id === id);
-  if(!s) return;
-  if(confirm(`Supprimer le service "${s.name}" ?`)){
-    services = services.filter(x => x.id !== id);
-    populateCategoryFilter();
+window.delMedia = function(id){
+  const m = media.find(x => x.id === id);
+  if(!m) return;
+  if(confirm(`Supprimer "${m.name}" ?`)){
+    media = media.filter(x => x.id !== id);
     render();
   }
 };
 
-document.getElementById('serviceForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const data = {
-    name: document.getElementById('fName').value.trim(),
-    category: document.getElementById('fCategory').value,
-    status: document.getElementById('fStatus').value,
-    price: document.getElementById('fPrice').value.trim(),
-    desc: document.getElementById('fDesc').value.trim(),
-  };
-  if(editingId){
-    const s = services.find(x => x.id === editingId);
-    Object.assign(s, data);
-  } else {
-    services.push({ id: nextId++, ...data });
-  }
-  populateCategoryFilter();
-  closeModal();
+document.getElementById('uploadInput').addEventListener('change', (e) => {
+  const colors = ["linear-gradient(135deg,#2563eb,#16a34a)","linear-gradient(135deg,#f97316,#f59e0b)","linear-gradient(135deg,#7c3aed,#a855f7)","linear-gradient(135deg,#0e7490,#22d3ee)"];
+  Array.from(e.target.files).forEach(file => {
+    media.unshift({
+      id: nextId++,
+      name: file.name,
+      type: file.type.startsWith('image') ? 'image' : 'file',
+      color: colors[Math.floor(Math.random()*colors.length)],
+      size: (file.size/1024).toFixed(0) + " Ko",
+      date: new Date().toISOString().slice(0,10)
+    });
+  });
   render();
+  e.target.value = '';
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
-document.getElementById('statusFilter').addEventListener('change', render);
-document.getElementById('catFilter').addEventListener('change', render);
-
-populateCategoryFilter();
 render();
 </script>
 </body>
