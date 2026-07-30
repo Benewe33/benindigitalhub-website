@@ -395,6 +395,7 @@ img{display:block;max-width:100%;}
         <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
         <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <a href="technologies.html" class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></a>
+        <a href="realisations.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Réalisations</span></a>
         <a href="blog.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></a>
         <a href="temoignages.html" class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></a>
         <a href="partenaires.html" class="side-link"><svg><use href="#i-building"/></svg><span class="grow">Partenaires</span></a>
@@ -731,6 +732,18 @@ img{display:block;max-width:100%;}
               <div class="hint">PNG, JPG ou SVG. Max 2MB</div>
             </div>
 
+            <h3>Bannière du site</h3>
+            <div class="upload-box">
+              <button class="remove-x" id="bannerRemoveBtn"><svg><use href="#i-close"/></svg></button>
+              <div id="bannerPreviewWrap" style="width:100%;aspect-ratio:16/7;border-radius:10px;overflow:hidden;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <span id="bannerEmptyLabel" style="color:#94a3b8;font-size:0.82rem;">Aucune bannière — l'illustration par défaut du site sera utilisée</span>
+                <img id="bannerPreview" style="display:none;width:100%;height:100%;object-fit:cover;" alt="Bannière">
+              </div>
+              <div><label class="btn-upload" for="bannerInput"><svg><use href="#i-upload"/></svg>Changer la bannière</label></div>
+              <input type="file" id="bannerInput" accept="image/png,image/jpeg" style="display:none;">
+              <div class="hint">PNG ou JPG, format large (ex. 1600×700). Max 4MB</div>
+            </div>
+
             <h3>Favicon</h3>
             <div class="upload-box">
               <button class="remove-x"><svg><use href="#i-close"/></svg></button>
@@ -847,6 +860,8 @@ document.getElementById('companyDesc').addEventListener('input', (e) => {
 // logo upload -> update previews
 let pendingLogoDataUrl = null;
 let pendingFaviconDataUrl = null;
+let pendingBannerDataUrl = null;
+let bannerRemoved = false;
 
 function fileToDataUrl(file){
   return new Promise((resolve, reject) => {
@@ -857,8 +872,8 @@ function fileToDataUrl(file){
   });
 }
 
-// Redimensionne l'image pour éviter d'envoyer des photos de plusieurs Mo telles quelles.
-function resizeImageDataUrl(dataUrl, maxDim){
+// Redimensionne l'image pour éviter d'envoyer des fichiers de plusieurs Mo tels quels.
+function resizeImageDataUrl(dataUrl, maxDim, format = 'image/png', quality = 0.9){
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
@@ -873,7 +888,7 @@ function resizeImageDataUrl(dataUrl, maxDim){
       canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL('image/png', 0.9));
+      resolve(canvas.toDataURL(format, quality));
     };
     img.onerror = reject;
     img.src = dataUrl;
@@ -907,6 +922,31 @@ document.getElementById('logoInput').addEventListener('change', async (e) => {
     toast("Impossible de traiter cette image, réessayez avec un autre fichier.");
   }
 });
+document.getElementById('bannerInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 4*1024*1024){ toast('La bannière dépasse 4 Mo.'); return; }
+  toast('Traitement de l\'image...');
+  try{
+    const rawUrl = await fileToDataUrl(file);
+    const url = await resizeImageDataUrl(rawUrl, 1400, 'image/jpeg', 0.82);
+    pendingBannerDataUrl = url;
+    bannerRemoved = false;
+    document.getElementById('bannerPreview').src = url;
+    document.getElementById('bannerPreview').style.display = '';
+    document.getElementById('bannerEmptyLabel').style.display = 'none';
+    toast("Bannière prête — cliquez sur \"Enregistrer\" en haut pour l'appliquer au site.");
+  }catch(err){
+    toast("Impossible de traiter cette image, réessayez avec un autre fichier.");
+  }
+});
+document.getElementById('bannerRemoveBtn').addEventListener('click', () => {
+  pendingBannerDataUrl = null;
+  bannerRemoved = true;
+  document.getElementById('bannerPreview').src = '';
+  document.getElementById('bannerPreview').style.display = 'none';
+  document.getElementById('bannerEmptyLabel').style.display = '';
+});
 document.getElementById('faviconInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if(!file) return;
@@ -929,6 +969,7 @@ const SETTINGS_HEADERS = { apikey: SETTINGS_SUPA_KEY, Authorization: `Bearer ${S
 let currentSettingsId = null;
 let existingLogoUrl = null;
 let existingFaviconUrl = null;
+let existingBannerUrl = null;
 
 async function loadSettings(){
   try{
@@ -949,6 +990,12 @@ async function loadSettings(){
       if(s.website) document.getElementById('websiteUrl').value = s.website;
       if(s.logo_url){ document.getElementById('logoPreview').src = s.logo_url; document.getElementById('previewLogo').src = s.logo_url; }
       if(s.favicon_url){ document.getElementById('faviconPreview').src = s.favicon_url; }
+      if(s.banner_url){
+        existingBannerUrl = s.banner_url;
+        document.getElementById('bannerPreview').src = s.banner_url;
+        document.getElementById('bannerPreview').style.display = '';
+        document.getElementById('bannerEmptyLabel').style.display = 'none';
+      }
       document.getElementById('previewDesc').textContent = document.getElementById('companyDesc').value;
     }
   }catch(err){
@@ -979,6 +1026,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     website: document.getElementById('websiteUrl').value.trim(),
     logo_url: pendingLogoDataUrl || existingLogoUrl,
     favicon_url: pendingFaviconDataUrl || existingFaviconUrl,
+    banner_url: bannerRemoved ? null : (pendingBannerDataUrl || existingBannerUrl),
   };
   const saveBtn = document.getElementById('saveBtn');
   const original = saveBtn.innerHTML;
