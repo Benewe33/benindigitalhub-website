@@ -857,24 +857,70 @@ function fileToDataUrl(file){
   });
 }
 
+// Redimensionne l'image pour éviter d'envoyer des photos de plusieurs Mo telles quelles.
+function resizeImageDataUrl(dataUrl, maxDim){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if(width > maxDim || height > maxDim){
+        const ratio = Math.min(maxDim / width, maxDim / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/png', 0.9));
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+
+// Requête fetch avec délai de sécurité : ne reste plus jamais bloquée indéfiniment.
+async function fetchWithTimeout(url, options, timeoutMs){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try{
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 document.getElementById('logoInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if(!file) return;
   if(file.size > 2*1024*1024){ toast('Le logo dépasse 2 Mo.'); return; }
-  const url = await fileToDataUrl(file);
-  pendingLogoDataUrl = url;
-  document.getElementById('logoPreview').src = url;
-  document.getElementById('previewLogo').src = url;
-  toast("Logo prêt — cliquez sur \"Enregistrer\" en haut pour l'appliquer au site.");
+  toast('Traitement de l\'image...');
+  try{
+    const rawUrl = await fileToDataUrl(file);
+    const url = await resizeImageDataUrl(rawUrl, 400);
+    pendingLogoDataUrl = url;
+    document.getElementById('logoPreview').src = url;
+    document.getElementById('previewLogo').src = url;
+    toast("Logo prêt — cliquez sur \"Enregistrer\" en haut pour l'appliquer au site.");
+  }catch(err){
+    toast("Impossible de traiter cette image, réessayez avec un autre fichier.");
+  }
 });
 document.getElementById('faviconInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if(!file) return;
   if(file.size > 512*1024){ toast('Le favicon dépasse 512 Ko.'); return; }
-  const url = await fileToDataUrl(file);
-  pendingFaviconDataUrl = url;
-  document.getElementById('faviconPreview').src = url;
-  toast("Favicon prêt — cliquez sur \"Enregistrer\" en haut pour l'appliquer au site.");
+  toast('Traitement de l\'image...');
+  try{
+    const rawUrl = await fileToDataUrl(file);
+    const url = await resizeImageDataUrl(rawUrl, 128);
+    pendingFaviconDataUrl = url;
+    document.getElementById('faviconPreview').src = url;
+    toast("Favicon prêt — cliquez sur \"Enregistrer\" en haut pour l'appliquer au site.");
+  }catch(err){
+    toast("Impossible de traiter cette image, réessayez avec un autre fichier.");
+  }
 });
 
 const SETTINGS_SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
@@ -940,22 +986,26 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   try{
     let res;
     if(currentSettingsId){
-      res = await fetch(`${SETTINGS_SUPA_URL}/rest/v1/site_settings?id=eq.${currentSettingsId}`, {
+      res = await fetchWithTimeout(`${SETTINGS_SUPA_URL}/rest/v1/site_settings?id=eq.${currentSettingsId}`, {
         method:'PATCH', headers: { ...SETTINGS_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
         body: JSON.stringify(data)
-      });
+      }, 15000);
     } else {
-      res = await fetch(`${SETTINGS_SUPA_URL}/rest/v1/site_settings`, {
+      res = await fetchWithTimeout(`${SETTINGS_SUPA_URL}/rest/v1/site_settings`, {
         method:'POST', headers: { ...SETTINGS_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
         body: JSON.stringify(data)
-      });
+      }, 15000);
     }
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const [saved] = await res.json();
     currentSettingsId = saved.id;
     toast('Paramètres enregistrés sur Supabase.');
   }catch(err){
-    toast("Impossible d'enregistrer — vérifiez les policies INSERT/UPDATE sur la table site_settings.");
+    if(err.name === 'AbortError'){
+      toast("L'enregistrement a pris trop de temps et a été annulé — réessayez, ou choisissez une image plus légère.");
+    } else {
+      toast("Impossible d'enregistrer — vérifiez les policies INSERT/UPDATE sur la table site_settings.");
+    }
   }
   saveBtn.innerHTML = original; saveBtn.disabled = false;
 });
