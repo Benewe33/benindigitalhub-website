@@ -452,7 +452,7 @@ async function loadBackups(){
   document.getElementById('backupList').innerHTML = `<div class="state-box">Chargement depuis Supabase...</div>`;
   loadError = null;
   try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*&order=id.desc`, { headers: SUPA_HEADERS });
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*&order=id.desc`, { headers: SUPA_HEADERS, cache: 'no-store' });
     if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
     backups = await res.json();
   }catch(err){

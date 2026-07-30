@@ -512,7 +512,7 @@ async function loadData(){
   document.getElementById('tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
   loadError = null;
   try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS });
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS, cache: 'no-store' });
     if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
     list = await res.json();
   }catch(err){

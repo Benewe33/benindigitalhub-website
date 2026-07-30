@@ -932,7 +932,7 @@ let existingFaviconUrl = null;
 
 async function loadSettings(){
   try{
-    const res = await fetch(`${SETTINGS_SUPA_URL}/rest/v1/site_settings?select=*&limit=1`, { headers: SETTINGS_HEADERS });
+    const res = await fetch(`${SETTINGS_SUPA_URL}/rest/v1/site_settings?select=*&limit=1`, { headers: SETTINGS_HEADERS, cache: 'no-store' });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const rows = await res.json();
     if(rows.length){

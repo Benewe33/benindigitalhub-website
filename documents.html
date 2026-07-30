@@ -380,6 +380,7 @@ img{display:block;max-width:100%;}
         <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
         <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <a href="technologies.html" class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></a>
+        <a href="realisations.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Réalisations</span></a>
         <a href="blog.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></a>
         <a href="temoignages.html" class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></a>
         <a href="partenaires.html" class="side-link"><svg><use href="#i-building"/></svg><span class="grow">Partenaires</span></a>
@@ -499,28 +500,9 @@ function formatDate(iso){
   return `${d}/${m}/${y}`;
 }
 
-let list = [];
-let loadError = null;
+let list = [{"id": 1, "name": "Contrat - YéyéMarket.pdf", "type": "PDF", "size": "1.2 Mo", "addedBy": "EWEDJE Eboun Benjamin", "date": "2026-07-10"}, {"id": 2, "name": "Brief - SantéBénin.docx", "type": "Word", "size": "340 Ko", "addedBy": "Mariam T.", "date": "2026-07-15"}, {"id": 3, "name": "Facture - Juillet 2026.pdf", "type": "PDF", "size": "210 Ko", "addedBy": "Carlos D.", "date": "2026-07-28"}, {"id": 4, "name": "Logo BDH.svg", "type": "Image", "size": "48 Ko", "addedBy": "Sophie M.", "date": "2026-06-01"}, {"id": 5, "name": "Cahier des charges - UniBénin.pdf", "type": "PDF", "size": "1.8 Mo", "addedBy": "Jean K.", "date": "2026-05-20"}, {"id": 6, "name": "Budget prévisionnel.xlsx", "type": "Excel", "size": "98 Ko", "addedBy": "EWEDJE Eboun Benjamin", "date": "2026-07-01"}];
+let nextId = 7;
 let editingId = null;
-const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
-const TABLE = 'documents';
-const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
-
-async function loadData(){
-  document.getElementById('tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
-  loadError = null;
-  try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS });
-    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
-    list = await res.json();
-  }catch(err){
-    loadError = err.message;
-    list = [];
-  }
-  
-  render();
-}
 const fieldMap = {
     fName: "name",
     fType: "type",
@@ -539,17 +521,6 @@ function updateStats(){
 }
 
 function render(){
-  if(loadError){
-    const tb = document.getElementById('tbody');
-    tb.innerHTML = `<tr><td colspan="6" style="padding:24px;color:#dc2626;font-size:0.85rem;">
-      Impossible de charger les données depuis Supabase.<br>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
-      Vérifiez que la table <code>documents</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
-    </td></tr>`;
-    document.getElementById('emptyState').style.display = 'none';
-    updateStats();
-    return;
-  }
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filtered = list.filter(r => {
     const matchSearch = !search || r.name.toLowerCase().includes(search) || r.addedBy.toLowerCase().includes(search);
@@ -606,64 +577,39 @@ window.openEdit = function(id){
   openModal('Modifier');
 };
 
-window.delItem = async function(id){
+window.delItem = function(id){
   const r = list.find(x => x.id === id);
   if(!r) return;
-  if(!confirm(`Supprimer "${r.name}" ?`)) return;
-  try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
-    if(!res.ok) throw new Error('HTTP ' + res.status);
+  if(confirm(`Supprimer "${r.name}" ?`)){
     list = list.filter(x => x.id !== id);
     
     render();
-  }catch(err){
-    alert("Impossible de supprimer cet élément — vérifiez la policy DELETE sur la table documents.");
   }
 };
 
-document.getElementById('itemForm').addEventListener('submit', async (e) => {
+document.getElementById('itemForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const data = {};
   Object.keys(fieldMap).forEach(fid => {
     const el = document.getElementById(fid);
     data[fieldMap[fid]] = el.value.trim ? el.value.trim() : el.value;
   });
-  const saveBtn = document.getElementById('modalSaveBtn');
-  const original = saveBtn.textContent;
-  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
-  try{
-    if(editingId){
-      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
-        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
-        body: JSON.stringify(data)
-      });
-      if(!res.ok) throw new Error('HTTP ' + res.status);
-      const [updated] = await res.json();
-      const r = list.find(x => x.id === editingId);
-      Object.assign(r, updated);
-    } else {
-      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
-        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
-        body: JSON.stringify(data)
-      });
-      if(!res.ok) throw new Error('HTTP ' + res.status);
-      const [created] = await res.json();
-      list.push(created);
-    }
-    
-    closeModal();
-    render();
-  }catch(err){
-    alert("Impossible d'enregistrer cet élément — vérifiez les policies INSERT/UPDATE sur la table documents.");
+  if(editingId){
+    const r = list.find(x => x.id === editingId);
+    Object.assign(r, data);
+  } else {
+    list.push({ id: nextId++, ...data });
   }
-  saveBtn.textContent = original; saveBtn.disabled = false;
+  
+  closeModal();
+  render();
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById("typeFilter").addEventListener("change", render);
 
 
-loadData();
+render();
 </script>
 </body>
 </html>
