@@ -858,6 +858,33 @@ document.getElementById('faviconInput').addEventListener('change', (e) => {
   document.getElementById('faviconPreview').src = URL.createObjectURL(file);
 });
 
+const SETTINGS_SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SETTINGS_SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const SETTINGS_HEADERS = { apikey: SETTINGS_SUPA_KEY, Authorization: `Bearer ${SETTINGS_SUPA_KEY}` };
+let currentSettingsId = null;
+
+async function loadSettings(){
+  try{
+    const res = await fetch(`${SETTINGS_SUPA_URL}/rest/v1/site_settings?select=*&limit=1`, { headers: SETTINGS_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const rows = await res.json();
+    if(rows.length){
+      const s = rows[0];
+      currentSettingsId = s.id;
+      if(s.company_name) document.getElementById('companyName').value = s.company_name;
+      if(s.site_name) document.getElementById('siteName').value = s.site_name;
+      if(s.phone) document.getElementById('phoneNumber').value = s.phone;
+      if(s.address) document.getElementById('address').value = s.address;
+      if(s.description) document.getElementById('companyDesc').value = s.description;
+      if(s.contact_email) document.getElementById('contactEmail').value = s.contact_email;
+      if(s.website) document.getElementById('websiteUrl').value = s.website;
+      document.getElementById('previewDesc').textContent = document.getElementById('companyDesc').value;
+    }
+  }catch(err){
+    toast("Impossible de charger les réglages depuis Supabase — vérifiez que la table site_settings existe.");
+  }
+}
+
 function toast(msg){
   let t = document.createElement('div');
   t.textContent = msg;
@@ -867,9 +894,46 @@ function toast(msg){
   setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; setTimeout(()=>t.remove(),300); }, 3200);
 }
 
-document.getElementById('saveBtn').addEventListener('click', () => {
-  toast('Paramètres enregistrés (aperçu) — pas encore connecté à une base de données réelle.');
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const data = {
+    company_name: document.getElementById('companyName').value.trim(),
+    site_name: document.getElementById('siteName').value.trim(),
+    phone: document.getElementById('phoneNumber').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    timezone: document.getElementById('timezone').value,
+    lang: document.getElementById('lang').value,
+    currency: document.getElementById('currency').value,
+    description: document.getElementById('companyDesc').value.trim(),
+    contact_email: document.getElementById('contactEmail').value.trim(),
+    website: document.getElementById('websiteUrl').value.trim(),
+  };
+  const saveBtn = document.getElementById('saveBtn');
+  const original = saveBtn.innerHTML;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    let res;
+    if(currentSettingsId){
+      res = await fetch(`${SETTINGS_SUPA_URL}/rest/v1/site_settings?id=eq.${currentSettingsId}`, {
+        method:'PATCH', headers: { ...SETTINGS_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+    } else {
+      res = await fetch(`${SETTINGS_SUPA_URL}/rest/v1/site_settings`, {
+        method:'POST', headers: { ...SETTINGS_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+    }
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const [saved] = await res.json();
+    currentSettingsId = saved.id;
+    toast('Paramètres enregistrés sur Supabase.');
+  }catch(err){
+    toast("Impossible d'enregistrer — vérifiez les policies INSERT/UPDATE sur la table site_settings.");
+  }
+  saveBtn.innerHTML = original; saveBtn.disabled = false;
 });
+
+loadSettings();
 </script>
 </body>
 </html>
