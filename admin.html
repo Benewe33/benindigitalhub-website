@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration — Bénin Digital Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0c1c3d; --blue:#2563eb; --green:#16a34a; --orange:#f97316; --violet:#7c3aed; --red:#dc2626;
+  --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f8fafc;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+img{display:block;max-width:100%;}
+.app{display:flex;min-height:100vh;}
+
+/* ---------- sidebar ---------- */
+.sidebar{width:260px;flex-shrink:0;background:var(--navy);color:#cbd5e1;display:flex;flex-direction:column;transition:width .25s ease;overflow:hidden;}
+.sidebar.collapsed{width:0;}
+.side-head{display:flex;align-items:center;gap:12px;padding:20px;border-bottom:1px solid rgba(255,255,255,0.1);white-space:nowrap;}
+.side-logo{width:40px;height:40px;border-radius:10px;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.05rem;}
+.side-logo b{color:var(--blue)}.side-logo i{color:var(--ink);font-style:normal}.side-logo em{color:var(--green);font-style:normal}
+.side-head .t1{color:#fff;font-weight:700;font-size:0.92rem;line-height:1.2;}
+.side-head .t2{font-size:0.7rem;color:#94a3b8;}
+.side-nav{flex:1;overflow-y:auto;padding:16px 12px;}
+.side-group{margin-bottom:22px;}
+.side-group-label{font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#64748b;padding:0 10px;margin-bottom:8px;}
+.side-link{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-size:0.86rem;font-weight:500;color:#cbd5e1;white-space:nowrap;transition:background .15s;width:100%;text-align:left;}
+.side-link:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.side-link.active{background:var(--blue);color:#fff;}
+.side-link svg{width:17px;height:17px;flex-shrink:0;}
+.side-link span.grow{flex:1;}
+.side-link .badge{font-size:0.62rem;font-weight:700;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;}
+.side-foot{padding:12px;border-top:1px solid rgba(255,255,255,0.1);}
+.side-profile{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;white-space:nowrap;width:100%;}
+.side-profile:hover{background:rgba(255,255,255,0.06);}
+.side-profile img{width:32px;height:32px;border-radius:50%;flex-shrink:0;}
+.side-profile .name{color:#fff;font-size:0.84rem;font-weight:600;}
+.side-profile .mail{font-size:0.7rem;color:#94a3b8;}
+
+/* ---------- main ---------- */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.topbar{background:#fff;border-bottom:1px solid var(--line);padding:12px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:5;}
+.icon-btn{padding:8px;border-radius:8px;color:#64748b;flex-shrink:0;}
+.icon-btn:hover{background:#f1f5f9;}
+.icon-btn svg{width:19px;height:19px;display:block;}
+.search-wrap{position:relative;flex:1;max-width:420px;}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:#94a3b8;}
+.search-wrap input{width:100%;padding:9px 12px 9px 34px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:0.88rem;font-family:inherit;}
+.search-wrap input:focus{outline:none;border-color:var(--blue);background:#fff;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.bell-wrap{position:relative;}
+.bell-dot{position:absolute;top:2px;right:2px;background:var(--red);color:#fff;font-size:0.6rem;font-weight:700;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;}
+.profile-btn{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 6px;border-radius:8px;}
+.profile-btn:hover{background:#f1f5f9;}
+.profile-btn img{width:32px;height:32px;border-radius:50%;}
+.profile-btn .name{font-size:0.86rem;font-weight:600;text-align:left;line-height:1.2;}
+.profile-btn .role{font-size:0.7rem;color:#94a3b8;text-align:left;}
+
+.content{flex:1;padding:24px;}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;}
+.page-head h1{font-size:1.5rem;margin:0;}
+.page-head p{color:var(--muted);font-size:0.9rem;margin:4px 0 0;}
+.range-btn{display:flex;align-items:center;gap:8px;font-size:0.86rem;font-weight:600;color:#475569;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 14px;}
+.range-btn svg{width:15px;height:15px;}
+
+.grid-layout{display:grid;grid-template-columns:3fr 1fr;gap:20px;align-items:start;}
+.col-main{display:flex;flex-direction:column;gap:20px;min-width:0;}
+.col-side{display:flex;flex-direction:column;gap:20px;}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;}
+.card h3{margin:0;font-size:0.98rem;font-weight:700;}
+
+/* stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.stat-card .top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;}
+.stat-icon svg{width:20px;height:20px;}
+.stat-label{font-size:0.84rem;color:var(--muted);}
+.stat-value{font-size:1.5rem;font-weight:800;margin-top:2px;}
+.stat-change{display:flex;align-items:center;gap:4px;font-size:0.76rem;font-weight:700;color:var(--green);margin-top:6px;}
+.stat-change span.n{color:#94a3b8;font-weight:400;}
+.stat-change svg{width:13px;height:13px;}
+.spark{margin-top:8px;height:34px;}
+
+/* overview + donut */
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:20px;}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.legend-row{display:flex;gap:16px;font-size:0.78rem;color:var(--muted);margin:6px 0 4px;}
+.legend-row span{display:flex;align-items:center;gap:6px;}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+.chart-wrap{position:relative;height:250px;}
+.donut-wrap{position:relative;height:180px;display:flex;align-items:center;justify-content:center;}
+.donut-center{position:absolute;text-align:center;pointer-events:none;}
+.donut-center b{display:block;font-size:1.4rem;}
+.donut-center span{font-size:0.72rem;color:#94a3b8;}
+.donut-legend{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+.donut-legend .row{display:flex;justify-content:space-between;font-size:0.86rem;}
+.donut-legend .row .l{display:flex;align-items:center;gap:8px;color:#475569;}
+.donut-legend .row .v{color:#94a3b8;font-size:0.8rem;}
+.link-more{display:inline-flex;align-items:center;gap:5px;color:var(--blue);font-size:0.84rem;font-weight:600;margin-top:14px;}
+.link-more svg{width:13px;height:13px;}
+
+/* three col */
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.proj-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
+.proj-row:last-child{border-bottom:none;}
+.proj-row img{width:30px;height:30px;border-radius:50%;flex-shrink:0;}
+.proj-row .info{flex:1;min-width:0;}
+.proj-row .name{font-size:0.86rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.proj-row .meta{font-size:0.74rem;color:#94a3b8;}
+.status-pill{font-size:0.68rem;font-weight:700;padding:4px 8px;border-radius:6px;white-space:nowrap;}
+.status-pill.cours{background:#eff6ff;color:#2563eb;}
+.status-pill.termine{background:#f0fdf4;color:#16a34a;}
+.status-pill.attente{background:#fff7ed;color:#ea580c;}
+
+.act-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;}
+.act-row:last-child{border-bottom:none;}
+.act-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.act-icon svg{width:15px;height:15px;}
+.act-text{font-size:0.84rem;color:#334155;line-height:1.4;}
+.act-time{font-size:0.72rem;color:#94a3b8;margin-top:2px;}
+
+.traffic-row{margin-bottom:14px;}
+.traffic-row:last-child{margin-bottom:0;}
+.traffic-top{display:flex;justify-content:space-between;font-size:0.86rem;margin-bottom:6px;}
+.traffic-top .lbl{color:#475569;}
+.traffic-top .pct{color:#94a3b8;}
+.bar-track{height:6px;border-radius:4px;background:#f1f5f9;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;}
+
+/* bottom visits */
+.visits-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px;align-items:center;}
+.visit-stat{margin-bottom:18px;}
+.visit-stat:last-child{margin-bottom:0;}
+.visit-stat .l{font-size:0.76rem;color:#94a3b8;margin-bottom:4px;}
+.visit-stat .v{font-size:1.4rem;font-weight:800;}
+.visit-stat .c{display:flex;align-items:center;gap:4px;font-size:0.76rem;font-weight:700;margin-top:4px;}
+.visit-stat .c svg{width:12px;height:12px;}
+.visit-side{border-left:1px solid var(--line);padding-left:24px;}
+
+/* quick actions / alerts */
+.qa-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:8px;font-size:0.86rem;font-weight:600;color:#475569;text-align:left;}
+.qa-btn:hover{background:#f8fafc;}
+.qa-btn svg{width:16px;height:16px;flex-shrink:0;}
+.alert-row{display:flex;justify-content:space-between;align-items:center;padding:11px 2px;border-bottom:1px solid #f1f5f9;}
+.alert-row:last-child{border-bottom:none;}
+.alert-row .lbl{font-size:0.86rem;color:#475569;}
+.alert-count{font-size:0.72rem;font-weight:800;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:#fef2f2;color:#dc2626;flex-shrink:0;}
+.alert-count.warn{border-radius:6px;width:auto;padding:2px 8px;background:#fffbeb;color:#d97706;}
+
+@media (max-width:1100px){
+  .grid-layout{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .two-col{grid-template-columns:1fr;}
+  .three-col{grid-template-columns:1fr;}
+  .visits-grid{grid-template-columns:1fr;}
+  .visit-side{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:16px;display:flex;gap:24px;}
+}
+@media (max-width:640px){
+  .sidebar{position:fixed;inset:0 auto 0 0;z-index:50;height:100vh;}
+  .stats-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<svg style="display:none">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 2v6h6"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></symbol>
+  <symbol id="i-news" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4z"/><path d="M4 4v16M8 9h7M8 13h7M8 17h4"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></symbol>
+  <symbol id="i-trending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9z"/><path d="M10 21a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-userplus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+  <symbol id="i-arrowup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></symbol>
+  <symbol id="i-arrowdown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 7v10H7"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">
+      <div class="side-logo"><b>B</b><i>D</i><em>H</em></div>
+      <div><div class="t1">Bénin Digital Hub</div><div class="t2">Administration</div></div>
+    </div>
+    <nav class="side-nav">
+      <div class="side-group">
+        <button class="side-link active"><svg><use href="#i-home"/></svg><span class="grow">Tableau de bord</span></button>
+      </div>
+      <div class="side-group">
+        <div class="side-group-label">Gestion</div>
+        <button class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></button>
+        <button class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></button>
+        <button class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></button>
+        <button class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></button>
+        <button class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></button>
+        <button class="side-link"><svg><use href="#i-building"/></svg><span class="grow">Partenaires</span></button>
+        <button class="side-link"><svg><use href="#i-users"/></svg><span class="grow">Équipe</span></button>
+      </div>
+      <div class="side-group">
+        <div class="side-group-label">Utilisateurs</div>
+        <button class="side-link"><svg><use href="#i-users"/></svg><span class="grow">Utilisateurs</span></button>
+        <button class="side-link"><svg><use href="#i-shield"/></svg><span class="grow">Rôles & Permissions</span></button>
+        <button class="side-link"><svg><use href="#i-mail"/></svg><span class="grow">Demandes de contact</span><span class="badge">5</span></button>
+      </div>
+      <div class="side-group">
+        <div class="side-group-label">Contenu</div>
+        <button class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Pages</span></button>
+        <button class="side-link"><svg><use href="#i-image"/></svg><span class="grow">Médias</span></button>
+        <button class="side-link"><svg><use href="#i-folder"/></svg><span class="grow">Documents</span></button>
+        <button class="side-link"><svg><use href="#i-news"/></svg><span class="grow">Actualités</span></button>
+      </div>
+      <div class="side-group">
+        <div class="side-group-label">Paramètres</div>
+        <button class="side-link"><svg><use href="#i-settings"/></svg><span class="grow">Réglages</span></button>
+        <button class="side-link"><svg><use href="#i-trending"/></svg><span class="grow">SEO & Analytics</span></button>
+        <button class="side-link"><svg><use href="#i-save"/></svg><span class="grow">Sauvegardes</span></button>
+      </div>
+    </nav>
+    <div class="side-foot">
+      <button class="side-profile">
+        <img src="https://i.pravatar.cc/64?img=12" alt="Administrateur">
+        <div><div class="name">Administrateur</div><div class="mail">admin@bdh.tech</div></div>
+        <svg style="width:14px;height:14px;color:#64748b;margin-left:auto"><use href="#i-chevron"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn" id="burgerBtn"><svg><use href="#i-menu"/></svg></button>
+      <div class="search-wrap">
+        <svg><use href="#i-search"/></svg>
+        <input type="text" placeholder="Rechercher (projets, services, utilisateurs...)">
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn bell-wrap"><svg><use href="#i-bell"/></svg><span class="bell-dot">5</span></button>
+        <button class="profile-btn">
+          <img src="https://i.pravatar.cc/64?img=12" alt="Administrateur">
+          <div><div class="name">Administrateur</div><div class="role">Super Admin</div></div>
+          <svg style="width:14px;height:14px;color:#94a3b8"><use href="#i-chevron"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>Bienvenue, Administrateur 👋</h1>
+          <p>Voici un aperçu des activités de Bénin Digital Hub.</p>
+        </div>
+        <button class="range-btn">20 Mai — 26 Mai 2026 <svg><use href="#i-chevron"/></svg></button>
+      </div>
+
+      <div class="grid-layout">
+        <div class="col-main">
+
+          <!-- STAT CARDS -->
+          <div class="stats-grid">
+            <div class="card stat-card">
+              <div class="top-row"><div class="stat-icon" style="background:#2563eb"><svg><use href="#i-briefcase"/></svg></div><svg style="width:15px;height:15px;color:#cbd5e1"><use href="#i-more"/></svg></div>
+              <div class="stat-label">Projets</div>
+              <div class="stat-value">24</div>
+              <div class="stat-change"><svg><use href="#i-arrowup"/></svg>14.3% <span class="n">vs semaine dernière</span></div>
+              <div class="spark"><canvas id="spark1"></canvas></div>
+            </div>
+            <div class="card stat-card">
+              <div class="top-row"><div class="stat-icon" style="background:#16a34a"><svg><use href="#i-layers"/></svg></div><svg style="width:15px;height:15px;color:#cbd5e1"><use href="#i-more"/></svg></div>
+              <div class="stat-label">Services</div>
+              <div class="stat-value">16</div>
+              <div class="stat-change"><svg><use href="#i-arrowup"/></svg>11.2% <span class="n">vs semaine dernière</span></div>
+              <div class="spark"><canvas id="spark2"></canvas></div>
+            </div>
+            <div class="card stat-card">
+              <div class="top-row"><div class="stat-icon" style="background:#f97316"><svg><use href="#i-users"/></svg></div><svg style="width:15px;height:15px;color:#cbd5e1"><use href="#i-more"/></svg></div>
+              <div class="stat-label">Utilisateurs</div>
+              <div class="stat-value">142</div>
+              <div class="stat-change"><svg><use href="#i-arrowup"/></svg>7.8% <span class="n">vs semaine dernière</span></div>
+              <div class="spark"><canvas id="spark3"></canvas></div>
+            </div>
+            <div class="card stat-card">
+              <div class="top-row"><div class="stat-icon" style="background:#7c3aed"><svg><use href="#i-mail"/></svg></div><svg style="width:15px;height:15px;color:#cbd5e1"><use href="#i-more"/></svg></div>
+              <div class="stat-label">Demandes de contact</div>
+              <div class="stat-value">38</div>
+              <div class="stat-change"><svg><use href="#i-arrowup"/></svg>18.6% <span class="n">vs semaine dernière</span></div>
+              <div class="spark"><canvas id="spark4"></canvas></div>
+            </div>
+          </div>
+
+          <!-- OVERVIEW + DONUT -->
+          <div class="two-col">
+            <div class="card">
+              <div class="card-head"><h3>Vue d'ensemble</h3><button class="range-btn" style="padding:6px 10px;font-size:0.78rem;">7 derniers jours <svg style="width:12px;height:12px"><use href="#i-chevron"/></svg></button></div>
+              <div class="legend-row">
+                <span><span class="dot" style="background:#2563eb"></span>Visites</span>
+                <span><span class="dot" style="background:#16a34a"></span>Utilisateurs</span>
+                <span><span class="dot" style="background:#f97316"></span>Demandes</span>
+              </div>
+              <div class="chart-wrap"><canvas id="overviewChart"></canvas></div>
+            </div>
+            <div class="card">
+              <h3 style="margin-bottom:10px;">Répartition des projets</h3>
+              <div class="donut-wrap">
+                <canvas id="donutChart"></canvas>
+                <div class="donut-center"><b>24</b><span>Total</span></div>
+              </div>
+              <div class="donut-legend">
+                <div class="row"><span class="l"><span class="dot" style="background:#2563eb"></span>En cours</span><span class="v">10 (41.7%)</span></div>
+                <div class="row"><span class="l"><span class="dot" style="background:#16a34a"></span>Terminés</span><span class="v">8 (33.3%)</span></div>
+                <div class="row"><span class="l"><span class="dot" style="background:#f97316"></span>En attente</span><span class="v">4 (16.7%)</span></div>
+                <div class="row"><span class="l"><span class="dot" style="background:#dc2626"></span>Annulés</span><span class="v">2 (8.3%)</span></div>
+              </div>
+              <a href="#" class="link-more">Voir tous les projets <svg><use href="#i-arrowup"/></svg></a>
+            </div>
+          </div>
+
+          <!-- THREE COL -->
+          <div class="three-col">
+            <div class="card">
+              <div class="card-head"><h3>Derniers projets</h3><a href="#" class="link-more" style="margin:0;">Voir tous <svg><use href="#i-arrowup"/></svg></a></div>
+              <div class="proj-row"><img src="https://i.pravatar.cc/64?u=jeank"><div class="info"><div class="name">Plateforme Santé Connect</div><div class="meta">Jean K. · 26/05/2026</div></div><span class="status-pill cours">En cours</span></div>
+              <div class="proj-row"><img src="https://i.pravatar.cc/64?u=mariamt"><div class="info"><div class="name">Refonte Site UniBénin</div><div class="meta">Mariam T. · 25/05/2026</div></div><span class="status-pill cours">En cours</span></div>
+              <div class="proj-row"><img src="https://i.pravatar.cc/64?u=carlosd"><div class="info"><div class="name">Marketplace Yévé Market</div><div class="meta">Carlos D. · 23/05/2026</div></div><span class="status-pill termine">Terminé</span></div>
+              <div class="proj-row"><img src="https://i.pravatar.cc/64?u=cedrica"><div class="info"><div class="name">Solution e-Gouvernement</div><div class="meta">Cédric A. · 22/05/2026</div></div><span class="status-pill attente">En attente</span></div>
+              <div class="proj-row"><img src="https://i.pravatar.cc/64?u=sophiem"><div class="info"><div class="name">Application Mobile BDH</div><div class="meta">Sophie M. · 21/05/2026</div></div><span class="status-pill cours">En cours</span></div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>Activités récentes</h3><a href="#" class="link-more" style="margin:0;">Voir tout <svg><use href="#i-arrowup"/></svg></a></div>
+              <div class="act-row"><div class="act-icon" style="background:#eff6ff;color:#2563eb"><svg><use href="#i-file"/></svg></div><div><div class="act-text">Nouveau projet ajouté : Plateforme e-Learning</div><div class="act-time">Il y a 25 min</div></div></div>
+              <div class="act-row"><div class="act-icon" style="background:#f5f3ff;color:#7c3aed"><svg><use href="#i-layers"/></svg></div><div><div class="act-text">Mariam T. a mis à jour le projet Refonte Site UniBénin</div><div class="act-time">Il y a 1h</div></div></div>
+              <div class="act-row"><div class="act-icon" style="background:#f0fdf4;color:#16a34a"><svg><use href="#i-news"/></svg></div><div><div class="act-text">Nouvel article publié : L'IA au service du Bénin</div><div class="act-time">Il y a 3h</div></div></div>
+              <div class="act-row"><div class="act-icon" style="background:#fff7ed;color:#f97316"><svg><use href="#i-cpu"/></svg></div><div><div class="act-text">Carlos D. a ajouté une nouvelle technologie</div><div class="act-time">Il y a 5h</div></div></div>
+              <div class="act-row"><div class="act-icon" style="background:#fdf2f8;color:#db2777"><svg><use href="#i-mail"/></svg></div><div><div class="act-text">Nouvelle demande de contact : Entreprise X</div><div class="act-time">Il y a 6h</div></div></div>
+            </div>
+
+            <div class="card">
+              <h3 style="margin-bottom:16px;">Sources de trafic</h3>
+              <div class="traffic-row"><div class="traffic-top"><span class="lbl">Recherche Google</span><span class="pct">45%</span></div><div class="bar-track"><div class="bar-fill" style="width:45%;background:#2563eb"></div></div></div>
+              <div class="traffic-row"><div class="traffic-top"><span class="lbl">Accès direct</span><span class="pct">25%</span></div><div class="bar-track"><div class="bar-fill" style="width:25%;background:#16a34a"></div></div></div>
+              <div class="traffic-row"><div class="traffic-top"><span class="lbl">Réseaux sociaux</span><span class="pct">15%</span></div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#7c3aed"></div></div></div>
+              <div class="traffic-row"><div class="traffic-top"><span class="lbl">Sites référents</span><span class="pct">10%</span></div><div class="bar-track"><div class="bar-fill" style="width:10%;background:#f97316"></div></div></div>
+              <div class="traffic-row"><div class="traffic-top"><span class="lbl">Autres</span><span class="pct">5%</span></div><div class="bar-track"><div class="bar-fill" style="width:5%;background:#94a3b8"></div></div></div>
+            </div>
+          </div>
+
+          <!-- SITE VISITS -->
+          <div class="card">
+            <div class="card-head"><h3>Visites du site</h3><button class="range-btn" style="padding:6px 10px;font-size:0.78rem;">7 derniers jours <svg style="width:12px;height:12px"><use href="#i-chevron"/></svg></button></div>
+            <div class="visits-grid">
+              <div class="chart-wrap" style="height:220px;"><canvas id="visitsChart"></canvas></div>
+              <div class="visit-side">
+                <div class="visit-stat"><div class="l">Total visites</div><div class="v">2,458</div><div class="c" style="color:#16a34a"><svg><use href="#i-arrowup"/></svg>12.4% <span style="color:#94a3b8;font-weight:400;margin-left:2px;">vs semaine dernière</span></div></div>
+                <div class="visit-stat"><div class="l">Pages vues</div><div class="v">6,842</div><div class="c" style="color:#16a34a"><svg><use href="#i-arrowup"/></svg>10.1%</div></div>
+                <div class="visit-stat"><div class="l">Taux de rebond</div><div class="v">36.7%</div><div class="c" style="color:#dc2626"><svg><use href="#i-arrowdown"/></svg>2.3%</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="col-side">
+          <div class="card">
+            <h3 style="margin-bottom:10px;">Actions rapides</h3>
+            <button class="qa-btn"><svg style="color:#2563eb"><use href="#i-plus"/></svg>Ajouter un projet</button>
+            <button class="qa-btn"><svg style="color:#16a34a"><use href="#i-plus"/></svg>Ajouter un service</button>
+            <button class="qa-btn"><svg style="color:#f97316"><use href="#i-file"/></svg>Ajouter un article</button>
+            <button class="qa-btn"><svg style="color:#7c3aed"><use href="#i-userplus"/></svg>Ajouter un membre</button>
+            <button class="qa-btn"><svg style="color:#db2777"><use href="#i-cpu"/></svg>Ajouter une technologie</button>
+            <button class="qa-btn"><svg style="color:#334155"><use href="#i-chart"/></svg>Voir les statistiques</button>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:6px;">Alertes</h3>
+            <div class="alert-row"><span class="lbl">Demandes de contact non lues</span><span class="alert-count">5</span></div>
+            <div class="alert-row"><span class="lbl">Projets en attente de validation</span><span class="alert-count">3</span></div>
+            <div class="alert-row"><span class="lbl">Commentaires à approuver</span><span class="alert-count">2</span></div>
+            <div class="alert-row"><span class="lbl">Articles non publiés</span><span class="alert-count">4</span></div>
+            <div class="alert-row"><span class="lbl">Sauvegarde recommandée</span><span class="alert-count warn">!</span></div>
+            <a href="#" class="link-more">Voir toutes les alertes <svg><use href="#i-arrowup"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#94a3b8';
+
+function sparkline(id, color, data){
+  new Chart(document.getElementById(id), {
+    type:'line',
+    data:{ labels:data.map((_,i)=>i), datasets:[{ data, borderColor:color, borderWidth:2, pointRadius:0, tension:0.4 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{enabled:false} },
+      scales:{ x:{display:false}, y:{display:false} }
+    }
+  });
+}
+sparkline('spark1','#2563eb',[4,8,6,10,7,12,9,14,11,16]);
+sparkline('spark2','#16a34a',[6,5,8,7,10,8,12,10,13,12]);
+sparkline('spark3','#f97316',[10,12,9,14,11,15,13,17,15,18]);
+sparkline('spark4','#7c3aed',[3,6,4,9,6,10,8,12,9,13]);
+
+const overviewLabels=['20 Mai','21 Mai','22 Mai','23 Mai','24 Mai','25 Mai','26 Mai'];
+new Chart(document.getElementById('overviewChart'), {
+  type:'line',
+  data:{ labels:overviewLabels, datasets:[
+    { label:'Visites', data:[1850,2320,2080,2150,1920,2010,2200], borderColor:'#2563eb', backgroundColor:'#2563eb', borderWidth:2.5, pointRadius:3, tension:0.35 },
+    { label:'Utilisateurs', data:[820,980,900,1125,860,890,940], borderColor:'#16a34a', backgroundColor:'#16a34a', borderWidth:2.5, pointRadius:3, tension:0.35 },
+    { label:'Demandes', data:[22,28,24,32,20,26,30], borderColor:'#f97316', backgroundColor:'#f97316', borderWidth:2.5, pointRadius:3, tension:0.35, yAxisID:'y1' },
+  ]},
+  options:{
+    responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
+    plugins:{ legend:{display:false},
+      tooltip:{ backgroundColor:'#0f172a', padding:12, cornerRadius:8, titleFont:{weight:'700'}, boxPadding:4 } },
+    scales:{
+      x:{ grid:{display:false} },
+      y:{ grid:{color:'#f1f5f9'}, ticks:{ callback:v=>v.toLocaleString('fr-FR') } },
+      y1:{ display:false, position:'right' }
+    }
+  }
+});
+
+new Chart(document.getElementById('donutChart'), {
+  type:'doughnut',
+  data:{ labels:['En cours','Terminés','En attente','Annulés'],
+    datasets:[{ data:[10,8,4,2], backgroundColor:['#2563eb','#16a34a','#f97316','#dc2626'], borderWidth:0 }] },
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'72%',
+    plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0f172a', padding:10, cornerRadius:8 } } }
+});
+
+new Chart(document.getElementById('visitsChart'), {
+  type:'bar',
+  data:{ labels:overviewLabels, datasets:[{ data:[2020,2380,2260,2650,2180,2090,2458], backgroundColor:'#2563eb', borderRadius:6, maxBarThickness:34 }] },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0f172a', padding:10, cornerRadius:8 } },
+    scales:{ x:{ grid:{display:false} }, y:{ grid:{color:'#f1f5f9'} } } }
+});
+
+document.getElementById('burgerBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+</script>
+</body>
+</html>
