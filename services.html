@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projets — Administration Bénin Digital Hub</title>
+<title>Services — Administration Bénin Digital Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -254,6 +254,9 @@ img{display:block;max-width:100%;}
   <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></symbol>
   <symbol id="i-trending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
   <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9z"/><path d="M10 21a2 2 0 0 0 4 0"/></symbol>
   <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
@@ -264,8 +267,6 @@ img{display:block;max-width:100%;}
   <symbol id="i-arrowdown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 7v10H7"/></symbol>
   <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></symbol>
   <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></symbol>
-  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></symbol>
-  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></symbol>
 </svg>
 
 <div class="app">
@@ -278,12 +279,12 @@ img{display:block;max-width:100%;}
     </div>
     <nav class="side-nav">
       <div class="side-group">
-        <a href="admin.html" class="side-link"><svg><use href="#i-home"/></svg><span class="grow">Tableau de bord</span></a>
+        <a href="admin.html" class="side-link active"><svg><use href="#i-home"/></svg><span class="grow">Tableau de bord</span></a>
       </div>
       <div class="side-group">
         <div class="side-group-label">Gestion</div>
-        <a href="projets.html" class="side-link active"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
-        <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
+        <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
+        <a href="services.html" class="side-link active"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <button class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></button>
         <button class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></button>
         <button class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></button>
@@ -341,31 +342,29 @@ img{display:block;max-width:100%;}
     <main class="content">
       <div class="page-head">
         <div>
-          <h1>Projets</h1>
-          <p>Gérez tous les projets de Bénin Digital Hub.</p>
+          <h1>Services</h1>
+          <p>Gérez les services proposés par Bénin Digital Hub.</p>
         </div>
-        <button class="btn-primary" id="openAddBtn"><svg><use href="#i-plus"/></svg>Ajouter un projet</button>
+        <button class="btn-primary" id="openAddBtn"><svg><use href="#i-plus"/></svg>Ajouter un service</button>
       </div>
 
       <div class="mini-stats">
-        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statTotal">8</div><div class="l">Total projets</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-trending"/></svg></div><div><div class="v" id="statCours">0</div><div class="l">En cours</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#16a34a"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statTermine">0</div><div class="l">Terminés</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#f97316"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statAttente">0</div><div class="l">En attente</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-layers"/></svg></div><div><div class="v" id="statTotal">0</div><div class="l">Total services</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#16a34a"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statActifs">0</div><div class="l">Actifs</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#94a3b8"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statInactifs">0</div><div class="l">Inactifs</div></div></div>
+        <div class="mini-stat"><div class="dot-ic" style="background:#f97316"><svg><use href="#i-folder"/></svg></div><div><div class="v" id="statCategories">0</div><div class="l">Catégories</div></div></div>
       </div>
 
       <div class="card">
         <div class="toolbar">
           <div class="search-wrap">
             <svg><use href="#i-search"/></svg>
-            <input type="text" id="searchInput" placeholder="Rechercher un projet, un chef de projet...">
+            <input type="text" id="searchInput" placeholder="Rechercher un service...">
           </div>
           <select id="statusFilter">
             <option value="">Tous les statuts</option>
-            <option value="En cours">En cours</option>
-            <option value="Terminé">Terminé</option>
-            <option value="En attente">En attente</option>
-            <option value="Annulé">Annulé</option>
+            <option value="Actif">Actif</option>
+            <option value="Inactif">Inactif</option>
           </select>
           <select id="catFilter">
             <option value="">Toutes les catégories</option>
@@ -375,17 +374,16 @@ img{display:block;max-width:100%;}
         <table class="ptable">
           <thead>
             <tr>
-              <th>Projet</th>
-              <th>Chef de projet</th>
+              <th>Service</th>
               <th>Catégorie</th>
+              <th>Tarif indicatif</th>
               <th>Statut</th>
-              <th>Date</th>
               <th></th>
             </tr>
           </thead>
-          <tbody id="projectsBody"></tbody>
+          <tbody id="servicesBody"></tbody>
         </table>
-        <div class="table-empty" id="emptyState" style="display:none;">Aucun projet ne correspond à votre recherche.</div>
+        <div class="table-empty" id="emptyState" style="display:none;">Aucun service ne correspond à votre recherche.</div>
       </div>
     </main>
   </div>
@@ -395,39 +393,32 @@ img{display:block;max-width:100%;}
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box">
     <div class="modal-head">
-      <h3 id="modalTitle">Ajouter un projet</h3>
+      <h3 id="modalTitle">Ajouter un service</h3>
       <button class="modal-close" id="modalCloseBtn"><svg><use href="#i-close"/></svg></button>
     </div>
-    <form id="projectForm">
-      <div class="field"><label>Nom du projet *</label><input type="text" id="fName" required placeholder="Ex. Plateforme Santé Connect"></div>
+    <form id="serviceForm">
+      <div class="field"><label>Nom du service *</label><input type="text" id="fName" required placeholder="Ex. Développement Web"></div>
       <div class="field-row">
-        <div class="field"><label>Chef de projet *</label><input type="text" id="fLead" required placeholder="Ex. Jean K."></div>
         <div class="field"><label>Catégorie *</label>
           <select id="fCategory" required>
             <option value="">Choisir...</option>
-            <option>Santé</option>
-            <option>Éducation</option>
-            <option>E-commerce</option>
-            <option>Secteur public</option>
+            <option>Développement</option>
+            <option>Intelligence Artificielle</option>
+            <option>Cloud & Infrastructure</option>
             <option>Formation</option>
-            <option>IA</option>
-            <option>Interne</option>
-            <option>Autre</option>
+            <option>Conseil</option>
+            <option>Support</option>
           </select>
         </div>
-      </div>
-      <div class="field-row">
         <div class="field"><label>Statut *</label>
           <select id="fStatus" required>
-            <option>En cours</option>
-            <option>Terminé</option>
-            <option>En attente</option>
-            <option>Annulé</option>
+            <option>Actif</option>
+            <option>Inactif</option>
           </select>
         </div>
-        <div class="field"><label>Date *</label><input type="date" id="fDate" required></div>
       </div>
-      <div class="field"><label>Description</label><textarea id="fDesc" placeholder="Décrivez le projet en quelques mots..."></textarea></div>
+      <div class="field"><label>Tarif indicatif *</label><input type="text" id="fPrice" required placeholder="Ex. À partir de 250 000 FCFA"></div>
+      <div class="field"><label>Description</label><textarea id="fDesc" placeholder="Décrivez le service en quelques mots..."></textarea></div>
       <div class="modal-actions">
         <button type="button" class="btn-ghost-modal" id="modalCancelBtn">Annuler</button>
         <button type="submit" class="btn-primary" id="modalSaveBtn">Enregistrer</button>
@@ -441,38 +432,31 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let projects = [
-  { id:1, name:"Plateforme Santé Connect", lead:"Jean K.", category:"Santé", status:"En cours", date:"2026-05-26", desc:"Téléconsultation médicale et dossiers patients." },
-  { id:2, name:"Refonte Site UniBénin", lead:"Mariam T.", category:"Éducation", status:"En cours", date:"2026-05-25", desc:"Nouvelle interface pour la plateforme universitaire." },
-  { id:3, name:"Marketplace Yévé Market", lead:"Carlos D.", category:"E-commerce", status:"Terminé", date:"2026-05-23", desc:"Marketplace alimentaire avec paiement Mobile Money." },
-  { id:4, name:"Solution e-Gouvernement", lead:"Cédric A.", category:"Secteur public", status:"En attente", date:"2026-05-22", desc:"Portail numérique pour les services administratifs." },
-  { id:5, name:"Application Mobile BDH", lead:"Sophie M.", category:"Interne", date2:"", status:"En cours", date:"2026-05-21", desc:"Application mobile vitrine de l'agence." },
-  { id:6, name:"Site vitrine ThinQShop", lead:"Jean K.", category:"E-commerce", status:"Terminé", date:"2026-05-18", desc:"Site e-commerce pour un partenaire local." },
-  { id:7, name:"Plateforme Formation Tech", lead:"Mariam T.", category:"Formation", status:"En attente", date:"2026-05-15", desc:"Espace de cours en ligne pour le Hub." },
-  { id:8, name:"Chatbot IA Support Client", lead:"Carlos D.", category:"IA", status:"Annulé", date:"2026-05-10", desc:"Assistant conversationnel pour le support client." },
+let services = [
+  { id:1, name:"Développement Web", category:"Développement", price:"À partir de 250 000 FCFA", status:"Actif", desc:"Sites vitrines, marketplaces et applications web performantes." },
+  { id:2, name:"Applications Mobiles", category:"Développement", price:"À partir de 400 000 FCFA", status:"Actif", desc:"iOS & Android natif avec Flutter, paiement Mobile Money intégré." },
+  { id:3, name:"Assistants & Chatbots IA", category:"Intelligence Artificielle", price:"Sur devis", status:"Actif", desc:"Automatisation de tâches métier et assistants conversationnels." },
+  { id:4, name:"IA en langues locales", category:"Intelligence Artificielle", price:"Sur devis", status:"Inactif", desc:"Modèles adaptés au Fon, au Yoruba et aux réalités locales." },
+  { id:5, name:"Infrastructure Cloud", category:"Cloud & Infrastructure", price:"À partir de 80 000 FCFA/mois", status:"Actif", desc:"Hébergement, déploiement continu et bases de données sécurisées." },
+  { id:6, name:"Formation Tech", category:"Formation", price:"À partir de 50 000 FCFA", status:"Actif", desc:"Programmes pratiques en développement web, mobile et outils digitaux." },
+  { id:7, name:"Conseil Digital", category:"Conseil", price:"Sur devis", status:"Actif", desc:"Audit, stratégie de transformation numérique et roadmap." },
+  { id:8, name:"Support & Maintenance", category:"Support", price:"À partir de 30 000 FCFA/mois", status:"Actif", desc:"Maintenance continue, mises à jour et support réactif 6j/7." },
 ];
 let nextId = 9;
 let editingId = null;
 
-const statusClass = { "En cours":"cours", "Terminé":"termine", "En attente":"attente", "Annulé":"annule" };
-
-function formatDate(iso){
-  const [y,m,d] = iso.split('-');
-  return `${d}/${m}/${y}`;
-}
-
 function populateCategoryFilter(){
   const sel = document.getElementById('catFilter');
   const current = sel.value;
-  const cats = [...new Set(projects.map(p => p.category))].sort();
+  const cats = [...new Set(services.map(s => s.category))].sort();
   sel.innerHTML = '<option value="">Toutes les catégories</option>' + cats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
 }
 
 function updateStats(){
-  document.getElementById('statTotal').textContent = projects.length;
-  document.getElementById('statCours').textContent = projects.filter(p=>p.status==='En cours').length;
-  document.getElementById('statTermine').textContent = projects.filter(p=>p.status==='Terminé').length;
-  document.getElementById('statAttente').textContent = projects.filter(p=>p.status==='En attente').length;
+  document.getElementById('statTotal').textContent = services.length;
+  document.getElementById('statActifs').textContent = services.filter(s=>s.status==='Actif').length;
+  document.getElementById('statInactifs').textContent = services.filter(s=>s.status==='Inactif').length;
+  document.getElementById('statCategories').textContent = new Set(services.map(s=>s.category)).size;
 }
 
 function render(){
@@ -480,30 +464,28 @@ function render(){
   const status = document.getElementById('statusFilter').value;
   const cat = document.getElementById('catFilter').value;
 
-  const filtered = projects.filter(p => {
-    const matchSearch = !search || p.name.toLowerCase().includes(search) || p.lead.toLowerCase().includes(search);
-    const matchStatus = !status || p.status === status;
-    const matchCat = !cat || p.category === cat;
+  const filtered = services.filter(s => {
+    const matchSearch = !search || s.name.toLowerCase().includes(search);
+    const matchStatus = !status || s.status === status;
+    const matchCat = !cat || s.category === cat;
     return matchSearch && matchStatus && matchCat;
-  }).sort((a,b) => b.date.localeCompare(a.date));
+  });
 
-  const tbody = document.getElementById('projectsBody');
-  tbody.innerHTML = filtered.map(p => `
+  const tbody = document.getElementById('servicesBody');
+  tbody.innerHTML = filtered.map(s => `
     <tr>
       <td>
         <div class="p-name-cell">
-          <img src="https://i.pravatar.cc/64?u=proj${p.id}" alt="">
-          <div><div class="n">${p.name}</div></div>
+          <div><div class="n">${s.name}</div><div class="d" style="font-size:0.76rem;color:#94a3b8;max-width:360px;">${s.desc || ''}</div></div>
         </div>
       </td>
-      <td>${p.lead}</td>
-      <td><span class="cat-chip">${p.category}</span></td>
-      <td><span class="status-pill ${statusClass[p.status]}">${p.status}</span></td>
-      <td>${formatDate(p.date)}</td>
+      <td><span class="cat-chip">${s.category}</span></td>
+      <td>${s.price}</td>
+      <td><span class="status-pill ${s.status === 'Actif' ? 'termine' : 'annule'}">${s.status}</span></td>
       <td>
         <div class="row-actions">
-          <button onclick="openEdit(${p.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
-          <button class="danger" onclick="deleteProject(${p.id})" title="Supprimer"><svg><use href="#i-trash"/></svg></button>
+          <button onclick="openEdit(${s.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
+          <button class="danger" onclick="deleteService(${s.id})" title="Supprimer"><svg><use href="#i-trash"/></svg></button>
         </div>
       </td>
     </tr>
@@ -519,56 +501,54 @@ function openModal(title){
 }
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
-  document.getElementById('projectForm').reset();
+  document.getElementById('serviceForm').reset();
   editingId = null;
 }
 
 document.getElementById('openAddBtn').addEventListener('click', () => {
   editingId = null;
-  openModal('Ajouter un projet');
+  openModal('Ajouter un service');
 });
 document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
 document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', (e) => { if(e.target.id === 'modalOverlay') closeModal(); });
 
 window.openEdit = function(id){
-  const p = projects.find(x => x.id === id);
-  if(!p) return;
+  const s = services.find(x => x.id === id);
+  if(!s) return;
   editingId = id;
-  document.getElementById('fName').value = p.name;
-  document.getElementById('fLead').value = p.lead;
-  document.getElementById('fCategory').value = p.category;
-  document.getElementById('fStatus').value = p.status;
-  document.getElementById('fDate').value = p.date;
-  document.getElementById('fDesc').value = p.desc || '';
-  openModal('Modifier le projet');
+  document.getElementById('fName').value = s.name;
+  document.getElementById('fCategory').value = s.category;
+  document.getElementById('fStatus').value = s.status;
+  document.getElementById('fPrice').value = s.price;
+  document.getElementById('fDesc').value = s.desc || '';
+  openModal('Modifier le service');
 };
 
-window.deleteProject = function(id){
-  const p = projects.find(x => x.id === id);
-  if(!p) return;
-  if(confirm(`Supprimer le projet "${p.name}" ?`)){
-    projects = projects.filter(x => x.id !== id);
+window.deleteService = function(id){
+  const s = services.find(x => x.id === id);
+  if(!s) return;
+  if(confirm(`Supprimer le service "${s.name}" ?`)){
+    services = services.filter(x => x.id !== id);
     populateCategoryFilter();
     render();
   }
 };
 
-document.getElementById('projectForm').addEventListener('submit', (e) => {
+document.getElementById('serviceForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const data = {
     name: document.getElementById('fName').value.trim(),
-    lead: document.getElementById('fLead').value.trim(),
     category: document.getElementById('fCategory').value,
     status: document.getElementById('fStatus').value,
-    date: document.getElementById('fDate').value,
+    price: document.getElementById('fPrice').value.trim(),
     desc: document.getElementById('fDesc').value.trim(),
   };
   if(editingId){
-    const p = projects.find(x => x.id === editingId);
-    Object.assign(p, data);
+    const s = services.find(x => x.id === editingId);
+    Object.assign(s, data);
   } else {
-    projects.push({ id: nextId++, ...data });
+    services.push({ id: nextId++, ...data });
   }
   populateCategoryFilter();
   closeModal();
