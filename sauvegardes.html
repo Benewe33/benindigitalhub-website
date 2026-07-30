@@ -440,24 +440,49 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let nextId = 6;
-let backups = [
-  { id:1, date:"2026-07-30 02:00", type:"Automatique", size:"48 Mo", status:"Réussie" },
-  { id:2, date:"2026-07-29 02:00", type:"Automatique", size:"47 Mo", status:"Réussie" },
-  { id:3, date:"2026-07-28 14:22", type:"Manuelle", size:"47 Mo", status:"Réussie" },
-  { id:4, date:"2026-07-28 02:00", type:"Automatique", size:"46 Mo", status:"Réussie" },
-  { id:5, date:"2026-07-27 02:00", type:"Automatique", size:"46 Mo", status:"Échouée" },
-];
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'backups';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+let backups = [];
+let loadError = null;
+
+async function loadBackups(){
+  document.getElementById('backupList').innerHTML = `<div class="state-box">Chargement depuis Supabase...</div>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*&order=id.desc`, { headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    backups = await res.json();
+  }catch(err){
+    loadError = err.message;
+    backups = [];
+  }
+  render();
+}
 
 function updateStats(){
-  document.getElementById('statTotal').textContent = backups.length;
-  document.getElementById('statAuto').textContent = backups.filter(b=>b.type==='Automatique').length;
-  document.getElementById('statManuel').textContent = backups.filter(b=>b.type==='Manuelle').length;
-  document.getElementById('statLast').textContent = backups.length ? backups[0].date.split(' ')[0].split('-').reverse().join('/') : '—';
+  document.getElementById('statTotal').textContent = loadError ? '—' : backups.length;
+  document.getElementById('statAuto').textContent = loadError ? '—' : backups.filter(b=>b.type==='Automatique').length;
+  document.getElementById('statManuel').textContent = loadError ? '—' : backups.filter(b=>b.type==='Manuelle').length;
+  document.getElementById('statLast').textContent = (!loadError && backups.length) ? backups[0].date.split(' ')[0].split('-').reverse().join('/') : '—';
 }
 
 function render(){
   const list = document.getElementById('backupList');
+
+  if(loadError){
+    list.innerHTML = `<div class="state-box">
+      Impossible de charger les sauvegardes depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>backups</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </div>`;
+    document.getElementById('emptyState').style.display = 'none';
+    updateStats();
+    return;
+  }
+
   list.innerHTML = backups.map(b => `
     <div class="backup-row">
       <div class="backup-ic"><svg><use href="#i-save"/></svg></div>
@@ -491,24 +516,40 @@ window.restoreBackup = function(id){
 window.downloadBackup = function(id){
   toast("Téléchargement indisponible dans cet aperçu.");
 };
-window.deleteBackup = function(id){
+window.deleteBackup = async function(id){
   const b = backups.find(x => x.id === id);
   if(!b) return;
-  if(confirm(`Supprimer la sauvegarde du ${b.date} ?`)){
+  if(!confirm(`Supprimer la sauvegarde du ${b.date} ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     backups = backups.filter(x => x.id !== id);
     render();
+  }catch(err){
+    alert("Impossible de supprimer cette sauvegarde — vérifiez la policy DELETE sur la table backups.");
   }
 };
 
-document.getElementById('createBackupBtn').addEventListener('click', () => {
+document.getElementById('createBackupBtn').addEventListener('click', async () => {
   const now = new Date();
   const date = now.toISOString().slice(0,10) + " " + now.toTimeString().slice(0,5);
-  backups.unshift({ id: nextId++, date, type:"Manuelle", size: (44+Math.random()*8).toFixed(0)+" Mo", status:"Réussie" });
-  render();
-  toast("Sauvegarde manuelle créée (aperçu).");
+  const data = { date, type:"Manuelle", size: (44+Math.random()*8).toFixed(0)+" Mo", status:"Réussie" };
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+      method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+      body: JSON.stringify(data)
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const [created] = await res.json();
+    backups.unshift(created);
+    render();
+    toast("Sauvegarde manuelle créée.");
+  }catch(err){
+    toast("Impossible de créer la sauvegarde — vérifiez la policy INSERT sur la table backups.");
+  }
 });
 
-render();
+loadBackups();
 </script>
 </body>
 </html>

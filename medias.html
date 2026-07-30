@@ -436,28 +436,54 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let nextId = 7;
-let media = [
-  { id:1, name:"banner.jpg", type:"image", color:"linear-gradient(135deg,#2563eb,#16a34a)", size:"420 Ko", date:"2026-07-10" },
-  { id:2, name:"eboun.jpg", type:"image", color:"linear-gradient(135deg,#0d2748,#1c4b8c)", size:"180 Ko", date:"2026-05-01" },
-  { id:3, name:"yeyemarket-logo.png", type:"image", color:"linear-gradient(135deg,#16a34a,#22c55e)", size:"96 Ko", date:"2026-06-12" },
-  { id:4, name:"santebenin-logo.png", type:"image", color:"linear-gradient(135deg,#0e7490,#22d3ee)", size:"300 Ko", date:"2026-06-12" },
-  { id:5, name:"favicon-512.png", type:"image", color:"linear-gradient(135deg,#7c3aed,#a855f7)", size:"32 Ko", date:"2026-04-20" },
-  { id:6, name:"apple-touch-icon.png", type:"image", color:"linear-gradient(135deg,#f97316,#f59e0b)", size:"28 Ko", date:"2026-04-20" },
-];
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'media_files';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+let media = [];
+let loadError = null;
+
+async function loadMedia(){
+  document.getElementById('mediaGrid').innerHTML = `<div class="state-box">Chargement depuis Supabase...</div>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*&order=id.desc`, { headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    media = await res.json();
+  }catch(err){
+    loadError = err.message;
+    media = [];
+  }
+  render();
+}
 
 function updateStats(){
-  document.getElementById('statTotal').textContent = media.length;
-  document.getElementById('statImages').textContent = media.filter(m=>m.type==='image').length;
-  const totalKo = media.reduce((a,m) => a + parseInt(m.size), 0);
-  document.getElementById('statSize').textContent = (totalKo/1000).toFixed(1);
-  document.getElementById('statRecent').textContent = media.filter(m => m.date >= '2026-07-01').length;
+  document.getElementById('statTotal').textContent = loadError ? '—' : media.length;
+  document.getElementById('statImages').textContent = loadError ? '—' : media.filter(m=>m.type==='image').length;
+  const totalKo = loadError ? 0 : media.reduce((a,m) => a + (parseInt(m.size)||0), 0);
+  document.getElementById('statSize').textContent = loadError ? '—' : (totalKo/1000).toFixed(1);
+  document.getElementById('statRecent').textContent = loadError ? '—' : media.filter(m => m.date >= '2026-07-01').length;
 }
 
 function render(){
+  const grid = document.getElementById('mediaGrid');
+
+  if(loadError){
+    grid.innerHTML = '';
+    document.getElementById('emptyState').style.display = 'none';
+    grid.insertAdjacentHTML('afterend', `<div class="state-box" id="errBox">
+      Impossible de charger les médias depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>media_files</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </div>`);
+    updateStats();
+    return;
+  }
+  document.getElementById('errBox')?.remove();
+
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filtered = media.filter(m => !search || m.name.toLowerCase().includes(search));
-  const grid = document.getElementById('mediaGrid');
   grid.innerHTML = filtered.map(m => `
     <div class="media-card">
       <div class="media-thumb" style="background:${m.color}">
@@ -471,33 +497,48 @@ function render(){
   updateStats();
 }
 
-window.delMedia = function(id){
+window.delMedia = async function(id){
   const m = media.find(x => x.id === id);
   if(!m) return;
-  if(confirm(`Supprimer "${m.name}" ?`)){
+  if(!confirm(`Supprimer "${m.name}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     media = media.filter(x => x.id !== id);
     render();
+  }catch(err){
+    alert("Impossible de supprimer ce média — vérifiez la policy DELETE sur la table media_files.");
   }
 };
 
-document.getElementById('uploadInput').addEventListener('change', (e) => {
+document.getElementById('uploadInput').addEventListener('change', async (e) => {
   const colors = ["linear-gradient(135deg,#2563eb,#16a34a)","linear-gradient(135deg,#f97316,#f59e0b)","linear-gradient(135deg,#7c3aed,#a855f7)","linear-gradient(135deg,#0e7490,#22d3ee)"];
-  Array.from(e.target.files).forEach(file => {
-    media.unshift({
-      id: nextId++,
+  for(const file of Array.from(e.target.files)){
+    const data = {
       name: file.name,
       type: file.type.startsWith('image') ? 'image' : 'file',
       color: colors[Math.floor(Math.random()*colors.length)],
       size: (file.size/1024).toFixed(0) + " Ko",
       date: new Date().toISOString().slice(0,10)
-    });
-  });
+    };
+    try{
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      media.unshift(created);
+    }catch(err){
+      alert("Impossible d'enregistrer ce fichier — vérifiez la policy INSERT sur la table media_files. (Note : seul le nom du fichier est stocké, pas son contenu — le stockage réel nécessiterait Supabase Storage.)");
+    }
+  }
   render();
   e.target.value = '';
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
-render();
+loadMedia();
 </script>
 </body>
 </html>

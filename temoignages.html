@@ -233,6 +233,99 @@ img{display:block;max-width:100%;}
   .field-row{grid-template-columns:1fr;}
 }
 </style>
+<style>
+/* ===================== MEDIAS / ROLES / SAUVEGARDES / SEO ===================== */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.media-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;}
+.media-thumb{aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.6rem;font-weight:800;position:relative;}
+.media-thumb .del-btn{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:6px;background:rgba(0,0,0,0.35);color:#fff;display:flex;align-items:center;justify-content:center;}
+.media-thumb .del-btn:hover{background:rgba(220,38,38,0.85);}
+.media-thumb .del-btn svg{width:12px;height:12px;}
+.media-info{padding:10px 12px;}
+.media-info .n{font-size:0.8rem;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.media-info .s{font-size:0.72rem;color:#94a3b8;}
+.upload-drop{border:1.5px dashed var(--line);border-radius:12px;padding:30px;text-align:center;color:#94a3b8;font-size:0.88rem;margin-bottom:20px;cursor:pointer;}
+.upload-drop:hover{border-color:var(--blue);color:var(--blue);}
+.upload-drop svg{width:26px;height:26px;margin-bottom:8px;}
+
+.perm-table{width:100%;border-collapse:collapse;}
+.perm-table th, .perm-table td{padding:12px 14px;border-bottom:1px solid #f1f5f9;text-align:center;}
+.perm-table th{font-size:0.72rem;text-transform:uppercase;color:#94a3b8;font-weight:700;}
+.perm-table td:first-child, .perm-table th:first-child{text-align:left;}
+.perm-role-name{font-weight:700;font-size:0.9rem;}
+.perm-role-desc{font-size:0.76rem;color:#94a3b8;}
+.perm-check{width:18px;height:18px;accent-color:var(--blue);cursor:pointer;}
+
+.backup-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #f1f5f9;}
+.backup-row:last-child{border-bottom:none;}
+.backup-ic{width:38px;height:38px;border-radius:10px;background:#eff6ff;color:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.backup-ic svg{width:18px;height:18px;}
+.backup-info{flex:1;min-width:0;}
+.backup-info .n{font-weight:600;font-size:0.9rem;}
+.backup-info .m{font-size:0.78rem;color:#94a3b8;}
+.backup-actions{display:flex;gap:6px;}
+.backup-actions button{padding:8px 12px;border-radius:7px;font-size:0.78rem;font-weight:600;color:#475569;background:#f8fafc;border:1px solid var(--line);}
+.backup-actions button:hover{background:#f1f5f9;}
+.backup-actions button.danger:hover{background:#fef2f2;color:#dc2626;border-color:#fecaca;}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #f1f5f9;}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-row .t{font-weight:600;font-size:0.9rem;}
+.toggle-row .d{font-size:0.78rem;color:#94a3b8;margin-top:2px;}
+.switch{position:relative;width:42px;height:24px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;}
+.switch .slider{position:absolute;inset:0;background:#e2e8f0;border-radius:100px;cursor:pointer;transition:.2s;}
+.switch .slider::before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.switch input:checked + .slider{background:var(--blue);}
+.switch input:checked + .slider::before{transform:translateX(18px);}
+
+.contact-card{border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px;}
+.contact-card.unread{border-left:3px solid var(--blue);background:#fbfdff;}
+.contact-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.contact-top .n{font-weight:700;font-size:0.95rem;}
+.contact-top .meta{font-size:0.78rem;color:#94a3b8;margin-top:2px;}
+.contact-service{font-size:0.72rem;font-weight:700;color:var(--blue);background:#eff6ff;padding:3px 9px;border-radius:100px;}
+.contact-msg{font-size:0.88rem;color:#334155;line-height:1.5;margin-bottom:12px;}
+.contact-actions{display:flex;gap:8px;}
+.contact-actions button{padding:7px 12px;border-radius:7px;font-size:0.76rem;font-weight:600;background:#f8fafc;border:1px solid var(--line);color:#475569;}
+.contact-actions button:hover{background:#f1f5f9;}
+.contact-actions a.file-link{padding:7px 12px;border-radius:7px;font-size:0.76rem;font-weight:600;background:#f8fafc;border:1px solid var(--line);color:var(--blue);display:inline-flex;align-items:center;gap:5px;}
+.state-box{text-align:center;padding:50px 20px;color:#94a3b8;font-size:0.9rem;}
+.state-box svg{width:32px;height:32px;margin-bottom:12px;color:#cbd5e1;}
+</style>
+<style>
+/* ===================== REGLAGES SUB-TABS ===================== */
+.link-out{display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;font-weight:700;color:var(--blue);}
+.quick-link-box{display:flex;justify-content:space-between;align-items:center;background:var(--bg-soft);border-radius:12px;padding:16px 18px;margin-top:10px;}
+.quick-link-box .l{font-size:0.86rem;color:#475569;}
+.quick-link-box .l b{display:block;font-size:1.1rem;color:#0f172a;}
+
+.integration-card{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;}
+.integration-card .ic{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:0.78rem;flex-shrink:0;}
+.integration-card .info{flex:1;min-width:0;}
+.integration-card .n{font-weight:700;font-size:0.92rem;}
+.integration-card .d{font-size:0.78rem;color:#94a3b8;}
+.integration-card .badge-connected{font-size:0.7rem;font-weight:700;color:#16a34a;background:#f0fdf4;padding:3px 9px;border-radius:100px;}
+.integration-card .badge-disconnected{font-size:0.7rem;font-weight:700;color:#94a3b8;background:#f1f5f9;padding:3px 9px;border-radius:100px;}
+.btn-connect{padding:8px 16px;border-radius:8px;font-size:0.8rem;font-weight:700;background:var(--blue);color:#fff;}
+.btn-connect.disconnect{background:#fef2f2;color:#dc2626;}
+
+.apikey-row{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+.apikey-row .lbl{font-size:0.82rem;font-weight:600;color:#475569;min-width:170px;}
+.apikey-row input{flex:1;border:none;background:transparent;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:#94a3b8;}
+.apikey-row button{font-size:0.76rem;font-weight:700;color:var(--blue);padding:6px 10px;border-radius:6px;flex-shrink:0;}
+.apikey-row button:hover{background:#eff6ff;}
+
+.danger-zone{border:1px solid #fecaca;background:#fff5f5;border-radius:12px;padding:18px;margin-top:10px;}
+.danger-zone .row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid #fee2e2;}
+.danger-zone .row:last-child{border-bottom:none;}
+.danger-zone .t{font-weight:700;font-size:0.88rem;color:#991b1b;}
+.danger-zone .d{font-size:0.78rem;color:#b91c1c;}
+.btn-danger{padding:9px 16px;border-radius:8px;font-size:0.82rem;font-weight:700;background:#dc2626;color:#fff;flex-shrink:0;}
+.btn-danger:hover{background:#b91c1c;}
+
+.log-filters{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+</style>
 
 
 </head>
@@ -406,9 +499,28 @@ function formatDate(iso){
   return `${d}/${m}/${y}`;
 }
 
-let list = [{"id": 1, "client": "Amina D.", "company": "Commerçante, Cotonou", "rating": "5", "status": "Publié", "text": "L'équipe BDH a été réactive et à l'écoute tout au long du projet."}, {"id": 2, "client": "Roland K.", "company": "Gérant, Rolex Services", "rating": "5", "status": "Publié", "text": "Un site professionnel livré dans les temps, je recommande."}, {"id": 3, "client": "Fatou S.", "company": "Restauratrice, Calavi", "rating": "4", "status": "Publié", "text": "Bon accompagnement pour la mise en place de notre boutique en ligne."}, {"id": 4, "client": "Jean-Baptiste A.", "company": "Entrepreneur, Porto-Novo", "rating": "5", "status": "En attente", "text": "Très satisfait de l'application mobile développée pour mon activité."}, {"id": 5, "client": "Chantal M.", "company": "Formatrice indépendante", "rating": "4", "status": "En attente", "text": "Un accompagnement clair sur la partie formation, à recommander."}];
-let nextId = 6;
+let list = [];
+let loadError = null;
 let editingId = null;
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'testimonials';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+async function loadData(){
+  document.getElementById('tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    list = await res.json();
+  }catch(err){
+    loadError = err.message;
+    list = [];
+  }
+  
+  render();
+}
 const fieldMap = {
     fClient: "client",
     fCompany: "company",
@@ -427,6 +539,17 @@ function updateStats(){
 }
 
 function render(){
+  if(loadError){
+    const tb = document.getElementById('tbody');
+    tb.innerHTML = `<tr><td colspan="5" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les données depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>testimonials</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    document.getElementById('emptyState').style.display = 'none';
+    updateStats();
+    return;
+  }
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filtered = list.filter(r => {
     const matchSearch = !search || r.client.toLowerCase().includes(search) || r.company.toLowerCase().includes(search);
@@ -482,39 +605,64 @@ window.openEdit = function(id){
   openModal('Modifier');
 };
 
-window.delItem = function(id){
+window.delItem = async function(id){
   const r = list.find(x => x.id === id);
   if(!r) return;
-  if(confirm(`Supprimer "${r.client}" ?`)){
+  if(!confirm(`Supprimer "${r.client}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     list = list.filter(x => x.id !== id);
     
     render();
+  }catch(err){
+    alert("Impossible de supprimer cet élément — vérifiez la policy DELETE sur la table testimonials.");
   }
 };
 
-document.getElementById('itemForm').addEventListener('submit', (e) => {
+document.getElementById('itemForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = {};
   Object.keys(fieldMap).forEach(fid => {
     const el = document.getElementById(fid);
     data[fieldMap[fid]] = el.value.trim ? el.value.trim() : el.value;
   });
-  if(editingId){
-    const r = list.find(x => x.id === editingId);
-    Object.assign(r, data);
-  } else {
-    list.push({ id: nextId++, ...data });
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const original = saveBtn.textContent;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    if(editingId){
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [updated] = await res.json();
+      const r = list.find(x => x.id === editingId);
+      Object.assign(r, updated);
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      list.push(created);
+    }
+    
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'enregistrer cet élément — vérifiez les policies INSERT/UPDATE sur la table testimonials.");
   }
-  
-  closeModal();
-  render();
+  saveBtn.textContent = original; saveBtn.disabled = false;
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById("statusFilter").addEventListener("change", render);
 
 
-render();
+loadData();
 </script>
 </body>
 </html>

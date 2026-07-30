@@ -431,56 +431,79 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let services = [
-  { id:1, name:"Développement Web", category:"Développement", price:"À partir de 250 000 FCFA", status:"Actif", desc:"Sites vitrines, marketplaces et applications web performantes." },
-  { id:2, name:"Applications Mobiles", category:"Développement", price:"À partir de 400 000 FCFA", status:"Actif", desc:"iOS & Android natif avec Flutter, paiement Mobile Money intégré." },
-  { id:3, name:"Assistants & Chatbots IA", category:"Intelligence Artificielle", price:"Sur devis", status:"Actif", desc:"Automatisation de tâches métier et assistants conversationnels." },
-  { id:4, name:"IA en langues locales", category:"Intelligence Artificielle", price:"Sur devis", status:"Inactif", desc:"Modèles adaptés au Fon, au Yoruba et aux réalités locales." },
-  { id:5, name:"Infrastructure Cloud", category:"Cloud & Infrastructure", price:"À partir de 80 000 FCFA/mois", status:"Actif", desc:"Hébergement, déploiement continu et bases de données sécurisées." },
-  { id:6, name:"Formation Tech", category:"Formation", price:"À partir de 50 000 FCFA", status:"Actif", desc:"Programmes pratiques en développement web, mobile et outils digitaux." },
-  { id:7, name:"Conseil Digital", category:"Conseil", price:"Sur devis", status:"Actif", desc:"Audit, stratégie de transformation numérique et roadmap." },
-  { id:8, name:"Support & Maintenance", category:"Support", price:"À partir de 30 000 FCFA/mois", status:"Actif", desc:"Maintenance continue, mises à jour et support réactif 6j/7." },
-];
-let nextId = 9;
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'services';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+let services = [];
+let loadError = null;
 let editingId = null;
+
+async function loadServices(){
+  document.getElementById('servicesBody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    services = await res.json();
+  }catch(err){
+    loadError = err.message;
+    services = [];
+  }
+  populateCategoryFilter();
+  render();
+}
 
 function populateCategoryFilter(){
   const sel = document.getElementById('catFilter');
   const current = sel.value;
-  const cats = [...new Set(services.map(s => s.category))].sort();
+  const cats = [...new Set(services.map(s => s.category).filter(Boolean))].sort();
   sel.innerHTML = '<option value="">Toutes les catégories</option>' + cats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
 }
 
 function updateStats(){
-  document.getElementById('statTotal').textContent = services.length;
-  document.getElementById('statActifs').textContent = services.filter(s=>s.status==='Actif').length;
-  document.getElementById('statInactifs').textContent = services.filter(s=>s.status==='Inactif').length;
-  document.getElementById('statCategories').textContent = new Set(services.map(s=>s.category)).size;
+  document.getElementById('statTotal').textContent = loadError ? '—' : services.length;
+  document.getElementById('statActifs').textContent = loadError ? '—' : services.filter(s=>s.status==='Actif').length;
+  document.getElementById('statInactifs').textContent = loadError ? '—' : services.filter(s=>s.status==='Inactif').length;
+  document.getElementById('statCategories').textContent = loadError ? '—' : new Set(services.map(s=>s.category)).size;
 }
 
 function render(){
+  updateStats();
+  const tbody = document.getElementById('servicesBody');
+
+  if(loadError){
+    tbody.innerHTML = `<tr><td colspan="5" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les services depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>services</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    document.getElementById('emptyState').style.display = 'none';
+    return;
+  }
+
   const search = document.getElementById('searchInput').value.toLowerCase();
   const status = document.getElementById('statusFilter').value;
   const cat = document.getElementById('catFilter').value;
 
   const filtered = services.filter(s => {
-    const matchSearch = !search || s.name.toLowerCase().includes(search);
+    const matchSearch = !search || (s.name||'').toLowerCase().includes(search);
     const matchStatus = !status || s.status === status;
     const matchCat = !cat || s.category === cat;
     return matchSearch && matchStatus && matchCat;
   });
 
-  const tbody = document.getElementById('servicesBody');
   tbody.innerHTML = filtered.map(s => `
     <tr>
       <td>
         <div class="p-name-cell">
-          <div><div class="n">${s.name}</div><div class="d" style="font-size:0.76rem;color:#94a3b8;max-width:360px;">${s.desc || ''}</div></div>
+          <div><div class="n">${s.name}</div><div class="d" style="font-size:0.76rem;color:#94a3b8;max-width:360px;">${s.description||''}</div></div>
         </div>
       </td>
-      <td><span class="cat-chip">${s.category}</span></td>
-      <td>${s.price}</td>
-      <td><span class="status-pill ${s.status === 'Actif' ? 'termine' : 'annule'}">${s.status}</span></td>
+      <td><span class="cat-chip">${s.category||''}</span></td>
+      <td>${s.price||''}</td>
+      <td><span class="status-pill ${s.status === 'Actif' ? 'termine' : 'annule'}">${s.status||''}</span></td>
       <td>
         <div class="row-actions">
           <button onclick="openEdit(${s.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
@@ -491,7 +514,6 @@ function render(){
   `).join('');
 
   document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
-  updateStats();
 }
 
 function openModal(title){
@@ -516,50 +538,74 @@ window.openEdit = function(id){
   const s = services.find(x => x.id === id);
   if(!s) return;
   editingId = id;
-  document.getElementById('fName').value = s.name;
-  document.getElementById('fCategory').value = s.category;
-  document.getElementById('fStatus').value = s.status;
-  document.getElementById('fPrice').value = s.price;
-  document.getElementById('fDesc').value = s.desc || '';
+  document.getElementById('fName').value = s.name || '';
+  document.getElementById('fCategory').value = s.category || '';
+  document.getElementById('fStatus').value = s.status || '';
+  document.getElementById('fPrice').value = s.price || '';
+  document.getElementById('fDesc').value = s.description || '';
   openModal('Modifier le service');
 };
 
-window.deleteService = function(id){
+window.deleteService = async function(id){
   const s = services.find(x => x.id === id);
   if(!s) return;
-  if(confirm(`Supprimer le service "${s.name}" ?`)){
+  if(!confirm(`Supprimer le service "${s.name}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     services = services.filter(x => x.id !== id);
     populateCategoryFilter();
     render();
+  }catch(err){
+    alert("Impossible de supprimer ce service — vérifiez la policy DELETE sur la table services.");
   }
 };
 
-document.getElementById('serviceForm').addEventListener('submit', (e) => {
+document.getElementById('serviceForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = {
     name: document.getElementById('fName').value.trim(),
     category: document.getElementById('fCategory').value,
     status: document.getElementById('fStatus').value,
     price: document.getElementById('fPrice').value.trim(),
-    desc: document.getElementById('fDesc').value.trim(),
+    description: document.getElementById('fDesc').value.trim(),
   };
-  if(editingId){
-    const s = services.find(x => x.id === editingId);
-    Object.assign(s, data);
-  } else {
-    services.push({ id: nextId++, ...data });
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const original = saveBtn.textContent;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    if(editingId){
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [updated] = await res.json();
+      const s = services.find(x => x.id === editingId);
+      Object.assign(s, updated);
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      services.push(created);
+    }
+    populateCategoryFilter();
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'enregistrer ce service — vérifiez les policies INSERT/UPDATE sur la table services.");
   }
-  populateCategoryFilter();
-  closeModal();
-  render();
+  saveBtn.textContent = original; saveBtn.disabled = false;
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById('statusFilter').addEventListener('change', render);
 document.getElementById('catFilter').addEventListener('change', render);
 
-populateCategoryFilter();
-render();
+loadServices();
 </script>
 </body>
 </html>

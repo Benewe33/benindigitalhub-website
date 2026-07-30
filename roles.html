@@ -456,23 +456,47 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
 });
 
 const modules = ['projets','services','contenu','utilisateurs','reglages'];
-let nextId = 5;
-let roles = [
-  { id:1, name:"Super Admin", desc:"Accès complet à toute la plateforme.", perms:{projets:true,services:true,contenu:true,utilisateurs:true,reglages:true}, locked:true },
-  { id:2, name:"Éditeur", desc:"Gère le contenu et les projets, sans accès aux réglages.", perms:{projets:true,services:true,contenu:true,utilisateurs:false,reglages:false} },
-  { id:3, name:"Contributeur", desc:"Peut proposer du contenu, sans le publier seul.", perms:{projets:true,services:false,contenu:true,utilisateurs:false,reglages:false} },
-  { id:4, name:"Support", desc:"Accès aux demandes de contact uniquement.", perms:{projets:false,services:false,contenu:false,utilisateurs:false,reglages:false} },
-];
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'roles';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+let roles = [];
+let loadError = null;
+
+async function loadRoles(){
+  document.getElementById('permBody').innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    roles = await res.json();
+  }catch(err){
+    loadError = err.message;
+    roles = [];
+  }
+  render();
+}
 
 function render(){
   const tbody = document.getElementById('permBody');
+
+  if(loadError){
+    tbody.innerHTML = `<tr><td colspan="7" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les rôles depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>roles</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    return;
+  }
+
   tbody.innerHTML = roles.map(r => `
     <tr>
       <td>
         <div class="perm-role-name">${r.name}</div>
-        <div class="perm-role-desc">${r.desc}</div>
+        <div class="perm-role-desc">${r.description||''}</div>
       </td>
-      ${modules.map(m => `<td><input type="checkbox" class="perm-check" data-role="${r.id}" data-mod="${m}" ${r.perms[m] ? 'checked' : ''} ${r.locked ? 'disabled' : ''}></td>`).join('')}
+      ${modules.map(m => `<td><input type="checkbox" class="perm-check" data-role="${r.id}" data-mod="${m}" ${r.perms && r.perms[m] ? 'checked' : ''} ${r.locked ? 'disabled' : ''}></td>`).join('')}
       <td>${r.locked ? '' : `<button onclick="delRole(${r.id})" title="Supprimer" style="color:#94a3b8;"><svg style="width:15px;height:15px"><use href="#i-trash"/></svg></button>`}</td>
     </tr>
   `).join('');
@@ -480,17 +504,23 @@ function render(){
   tbody.querySelectorAll('.perm-check').forEach(cb => {
     cb.addEventListener('change', () => {
       const role = roles.find(r => r.id === Number(cb.dataset.role));
+      role.perms = role.perms || {};
       role.perms[cb.dataset.mod] = cb.checked;
     });
   });
 }
 
-window.delRole = function(id){
+window.delRole = async function(id){
   const r = roles.find(x => x.id === id);
   if(!r) return;
-  if(confirm(`Supprimer le rôle "${r.name}" ?`)){
+  if(!confirm(`Supprimer le rôle "${r.name}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     roles = roles.filter(x => x.id !== id);
     render();
+  }catch(err){
+    alert("Impossible de supprimer ce rôle — vérifiez la policy DELETE sur la table roles.");
   }
 };
 
@@ -502,16 +532,27 @@ document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
 document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', (e) => { if(e.target.id === 'modalOverlay') closeModal(); });
 
-document.getElementById('roleForm').addEventListener('submit', (e) => {
+document.getElementById('roleForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  roles.push({
-    id: nextId++,
+  const data = {
     name: document.getElementById('fName').value.trim(),
-    desc: document.getElementById('fDesc').value.trim(),
-    perms: {projets:false,services:false,contenu:false,utilisateurs:false,reglages:false}
-  });
-  closeModal();
-  render();
+    description: document.getElementById('fDesc').value.trim(),
+    perms: {projets:false,services:false,contenu:false,utilisateurs:false,reglages:false},
+    locked: false
+  };
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+      method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+      body: JSON.stringify(data)
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const [created] = await res.json();
+    roles.push(created);
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'ajouter ce rôle — vérifiez la policy INSERT sur la table roles.");
+  }
 });
 
 function toast(msg){
@@ -522,9 +563,22 @@ function toast(msg){
   requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
   setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; setTimeout(()=>t.remove(),300); }, 3000);
 }
-document.getElementById('saveRolesBtn').addEventListener('click', () => toast('Permissions enregistrées (aperçu) — pas encore connecté à une base réelle.'));
 
-render();
+document.getElementById('saveRolesBtn').addEventListener('click', async () => {
+  try{
+    await Promise.all(roles.filter(r => !r.locked).map(r =>
+      fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${r.id}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json' },
+        body: JSON.stringify({ perms: r.perms })
+      })
+    ));
+    toast('Permissions enregistrées sur Supabase.');
+  }catch(err){
+    toast("Erreur lors de l'enregistrement — vérifiez la policy UPDATE sur la table roles.");
+  }
+});
+
+loadRoles();
 </script>
 </body>
 </html>

@@ -447,65 +447,83 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let techs = [
-  { id:1,  name:"Next.js",      category:"Frontend",                 level:"Expert",       status:"Actif", color:"#000000" },
-  { id:2,  name:"React",        category:"Frontend",                 level:"Expert",       status:"Actif", color:"#2563eb" },
-  { id:3,  name:"Flutter",      category:"Mobile",                   level:"Avancé",       status:"Actif", color:"#02569B" },
-  { id:4,  name:"Node.js",      category:"Backend",                  level:"Avancé",       status:"Actif", color:"#5FA04E" },
-  { id:5,  name:"Supabase",     category:"Backend",                  level:"Expert",       status:"Actif", color:"#3ECF8E" },
-  { id:6,  name:"Vercel",       category:"Cloud & Déploiement",       level:"Expert",       status:"Actif", color:"#000000" },
-  { id:7,  name:"PostgreSQL",   category:"Base de données",           level:"Avancé",       status:"Actif", color:"#336791" },
-  { id:8,  name:"TypeScript",   category:"Frontend",                 level:"Avancé",       status:"Actif", color:"#3178C6" },
-  { id:9,  name:"Tailwind CSS", category:"Frontend",                 level:"Expert",       status:"Actif", color:"#06B6D4" },
-  { id:10, name:"KKiaPay",      category:"Paiement",                 level:"Avancé",       status:"Actif", color:"#f59e0b" },
-  { id:11, name:"OpenAI",       category:"Intelligence Artificielle", level:"Intermédiaire", status:"Actif", color:"#000000" },
-  { id:12, name:"GitHub",       category:"Outils",                   level:"Expert",       status:"Actif", color:"#000000" },
-  { id:13, name:"Figma",        category:"Outils",                   level:"Avancé",       status:"Inactif", color:"#a259ff" },
-];
-let nextId = 14;
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'technologies';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+let techs = [];
+let loadError = null;
 let editingId = null;
 
 function initials(name){
-  return name.replace(/\..*/, '').slice(0,2).toUpperCase();
+  return (name||'').replace(/\..*/, '').slice(0,2).toUpperCase();
+}
+
+async function loadTechs(){
+  document.getElementById('techBody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    techs = await res.json();
+  }catch(err){
+    loadError = err.message;
+    techs = [];
+  }
+  populateCategoryFilter();
+  render();
 }
 
 function populateCategoryFilter(){
   const sel = document.getElementById('catFilter');
   const current = sel.value;
-  const cats = [...new Set(techs.map(t => t.category))].sort();
+  const cats = [...new Set(techs.map(t => t.category).filter(Boolean))].sort();
   sel.innerHTML = '<option value="">Toutes les catégories</option>' + cats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
 }
 
 function updateStats(){
-  document.getElementById('statTotal').textContent = techs.length;
-  document.getElementById('statActifs').textContent = techs.filter(t=>t.status==='Actif').length;
-  document.getElementById('statInactifs').textContent = techs.filter(t=>t.status==='Inactif').length;
-  document.getElementById('statCategories').textContent = new Set(techs.map(t=>t.category)).size;
+  document.getElementById('statTotal').textContent = loadError ? '—' : techs.length;
+  document.getElementById('statActifs').textContent = loadError ? '—' : techs.filter(t=>t.status==='Actif').length;
+  document.getElementById('statInactifs').textContent = loadError ? '—' : techs.filter(t=>t.status==='Inactif').length;
+  document.getElementById('statCategories').textContent = loadError ? '—' : new Set(techs.map(t=>t.category)).size;
 }
 
 function render(){
+  updateStats();
+  const tbody = document.getElementById('techBody');
+
+  if(loadError){
+    tbody.innerHTML = `<tr><td colspan="5" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les technologies depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>technologies</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    document.getElementById('emptyState').style.display = 'none';
+    return;
+  }
+
   const search = document.getElementById('searchInput').value.toLowerCase();
   const status = document.getElementById('statusFilter').value;
   const cat = document.getElementById('catFilter').value;
 
   const filtered = techs.filter(t => {
-    const matchSearch = !search || t.name.toLowerCase().includes(search);
+    const matchSearch = !search || (t.name||'').toLowerCase().includes(search);
     const matchStatus = !status || t.status === status;
     const matchCat = !cat || t.category === cat;
     return matchSearch && matchStatus && matchCat;
   });
 
-  const tbody = document.getElementById('techBody');
   tbody.innerHTML = filtered.map(t => `
     <tr>
       <td>
         <div class="tech-name-cell">
-          <span class="tech-badge" style="background:${t.color}">${initials(t.name)}</span>
+          <span class="tech-badge" style="background:${t.color||'#2563eb'}">${initials(t.name)}</span>
           <span class="n">${t.name}</span>
         </div>
       </td>
-      <td><span class="cat-chip">${t.category}</span></td>
-      <td><span class="level-pill">${t.level}</span></td>
+      <td><span class="cat-chip">${t.category||''}</span></td>
+      <td><span class="level-pill">${t.level||''}</span></td>
       <td><span class="status-pill ${t.status === 'Actif' ? 'termine' : 'annule'}">${t.status === 'Actif' ? 'Active' : 'En veille'}</span></td>
       <td>
         <div class="row-actions">
@@ -517,7 +535,6 @@ function render(){
   `).join('');
 
   document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
-  updateStats();
 }
 
 function openModal(title){
@@ -542,25 +559,30 @@ window.openEdit = function(id){
   const t = techs.find(x => x.id === id);
   if(!t) return;
   editingId = id;
-  document.getElementById('fName').value = t.name;
-  document.getElementById('fColor').value = t.color;
-  document.getElementById('fCategory').value = t.category;
-  document.getElementById('fLevel').value = t.level;
-  document.getElementById('fStatus').value = t.status;
+  document.getElementById('fName').value = t.name || '';
+  document.getElementById('fColor').value = t.color || '#2563eb';
+  document.getElementById('fCategory').value = t.category || '';
+  document.getElementById('fLevel').value = t.level || '';
+  document.getElementById('fStatus').value = t.status || '';
   openModal('Modifier la technologie');
 };
 
-window.deleteTech = function(id){
+window.deleteTech = async function(id){
   const t = techs.find(x => x.id === id);
   if(!t) return;
-  if(confirm(`Supprimer "${t.name}" de la stack ?`)){
+  if(!confirm(`Supprimer "${t.name}" de la stack ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     techs = techs.filter(x => x.id !== id);
     populateCategoryFilter();
     render();
+  }catch(err){
+    alert("Impossible de supprimer cette technologie — vérifiez la policy DELETE sur la table technologies.");
   }
 };
 
-document.getElementById('techForm').addEventListener('submit', (e) => {
+document.getElementById('techForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = {
     name: document.getElementById('fName').value.trim(),
@@ -569,23 +591,42 @@ document.getElementById('techForm').addEventListener('submit', (e) => {
     level: document.getElementById('fLevel').value,
     status: document.getElementById('fStatus').value,
   };
-  if(editingId){
-    const t = techs.find(x => x.id === editingId);
-    Object.assign(t, data);
-  } else {
-    techs.push({ id: nextId++, ...data });
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const original = saveBtn.textContent;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    if(editingId){
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [updated] = await res.json();
+      const t = techs.find(x => x.id === editingId);
+      Object.assign(t, updated);
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      techs.push(created);
+    }
+    populateCategoryFilter();
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'enregistrer cette technologie — vérifiez les policies INSERT/UPDATE sur la table technologies.");
   }
-  populateCategoryFilter();
-  closeModal();
-  render();
+  saveBtn.textContent = original; saveBtn.disabled = false;
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById('statusFilter').addEventListener('change', render);
 document.getElementById('catFilter').addEventListener('change', render);
 
-populateCategoryFilter();
-render();
+loadTechs();
 </script>
 </body>
 </html>

@@ -441,53 +441,77 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let projects = [
-  { id:1, name:"Plateforme Santé Connect", lead:"Jean K.", category:"Santé", status:"En cours", date:"2026-05-26", desc:"Téléconsultation médicale et dossiers patients." },
-  { id:2, name:"Refonte Site UniBénin", lead:"Mariam T.", category:"Éducation", status:"En cours", date:"2026-05-25", desc:"Nouvelle interface pour la plateforme universitaire." },
-  { id:3, name:"Marketplace Yévé Market", lead:"Carlos D.", category:"E-commerce", status:"Terminé", date:"2026-05-23", desc:"Marketplace alimentaire avec paiement Mobile Money." },
-  { id:4, name:"Solution e-Gouvernement", lead:"Cédric A.", category:"Secteur public", status:"En attente", date:"2026-05-22", desc:"Portail numérique pour les services administratifs." },
-  { id:5, name:"Application Mobile BDH", lead:"Sophie M.", category:"Interne", date2:"", status:"En cours", date:"2026-05-21", desc:"Application mobile vitrine de l'agence." },
-  { id:6, name:"Site vitrine ThinQShop", lead:"Jean K.", category:"E-commerce", status:"Terminé", date:"2026-05-18", desc:"Site e-commerce pour un partenaire local." },
-  { id:7, name:"Plateforme Formation Tech", lead:"Mariam T.", category:"Formation", status:"En attente", date:"2026-05-15", desc:"Espace de cours en ligne pour le Hub." },
-  { id:8, name:"Chatbot IA Support Client", lead:"Carlos D.", category:"IA", status:"Annulé", date:"2026-05-10", desc:"Assistant conversationnel pour le support client." },
-];
-let nextId = 9;
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'projects';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+let projects = [];
+let loadError = null;
 let editingId = null;
 
 const statusClass = { "En cours":"cours", "Terminé":"termine", "En attente":"attente", "Annulé":"annule" };
 
 function formatDate(iso){
+  if(!iso) return '';
   const [y,m,d] = iso.split('-');
   return `${d}/${m}/${y}`;
+}
+
+async function loadProjects(){
+  document.getElementById('projectsBody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    projects = await res.json();
+  }catch(err){
+    loadError = err.message;
+    projects = [];
+  }
+  populateCategoryFilter();
+  render();
 }
 
 function populateCategoryFilter(){
   const sel = document.getElementById('catFilter');
   const current = sel.value;
-  const cats = [...new Set(projects.map(p => p.category))].sort();
+  const cats = [...new Set(projects.map(p => p.category).filter(Boolean))].sort();
   sel.innerHTML = '<option value="">Toutes les catégories</option>' + cats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
 }
 
 function updateStats(){
-  document.getElementById('statTotal').textContent = projects.length;
-  document.getElementById('statCours').textContent = projects.filter(p=>p.status==='En cours').length;
-  document.getElementById('statTermine').textContent = projects.filter(p=>p.status==='Terminé').length;
-  document.getElementById('statAttente').textContent = projects.filter(p=>p.status==='En attente').length;
+  document.getElementById('statTotal').textContent = loadError ? '—' : projects.length;
+  document.getElementById('statCours').textContent = loadError ? '—' : projects.filter(p=>p.status==='En cours').length;
+  document.getElementById('statTermine').textContent = loadError ? '—' : projects.filter(p=>p.status==='Terminé').length;
+  document.getElementById('statAttente').textContent = loadError ? '—' : projects.filter(p=>p.status==='En attente').length;
 }
 
 function render(){
+  updateStats();
+  const tbody = document.getElementById('projectsBody');
+
+  if(loadError){
+    tbody.innerHTML = `<tr><td colspan="6" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les projets depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>projects</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    document.getElementById('emptyState').style.display = 'none';
+    return;
+  }
+
   const search = document.getElementById('searchInput').value.toLowerCase();
   const status = document.getElementById('statusFilter').value;
   const cat = document.getElementById('catFilter').value;
 
   const filtered = projects.filter(p => {
-    const matchSearch = !search || p.name.toLowerCase().includes(search) || p.lead.toLowerCase().includes(search);
+    const matchSearch = !search || (p.name||'').toLowerCase().includes(search) || (p.lead||'').toLowerCase().includes(search);
     const matchStatus = !status || p.status === status;
     const matchCat = !cat || p.category === cat;
     return matchSearch && matchStatus && matchCat;
-  }).sort((a,b) => b.date.localeCompare(a.date));
+  }).sort((a,b) => (b.date||'').localeCompare(a.date||''));
 
-  const tbody = document.getElementById('projectsBody');
   tbody.innerHTML = filtered.map(p => `
     <tr>
       <td>
@@ -496,9 +520,9 @@ function render(){
           <div><div class="n">${p.name}</div></div>
         </div>
       </td>
-      <td>${p.lead}</td>
-      <td><span class="cat-chip">${p.category}</span></td>
-      <td><span class="status-pill ${statusClass[p.status]}">${p.status}</span></td>
+      <td>${p.lead||''}</td>
+      <td><span class="cat-chip">${p.category||''}</span></td>
+      <td><span class="status-pill ${statusClass[p.status]||''}">${p.status||''}</span></td>
       <td>${formatDate(p.date)}</td>
       <td>
         <div class="row-actions">
@@ -510,7 +534,6 @@ function render(){
   `).join('');
 
   document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
-  updateStats();
 }
 
 function openModal(title){
@@ -535,26 +558,31 @@ window.openEdit = function(id){
   const p = projects.find(x => x.id === id);
   if(!p) return;
   editingId = id;
-  document.getElementById('fName').value = p.name;
-  document.getElementById('fLead').value = p.lead;
-  document.getElementById('fCategory').value = p.category;
-  document.getElementById('fStatus').value = p.status;
-  document.getElementById('fDate').value = p.date;
-  document.getElementById('fDesc').value = p.desc || '';
+  document.getElementById('fName').value = p.name || '';
+  document.getElementById('fLead').value = p.lead || '';
+  document.getElementById('fCategory').value = p.category || '';
+  document.getElementById('fStatus').value = p.status || '';
+  document.getElementById('fDate').value = p.date || '';
+  document.getElementById('fDesc').value = p.description || '';
   openModal('Modifier le projet');
 };
 
-window.deleteProject = function(id){
+window.deleteProject = async function(id){
   const p = projects.find(x => x.id === id);
   if(!p) return;
-  if(confirm(`Supprimer le projet "${p.name}" ?`)){
+  if(!confirm(`Supprimer le projet "${p.name}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     projects = projects.filter(x => x.id !== id);
     populateCategoryFilter();
     render();
+  }catch(err){
+    alert("Impossible de supprimer ce projet — vérifiez la policy DELETE sur la table projects.");
   }
 };
 
-document.getElementById('projectForm').addEventListener('submit', (e) => {
+document.getElementById('projectForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = {
     name: document.getElementById('fName').value.trim(),
@@ -562,25 +590,44 @@ document.getElementById('projectForm').addEventListener('submit', (e) => {
     category: document.getElementById('fCategory').value,
     status: document.getElementById('fStatus').value,
     date: document.getElementById('fDate').value,
-    desc: document.getElementById('fDesc').value.trim(),
+    description: document.getElementById('fDesc').value.trim(),
   };
-  if(editingId){
-    const p = projects.find(x => x.id === editingId);
-    Object.assign(p, data);
-  } else {
-    projects.push({ id: nextId++, ...data });
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const original = saveBtn.textContent;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    if(editingId){
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [updated] = await res.json();
+      const p = projects.find(x => x.id === editingId);
+      Object.assign(p, updated);
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      projects.push(created);
+    }
+    populateCategoryFilter();
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'enregistrer ce projet — vérifiez les policies INSERT/UPDATE sur la table projects.");
   }
-  populateCategoryFilter();
-  closeModal();
-  render();
+  saveBtn.textContent = original; saveBtn.disabled = false;
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById('statusFilter').addEventListener('change', render);
 document.getElementById('catFilter').addEventListener('change', render);
 
-populateCategoryFilter();
-render();
+loadProjects();
 </script>
 </body>
 </html>
