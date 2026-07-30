@@ -586,7 +586,7 @@ const fieldMap = {
     fEmail: "email",
     fRole: "role",
     fStatus: "status",
-    fLastLogin: "lastLogin"
+    fLastLogin: "lastlogin"
 };
 
 
@@ -623,7 +623,7 @@ function render(){
       <td>${r.email}</td>
       <td><span class="cat-chip">${r.role}</span></td>
       <td><span class="status-pill ${r.status==='Actif'?'termine':'annule'}">${r.status}</span></td>
-      <td>${formatDate(r.lastLogin)}</td>
+      <td>${formatDate(r.lastlogin)}</td>
       <td>
         <div class="row-actions">
           <button onclick="openEdit(${r.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
