@@ -380,7 +380,6 @@ img{display:block;max-width:100%;}
         <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
         <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <a href="technologies.html" class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></a>
-        <a href="realisations.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Réalisations</span></a>
         <a href="blog.html" class="side-link active"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></a>
         <a href="temoignages.html" class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></a>
         <a href="partenaires.html" class="side-link"><svg><use href="#i-building"/></svg><span class="grow">Partenaires</span></a>
@@ -502,9 +501,28 @@ function formatDate(iso){
   return `${d}/${m}/${y}`;
 }
 
-let list = [{"id": 1, "title": "L'IA au service de l'administration publique au Bénin", "category": "Innovation", "author": "EWEDJE Eboun Benjamin", "status": "Publié", "date": "2026-07-25", "excerpt": "Comment l'intelligence artificielle transforme les services publics béninois."}, {"id": 2, "title": "5 étapes pour réussir sa transformation digitale", "category": "Transformation", "author": "Mariam T.", "status": "Publié", "date": "2026-07-20", "excerpt": "Un guide pratique pour les entreprises béninoises."}, {"id": 3, "title": "Cloud computing : pourquoi passer au cloud en 2026 ?", "category": "Technologie", "author": "Carlos D.", "status": "Publié", "date": "2026-07-15", "excerpt": "Les avantages du cloud pour les PME locales."}, {"id": 4, "title": "Mobile Money : intégrer KKiaPay dans votre application", "category": "Tutoriel", "author": "Sophie M.", "status": "Brouillon", "date": "2026-07-10", "excerpt": "Guide technique d'intégration pas à pas."}, {"id": 5, "title": "Le Hub BDH ouvre ses portes en 2026", "category": "Annonce", "author": "EWEDJE Eboun Benjamin", "status": "Brouillon", "date": "2026-07-05", "excerpt": "Tout savoir sur le futur espace d'innovation à Cotonou."}, {"id": 6, "title": "IA générative en langues locales : où en est-on ?", "category": "Innovation", "author": "Cédric A.", "status": "Publié", "date": "2026-06-28", "excerpt": "Focus sur les avancées en Fon et en Yoruba."}];
-let nextId = 7;
+let list = [];
+let loadError = null;
 let editingId = null;
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'blog_posts';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+async function loadData(){
+  document.getElementById('tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS, cache: 'no-store' });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    list = await res.json();
+  }catch(err){
+    loadError = err.message;
+    list = [];
+  }
+  populate_catFilter();
+  render();
+}
 const fieldMap = {
     fTitle: "title",
     fCategory: "category",
@@ -531,6 +549,17 @@ function updateStats(){
 }
 
 function render(){
+  if(loadError){
+    const tb = document.getElementById('tbody');
+    tb.innerHTML = `<tr><td colspan="6" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les données depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>blog_posts</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    document.getElementById('emptyState').style.display = 'none';
+    updateStats();
+    return;
+  }
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filtered = list.filter(r => {
     const matchSearch = !search || r.title.toLowerCase().includes(search) || r.author.toLowerCase().includes(search);
@@ -587,40 +616,64 @@ window.openEdit = function(id){
   openModal('Modifier');
 };
 
-window.delItem = function(id){
+window.delItem = async function(id){
   const r = list.find(x => x.id === id);
   if(!r) return;
-  if(confirm(`Supprimer "${r.title}" ?`)){
+  if(!confirm(`Supprimer "${r.title}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     list = list.filter(x => x.id !== id);
     populate_catFilter();
     render();
+  }catch(err){
+    alert("Impossible de supprimer cet élément — vérifiez la policy DELETE sur la table blog_posts.");
   }
 };
 
-document.getElementById('itemForm').addEventListener('submit', (e) => {
+document.getElementById('itemForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = {};
   Object.keys(fieldMap).forEach(fid => {
     const el = document.getElementById(fid);
     data[fieldMap[fid]] = el.value.trim ? el.value.trim() : el.value;
   });
-  if(editingId){
-    const r = list.find(x => x.id === editingId);
-    Object.assign(r, data);
-  } else {
-    list.push({ id: nextId++, ...data });
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const original = saveBtn.textContent;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    if(editingId){
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [updated] = await res.json();
+      const r = list.find(x => x.id === editingId);
+      Object.assign(r, updated);
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      list.push(created);
+    }
+    populate_catFilter();
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'enregistrer cet élément — vérifiez les policies INSERT/UPDATE sur la table blog_posts.");
   }
-  populate_catFilter();
-  closeModal();
-  render();
+  saveBtn.textContent = original; saveBtn.disabled = false;
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById("statusFilter").addEventListener("change", render);
 document.getElementById("catFilter").addEventListener("change", render);
 
-populate_catFilter();
-render();
+loadData();
 </script>
 </body>
 </html>

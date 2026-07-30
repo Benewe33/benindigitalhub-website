@@ -500,15 +500,34 @@ function formatDate(iso){
   return `${d}/${m}/${y}`;
 }
 
-let list = [{"id": 1, "name": "Fintech Solutions SARL", "sector": "Paiement mobile", "type": "Financier", "status": "Actif", "desc": "Partenaire technique pour l'intégration Mobile Money."}, {"id": 2, "name": "Cotonou Business School", "sector": "Formation", "type": "Institutionnel", "status": "Actif", "desc": "Partenariat pour les programmes de formation tech."}, {"id": 3, "name": "CloudAfrica Hosting", "sector": "Infrastructure cloud", "type": "Technique", "status": "Actif", "desc": "Hébergement local pour certains projets clients."}, {"id": 4, "name": "Radio Bénin Digital", "sector": "Média", "type": "Média", "status": "Inactif", "desc": "Partenariat média pour la visibilité du Hub."}, {"id": 5, "name": "Banque Régionale Bénin", "sector": "Services financiers", "type": "Financier", "status": "Actif", "desc": "Discussions en cours pour SantéBénin."}];
-let nextId = 6;
+let list = [];
+let loadError = null;
 let editingId = null;
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'partners';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+async function loadData(){
+  document.getElementById('tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS, cache: 'no-store' });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    list = await res.json();
+  }catch(err){
+    loadError = err.message;
+    list = [];
+  }
+  populate_typeFilter();
+  render();
+}
 const fieldMap = {
     fName: "name",
     fSector: "sector",
     fType: "type",
     fStatus: "status",
-    fDesc: "desc"
+    fDesc: "description"
 };
 
 
@@ -528,6 +547,17 @@ function updateStats(){
 }
 
 function render(){
+  if(loadError){
+    const tb = document.getElementById('tbody');
+    tb.innerHTML = `<tr><td colspan="5" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les données depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>partners</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    document.getElementById('emptyState').style.display = 'none';
+    updateStats();
+    return;
+  }
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filtered = list.filter(r => {
     const matchSearch = !search || r.name.toLowerCase().includes(search) || r.sector.toLowerCase().includes(search);
@@ -583,40 +613,64 @@ window.openEdit = function(id){
   openModal('Modifier');
 };
 
-window.delItem = function(id){
+window.delItem = async function(id){
   const r = list.find(x => x.id === id);
   if(!r) return;
-  if(confirm(`Supprimer "${r.name}" ?`)){
+  if(!confirm(`Supprimer "${r.name}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     list = list.filter(x => x.id !== id);
     populate_typeFilter();
     render();
+  }catch(err){
+    alert("Impossible de supprimer cet élément — vérifiez la policy DELETE sur la table partners.");
   }
 };
 
-document.getElementById('itemForm').addEventListener('submit', (e) => {
+document.getElementById('itemForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = {};
   Object.keys(fieldMap).forEach(fid => {
     const el = document.getElementById(fid);
     data[fieldMap[fid]] = el.value.trim ? el.value.trim() : el.value;
   });
-  if(editingId){
-    const r = list.find(x => x.id === editingId);
-    Object.assign(r, data);
-  } else {
-    list.push({ id: nextId++, ...data });
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const original = saveBtn.textContent;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    if(editingId){
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [updated] = await res.json();
+      const r = list.find(x => x.id === editingId);
+      Object.assign(r, updated);
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      list.push(created);
+    }
+    populate_typeFilter();
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'enregistrer cet élément — vérifiez les policies INSERT/UPDATE sur la table partners.");
   }
-  populate_typeFilter();
-  closeModal();
-  render();
+  saveBtn.textContent = original; saveBtn.disabled = false;
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById("statusFilter").addEventListener("change", render);
 document.getElementById("typeFilter").addEventListener("change", render);
 
-populate_typeFilter();
-render();
+loadData();
 </script>
 </body>
 </html>

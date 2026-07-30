@@ -348,6 +348,7 @@ img{display:block;max-width:100%;}
   <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></symbol>
   <symbol id="i-trending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
   <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5l5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
@@ -380,7 +381,6 @@ img{display:block;max-width:100%;}
         <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
         <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <a href="technologies.html" class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></a>
-        <a href="realisations.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Réalisations</span></a>
         <a href="blog.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></a>
         <a href="temoignages.html" class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></a>
         <a href="partenaires.html" class="side-link"><svg><use href="#i-building"/></svg><span class="grow">Partenaires</span></a>
@@ -476,6 +476,17 @@ img{display:block;max-width:100%;}
       <button class="modal-close" id="modalCloseBtn"><svg><use href="#i-close"/></svg></button>
     </div>
     <form id="itemForm">
+      <div class="field">
+        <label>Photo</label>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <img id="fPhotoPreview" src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;background:#f1f5f9;display:none;" alt="">
+          <div id="fPhotoPlaceholder" style="width:56px;height:56px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:0.7rem;">Aucune</div>
+          <div>
+            <label class="btn-upload" for="fPhotoInput" style="cursor:pointer;"><svg><use href="#i-upload"/></svg>Choisir une photo</label>
+            <input type="file" id="fPhotoInput" accept="image/png,image/jpeg" style="display:none;">
+          </div>
+        </div>
+      </div>
       <div class="field"><label>Nom *</label><input type="text" id="fName" required placeholder="Ex. Sophie M."></div>
       <div class="field"><label>Rôle *</label><input type="text" id="fRole" required placeholder="Ex. Développeuse Web/Mobile"></div>
       <div class="field"><label>Email</label><input type="email" id="fEmail" placeholder="prenom@benindigitalhub.tech"></div>
@@ -500,9 +511,75 @@ function formatDate(iso){
   return `${d}/${m}/${y}`;
 }
 
-let list = [{"id": 1, "name": "EWEDJE Eboun Benjamin", "role": "CEO & Fondateur", "email": "eboun@benindigitalhub.tech", "status": "Actif", "bio": "Entrepreneur digital, passionné de tech et de développement économique au Bénin."}, {"id": 2, "name": "Développeur Web/Mobile", "role": "Développement", "email": "", "status": "Poste ouvert", "bio": "Vous maîtrisez React, Flutter ou Node.js ? Rejoignez l'aventure."}, {"id": 3, "name": "Designer UX/UI", "role": "Design", "email": "", "status": "Poste ouvert", "bio": "Créatif et orienté expérience utilisateur ? On a besoin de vous."}, {"id": 4, "name": "Commercial Digital", "role": "Commerce", "email": "", "status": "Poste ouvert", "bio": "Réseau et passion pour le digital ? Développons notre clientèle."}];
-let nextId = 5;
+let list = [];
+let loadError = null;
 let editingId = null;
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+const TABLE = 'team_members';
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+
+async function loadData(){
+  document.getElementById('tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
+  loadError = null;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?select=*`, { headers: SUPA_HEADERS, cache: 'no-store' });
+    if(!res.ok) throw new Error(`HTTP ${res.status} — vérifiez la table "${TABLE}" et ses policies RLS.`);
+    list = await res.json();
+  }catch(err){
+    loadError = err.message;
+    list = [];
+  }
+  
+  render();
+}
+let pendingPhotoDataUrl = null;
+function fileToDataUrl(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function resizeImageDataUrl(dataUrl, maxDim){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if(width > maxDim || height > maxDim){
+        const ratio = Math.min(maxDim / width, maxDim / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+function setPhotoPreview(url){
+  const img = document.getElementById('fPhotoPreview');
+  const ph = document.getElementById('fPhotoPlaceholder');
+  if(url){ img.src = url; img.style.display = ''; ph.style.display = 'none'; }
+  else { img.src = ''; img.style.display = 'none'; ph.style.display = ''; }
+}
+document.getElementById('fPhotoInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 3*1024*1024){ alert('La photo dépasse 3 Mo.'); return; }
+  try{
+    const raw = await fileToDataUrl(file);
+    const resized = await resizeImageDataUrl(raw, 300);
+    pendingPhotoDataUrl = resized;
+    setPhotoPreview(resized);
+  }catch(err){
+    alert("Impossible de traiter cette image.");
+  }
+});
 const fieldMap = {
     fName: "name",
     fRole: "role",
@@ -521,6 +598,17 @@ function updateStats(){
 }
 
 function render(){
+  if(loadError){
+    const tb = document.getElementById('tbody');
+    tb.innerHTML = `<tr><td colspan="5" style="padding:24px;color:#dc2626;font-size:0.85rem;">
+      Impossible de charger les données depuis Supabase.<br>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;">${loadError}</span><br>
+      Vérifiez que la table <code>team_members</code> existe et qu'une policy RLS autorise le rôle <code>anon</code> à la lire.
+    </td></tr>`;
+    document.getElementById('emptyState').style.display = 'none';
+    updateStats();
+    return;
+  }
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filtered = list.filter(r => {
     const matchSearch = !search || r.name.toLowerCase().includes(search) || r.role.toLowerCase().includes(search);
@@ -530,7 +618,7 @@ function render(){
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = filtered.map(r => `
     <tr>
-      <td><div class="p-name-cell"><span class="tech-badge" style="background:#0d2748">${r.name.slice(0,2).toUpperCase()}</span><span class="n">${r.name}</span></div></td>
+      <td><div class="p-name-cell">${r.photo_url ? `<img src="${r.photo_url}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<span class="tech-badge" style="background:#0d2748">${r.name.slice(0,2).toUpperCase()}</span>`}<span class="n">${r.name}</span></div></td>
       <td>${r.role}</td>
       <td>${r.email||'—'}</td>
       <td><span class="status-pill ${r.status==='Actif'?'termine':'attente'}">${r.status}</span></td>
@@ -555,6 +643,8 @@ function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
   document.getElementById('itemForm').reset();
   editingId = null;
+  pendingPhotoDataUrl = null;
+  setPhotoPreview(null);
 }
 
 document.getElementById('openAddBtn').addEventListener('click', () => {
@@ -573,42 +663,75 @@ window.openEdit = function(id){
     const el = document.getElementById(fid);
     if(el) el.value = r[fieldMap[fid]] ?? '';
   });
+  pendingPhotoDataUrl = null;
+  setPhotoPreview(r.photo_url || null);
   openModal('Modifier');
 };
 
-window.delItem = function(id){
+window.delItem = async function(id){
   const r = list.find(x => x.id === id);
   if(!r) return;
-  if(confirm(`Supprimer "${r.name}" ?`)){
+  if(!confirm(`Supprimer "${r.name}" ?`)) return;
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${id}`, { method:'DELETE', headers: SUPA_HEADERS });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     list = list.filter(x => x.id !== id);
     
     render();
+  }catch(err){
+    alert("Impossible de supprimer cet élément — vérifiez la policy DELETE sur la table team_members.");
   }
 };
 
-document.getElementById('itemForm').addEventListener('submit', (e) => {
+document.getElementById('itemForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = {};
   Object.keys(fieldMap).forEach(fid => {
     const el = document.getElementById(fid);
     data[fieldMap[fid]] = el.value.trim ? el.value.trim() : el.value;
   });
-  if(editingId){
-    const r = list.find(x => x.id === editingId);
-    Object.assign(r, data);
-  } else {
-    list.push({ id: nextId++, ...data });
+  if(pendingPhotoDataUrl){
+    data.photo_url = pendingPhotoDataUrl;
+  } else if(editingId){
+    const existing = list.find(x => x.id === editingId);
+    data.photo_url = existing ? (existing.photo_url || null) : null;
   }
-  
-  closeModal();
-  render();
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const original = saveBtn.textContent;
+  saveBtn.textContent = 'Enregistrement...'; saveBtn.disabled = true;
+  try{
+    if(editingId){
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}?id=eq.${editingId}`, {
+        method:'PATCH', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [updated] = await res.json();
+      const r = list.find(x => x.id === editingId);
+      Object.assign(r, updated);
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/${TABLE}`, {
+        method:'POST', headers: { ...SUPA_HEADERS, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+        body: JSON.stringify(data)
+      });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const [created] = await res.json();
+      list.push(created);
+    }
+    
+    closeModal();
+    render();
+  }catch(err){
+    alert("Impossible d'enregistrer cet élément — vérifiez les policies INSERT/UPDATE sur la table team_members.");
+  }
+  saveBtn.textContent = original; saveBtn.disabled = false;
 });
 
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById("statusFilter").addEventListener("change", render);
 
 
-render();
+loadData();
 </script>
 </body>
 </html>
