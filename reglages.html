@@ -845,23 +845,44 @@ document.getElementById('companyDesc').addEventListener('input', (e) => {
 });
 
 // logo upload -> update previews
-document.getElementById('logoInput').addEventListener('change', (e) => {
+let pendingLogoDataUrl = null;
+let pendingFaviconDataUrl = null;
+
+function fileToDataUrl(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('logoInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if(!file) return;
-  const url = URL.createObjectURL(file);
+  if(file.size > 2*1024*1024){ toast('Le logo dépasse 2 Mo.'); return; }
+  const url = await fileToDataUrl(file);
+  pendingLogoDataUrl = url;
   document.getElementById('logoPreview').src = url;
   document.getElementById('previewLogo').src = url;
+  toast("Logo prêt — cliquez sur \"Enregistrer\" en haut pour l'appliquer au site.");
 });
-document.getElementById('faviconInput').addEventListener('change', (e) => {
+document.getElementById('faviconInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if(!file) return;
-  document.getElementById('faviconPreview').src = URL.createObjectURL(file);
+  if(file.size > 512*1024){ toast('Le favicon dépasse 512 Ko.'); return; }
+  const url = await fileToDataUrl(file);
+  pendingFaviconDataUrl = url;
+  document.getElementById('faviconPreview').src = url;
+  toast("Favicon prêt — cliquez sur \"Enregistrer\" en haut pour l'appliquer au site.");
 });
 
 const SETTINGS_SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
 const SETTINGS_SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
 const SETTINGS_HEADERS = { apikey: SETTINGS_SUPA_KEY, Authorization: `Bearer ${SETTINGS_SUPA_KEY}` };
 let currentSettingsId = null;
+let existingLogoUrl = null;
+let existingFaviconUrl = null;
 
 async function loadSettings(){
   try{
@@ -871,6 +892,8 @@ async function loadSettings(){
     if(rows.length){
       const s = rows[0];
       currentSettingsId = s.id;
+      existingLogoUrl = s.logo_url || null;
+      existingFaviconUrl = s.favicon_url || null;
       if(s.company_name) document.getElementById('companyName').value = s.company_name;
       if(s.site_name) document.getElementById('siteName').value = s.site_name;
       if(s.phone) document.getElementById('phoneNumber').value = s.phone;
@@ -878,6 +901,8 @@ async function loadSettings(){
       if(s.description) document.getElementById('companyDesc').value = s.description;
       if(s.contact_email) document.getElementById('contactEmail').value = s.contact_email;
       if(s.website) document.getElementById('websiteUrl').value = s.website;
+      if(s.logo_url){ document.getElementById('logoPreview').src = s.logo_url; document.getElementById('previewLogo').src = s.logo_url; }
+      if(s.favicon_url){ document.getElementById('faviconPreview').src = s.favicon_url; }
       document.getElementById('previewDesc').textContent = document.getElementById('companyDesc').value;
     }
   }catch(err){
@@ -906,6 +931,8 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     description: document.getElementById('companyDesc').value.trim(),
     contact_email: document.getElementById('contactEmail').value.trim(),
     website: document.getElementById('websiteUrl').value.trim(),
+    logo_url: pendingLogoDataUrl || existingLogoUrl,
+    favicon_url: pendingFaviconDataUrl || existingFaviconUrl,
   };
   const saveBtn = document.getElementById('saveBtn');
   const original = saveBtn.innerHTML;
