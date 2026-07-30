@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projets — Administration Bénin Digital Hub</title>
+<title>Paramètres — Administration Bénin Digital Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -234,6 +234,70 @@ img{display:block;max-width:100%;}
 }
 </style>
 
+<style>
+/* ===================== REGLAGES PAGE ===================== */
+.settings-layout{display:grid;grid-template-columns:230px 1fr 320px;gap:20px;align-items:start;}
+.settings-tabs{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:2px;}
+.settings-tab{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:0.86rem;font-weight:500;color:#475569;text-align:left;width:100%;}
+.settings-tab svg{width:16px;height:16px;flex-shrink:0;color:#94a3b8;}
+.settings-tab:hover{background:#f8fafc;}
+.settings-tab.active{background:#eff6ff;color:var(--blue);font-weight:700;}
+.settings-tab.active svg{color:var(--blue);}
+
+.settings-panel h2{font-size:1.15rem;margin-bottom:4px;}
+.settings-panel > p.sub{color:var(--muted);font-size:0.86rem;margin-bottom:22px;}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;}
+.settings-grid .field.full{grid-column:1 / -1;}
+.phone-row{display:grid;grid-template-columns:90px 1fr;gap:8px;}
+
+.upload-box{border:1.5px dashed var(--line);border-radius:12px;padding:20px;text-align:center;position:relative;margin-bottom:14px;}
+.upload-box .remove-x{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;}
+.upload-box .remove-x:hover{background:#fee2e2;color:#dc2626;}
+.upload-box .remove-x svg{width:13px;height:13px;}
+.upload-box img{max-height:64px;margin:0 auto 14px;}
+.upload-box .hint{font-size:0.74rem;color:#94a3b8;margin-top:10px;}
+.btn-upload{display:inline-flex;align-items:center;gap:8px;font-size:0.82rem;font-weight:700;color:var(--blue);background:#eff6ff;padding:9px 16px;border-radius:8px;}
+.btn-upload:hover{background:#dbeafe;}
+.btn-upload svg{width:14px;height:14px;}
+
+.preview-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;}
+.preview-card h3{font-size:0.96rem;margin-bottom:14px;}
+.mini-browser{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.mini-browser .bar{background:#f1f5f9;padding:8px 10px;display:flex;gap:6px;}
+.mini-browser .bar span{width:8px;height:8px;border-radius:50%;}
+.mini-browser .body{padding:18px;background:linear-gradient(180deg,#fbfdff,#fff);}
+.mini-browser .mnav{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.mini-browser .mnav img{height:22px;}
+.mini-browser h4{font-size:1rem;line-height:1.25;margin:0 0 8px;}
+.mini-browser h4 .g{background:linear-gradient(120deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.mini-browser p{font-size:0.72rem;color:var(--muted);margin-bottom:12px;}
+.mini-browser .mbtn{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;font-size:0.72rem;font-weight:700;padding:8px 14px;border-radius:6px;}
+.preview-note{display:flex;gap:10px;background:#eff6ff;border-radius:10px;padding:12px;margin-top:14px;font-size:0.78rem;color:#1e40af;}
+.preview-note svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;}
+
+.social-row{display:flex;gap:10px;}
+.social-btn{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;}
+.social-btn svg{width:17px;height:17px;}
+
+.settings-footer{display:flex;justify-content:space-between;font-size:0.8rem;color:#94a3b8;margin-top:24px;}
+
+.help-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;margin:12px 12px 4px;}
+.help-box .htitle{display:flex;align-items:center;gap:8px;color:#fff;font-size:0.84rem;font-weight:700;margin-bottom:8px;}
+.help-box .htitle svg{width:15px;height:15px;}
+.help-box p{font-size:0.76rem;color:#94a3b8;margin-bottom:12px;line-height:1.5;}
+.help-box a{display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:700;color:#fff;background:rgba(255,255,255,0.08);padding:8px 12px;border-radius:7px;width:100%;justify-content:center;}
+.help-box a:hover{background:rgba(255,255,255,0.14);}
+.help-box a svg{width:13px;height:13px;}
+
+@media (max-width:1150px){
+  .settings-layout{grid-template-columns:1fr;}
+  .settings-tabs{flex-direction:row;flex-wrap:wrap;}
+}
+@media (max-width:640px){
+  .settings-grid{grid-template-columns:1fr;}
+}
+</style>
+
 </head>
 <body>
 
@@ -254,6 +318,7 @@ img{display:block;max-width:100%;}
   <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></symbol>
   <symbol id="i-trending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
   <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5l5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9z"/><path d="M10 21a2 2 0 0 0 4 0"/></symbol>
   <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
@@ -264,8 +329,6 @@ img{display:block;max-width:100%;}
   <symbol id="i-arrowdown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 7v10H7"/></symbol>
   <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></symbol>
   <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></symbol>
-  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></symbol>
-  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></symbol>
 </svg>
 
 <div class="app">
@@ -282,7 +345,7 @@ img{display:block;max-width:100%;}
       </div>
       <div class="side-group">
         <div class="side-group-label">Gestion</div>
-        <a href="projets.html" class="side-link active"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
+        <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
         <button class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></button>
         <button class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></button>
         <button class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></button>
@@ -305,7 +368,7 @@ img{display:block;max-width:100%;}
       </div>
       <div class="side-group">
         <div class="side-group-label">Paramètres</div>
-        <a href="reglages.html" class="side-link"><svg><use href="#i-settings"/></svg><span class="grow">Réglages</span></a>
+        <a href="reglages.html" class="side-link active"><svg><use href="#i-settings"/></svg><span class="grow">Réglages</span></a>
         <button class="side-link"><svg><use href="#i-trending"/></svg><span class="grow">SEO & Analytics</span></button>
         <button class="side-link"><svg><use href="#i-save"/></svg><span class="grow">Sauvegardes</span></button>
       </div>
@@ -341,98 +404,135 @@ img{display:block;max-width:100%;}
     <main class="content">
       <div class="page-head">
         <div>
-          <h1>Projets</h1>
-          <p>Gérez tous les projets de Bénin Digital Hub.</p>
+          <h1>Paramètres</h1>
+          <p>Gérez les paramètres généraux de la plateforme.</p>
         </div>
-        <button class="btn-primary" id="openAddBtn"><svg><use href="#i-plus"/></svg>Ajouter un projet</button>
+        <button class="btn-primary" id="saveBtn"><svg><use href="#i-save"/></svg>Enregistrer</button>
       </div>
 
-      <div class="mini-stats">
-        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statTotal">8</div><div class="l">Total projets</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#2563eb"><svg><use href="#i-trending"/></svg></div><div><div class="v" id="statCours">0</div><div class="l">En cours</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#16a34a"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statTermine">0</div><div class="l">Terminés</div></div></div>
-        <div class="mini-stat"><div class="dot-ic" style="background:#f97316"><svg><use href="#i-briefcase"/></svg></div><div><div class="v" id="statAttente">0</div><div class="l">En attente</div></div></div>
-      </div>
+      <div class="settings-layout">
+        <!-- SUB TABS -->
+        <div class="settings-tabs" id="settingsTabs">
+          <button class="settings-tab active" data-tab="general"><svg><use href="#i-settings"/></svg>Général</button>
+          <button class="settings-tab" data-tab="apparence"><svg><use href="#i-image"/></svg>Apparence</button>
+          <button class="settings-tab" data-tab="utilisateurs"><svg><use href="#i-users"/></svg>Utilisateurs</button>
+          <button class="settings-tab" data-tab="roles"><svg><use href="#i-shield"/></svg>Rôles & Permissions</button>
+          <button class="settings-tab" data-tab="securite"><svg><use href="#i-shield"/></svg>Sécurité</button>
+          <button class="settings-tab" data-tab="notifications"><svg><use href="#i-bell"/></svg>Notifications</button>
+          <button class="settings-tab" data-tab="emails"><svg><use href="#i-mail"/></svg>Emails</button>
+          <button class="settings-tab" data-tab="api"><svg><use href="#i-cpu"/></svg>API & Clés</button>
+          <button class="settings-tab" data-tab="integrations"><svg><use href="#i-folder"/></svg>Intégrations</button>
+          <button class="settings-tab" data-tab="seo"><svg><use href="#i-trending"/></svg>SEO</button>
+          <button class="settings-tab" data-tab="sauvegardes"><svg><use href="#i-save"/></svg>Sauvegardes</button>
+          <button class="settings-tab" data-tab="journal"><svg><use href="#i-file"/></svg>Journal d'activités</button>
+          <button class="settings-tab" data-tab="avance"><svg><use href="#i-cpu"/></svg>Avancé</button>
+        </div>
 
-      <div class="card">
-        <div class="toolbar">
-          <div class="search-wrap">
-            <svg><use href="#i-search"/></svg>
-            <input type="text" id="searchInput" placeholder="Rechercher un projet, un chef de projet...">
+        <!-- MAIN PANEL -->
+        <div class="card settings-panel" id="panelGeneral">
+          <h2>Général</h2>
+          <p class="sub">Informations générales de votre organisation et du site.</p>
+          <div class="settings-grid">
+            <div class="field"><label>Nom de l'entreprise</label><input type="text" id="companyName" value="Bénin Digital Hub"></div>
+            <div class="field"><label>Nom du site</label><input type="text" id="siteName" value="benindigitalhub.tech"></div>
+
+            <div class="field">
+              <label>Téléphone</label>
+              <div class="phone-row">
+                <select id="phonePrefix"><option>+229</option></select>
+                <input type="tel" id="phoneNumber" value="01 61 61 61 61">
+              </div>
+            </div>
+            <div class="field"><label>Fuseau horaire</label>
+              <select id="timezone">
+                <option selected>(UTC+01:00) Africa/Porto-Novo</option>
+                <option>(UTC+00:00) UTC</option>
+                <option>(UTC+01:00) Europe/Paris</option>
+              </select>
+            </div>
+
+            <div class="field full"><label>Adresse</label><textarea id="address" style="min-height:56px;">Cotonou, Bénin</textarea></div>
+
+            <div class="field"><label>Langue</label>
+              <select id="lang"><option selected>🇫🇷 Français</option><option>English</option></select>
+            </div>
+            <div class="field"><label>Devise</label>
+              <select id="currency"><option selected>FCFA</option><option>EUR</option><option>USD</option></select>
+            </div>
           </div>
-          <select id="statusFilter">
-            <option value="">Tous les statuts</option>
-            <option value="En cours">En cours</option>
-            <option value="Terminé">Terminé</option>
-            <option value="En attente">En attente</option>
-            <option value="Annulé">Annulé</option>
-          </select>
-          <select id="catFilter">
-            <option value="">Toutes les catégories</option>
-          </select>
+
+          <hr style="border:none;border-top:1px solid var(--line);margin:26px 0;">
+
+          <h2>Informations supplémentaires</h2>
+          <div class="settings-grid" style="margin-top:14px;">
+            <div class="field full"><label>Description de l'entreprise</label><textarea id="companyDesc">Bénin Digital Hub (BDH) accompagne les organisations dans leur transformation numérique grâce à des solutions innovantes, sécurisées et évolutives.</textarea></div>
+            <div class="field"><label>Email de contact principal</label><input type="email" id="contactEmail" value="contact@benindigitalhub.tech"></div>
+            <div class="field"><label>Site web</label><input type="url" id="websiteUrl" value="https://benindigitalhub.tech"></div>
+            <div class="field full">
+              <label>Réseaux sociaux</label>
+              <div class="social-row">
+                <a class="social-btn" style="background:#0a66c2" href="#" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.25h4V23h-4V8.25zM8.5 8.25h3.83v2.01h.05c.53-1 1.84-2.06 3.79-2.06 4.06 0 4.81 2.67 4.81 6.14V23h-4v-7.17c0-1.71-.03-3.9-2.38-3.9-2.39 0-2.76 1.87-2.76 3.79V23h-4V8.25z"/></svg></a>
+                <a class="social-btn" style="background:#1877f2" href="#" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+                <a class="social-btn" style="background:#000" href="#" title="X / Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.3L23.3 22h-6.6l-5.2-6.6L5.6 22H2.4l7.7-8.8L1 2h6.8l4.7 6.1L18.9 2zm-1.2 18h1.8L7.4 4H5.5l12.2 16z"/></svg></a>
+                <a class="social-btn" style="background:#ff0000" href="#" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.6-.5-5.3c-.3-1-1.1-1.8-2.1-2C18.6 4.2 12 4.2 12 4.2s-6.6 0-8.4.5c-1 .2-1.8 1-2.1 2C1 8.4 1 12 1 12s0 3.6.5 5.3c.3 1 1.1 1.7 2.1 2 1.8.5 8.4.5 8.4.5s6.6 0 8.4-.5c1-.3 1.8-1 2.1-2 .5-1.7.5-5.3.5-5.3zM9.8 15.5V8.5l6.4 3.5-6.4 3.5z"/></svg></a>
+                <a class="social-btn" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)" href="#" title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .3 2.4.5.6.2 1 .5 1.5 1 .4.4.7.8 1 1.5.2.5.4 1.2.5 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2-.5 2.4-.2.6-.5 1-1 1.5-.4.4-.8.7-1.5 1-.5.2-1.2.4-2.4.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.3-2.4-.5-.6-.2-1-.5-1.5-1-.4-.4-.7-.8-1-1.5-.2-.5-.4-1.2-.5-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2 .5-2.4.2-.6.5-1 1-1.5.4-.4.8-.7 1.5-1 .5-.2 1.2-.4 2.4-.5C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1 0-1.6.2-1.9.4-.5.2-.8.4-1.2.8-.4.4-.6.7-.8 1.2-.1.3-.3.9-.4 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c0 1 .2 1.6.4 1.9.2.5.4.8.8 1.2.4.4.7.6 1.2.8.3.1.9.3 1.9.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1 0 1.6-.2 1.9-.4.5-.2.8-.4 1.2-.8.4-.4.6-.7.8-1.2.1-.3.3-.9.4-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c0-1-.2-1.6-.4-1.9-.2-.5-.4-.8-.8-1.2-.4-.4-.7-.6-1.2-.8-.3-.1-.9-.3-1.9-.4-1.2-.1-1.6-.1-4.7-.1zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4zm5.2-2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-footer">
+            <span>© 2026 Bénin Digital Hub. Tous droits réservés.</span>
+            <span>Version 1.0.0</span>
+          </div>
         </div>
 
-        <table class="ptable">
-          <thead>
-            <tr>
-              <th>Projet</th>
-              <th>Chef de projet</th>
-              <th>Catégorie</th>
-              <th>Statut</th>
-              <th>Date</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="projectsBody"></tbody>
-        </table>
-        <div class="table-empty" id="emptyState" style="display:none;">Aucun projet ne correspond à votre recherche.</div>
+        <!-- OTHER TAB PLACEHOLDER (hidden by default) -->
+        <div class="card settings-panel" id="panelOther" style="display:none;">
+          <h2 id="otherTitle">Section</h2>
+          <p class="sub">Cette section est en cours de construction — dites-moi si vous voulez qu'on l'aborde ensuite.</p>
+        </div>
+
+        <!-- RIGHT: LOGO / FAVICON / PREVIEW -->
+        <div>
+          <div class="preview-card" style="margin-bottom:16px;">
+            <h3>Logo du site</h3>
+            <div class="upload-box">
+              <button class="remove-x"><svg><use href="#i-close"/></svg></button>
+              <img id="logoPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='64'><text x='0' y='40' font-family='Arial' font-weight='900' font-size='36'><tspan fill='%232563eb'>B</tspan><tspan fill='%23111'>D</tspan><tspan fill='%2316a34a'>H</tspan></text></svg>" alt="Logo">
+              <div><label class="btn-upload" for="logoInput"><svg><use href="#i-upload"/></svg>Changer le logo</label></div>
+              <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml" style="display:none;">
+              <div class="hint">PNG, JPG ou SVG. Max 2MB</div>
+            </div>
+
+            <h3>Favicon</h3>
+            <div class="upload-box">
+              <button class="remove-x"><svg><use href="#i-close"/></svg></button>
+              <img id="faviconPreview" style="max-height:44px;" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><rect width='44' height='44' rx='9' fill='%230d2748'/><text x='6' y='30' font-family='Arial' font-weight='900' font-size='20' fill='white'>BH</text></svg>" alt="Favicon">
+              <div><label class="btn-upload" for="faviconInput"><svg><use href="#i-upload"/></svg>Changer le favicon</label></div>
+              <input type="file" id="faviconInput" accept="image/png,image/x-icon,image/svg+xml" style="display:none;">
+              <div class="hint">ICO, PNG ou SVG. Max 512KB</div>
+            </div>
+          </div>
+
+          <div class="preview-card">
+            <h3>Aperçu du site</h3>
+            <div class="mini-browser">
+              <div class="bar"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+              <div class="body">
+                <div class="mnav"><img id="previewLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='22'><text x='0' y='18' font-family='Arial' font-weight='900' font-size='18'><tspan fill='%232563eb'>B</tspan><tspan fill='%23111'>D</tspan><tspan fill='%2316a34a'>H</tspan></text></svg>" alt=""></div>
+                <h4 id="previewHeadline">Transformer le <span class="g">Bénin</span><br>grâce au <span class="g">numérique</span></h4>
+                <p id="previewDesc">Nous accompagnons les entreprises, les administrations et les startups dans leur transformation digitale.</p>
+                <span class="mbtn">Découvrir nos solutions <svg style="width:12px;height:12px"><use href="#i-arrowup"/></svg></span>
+              </div>
+            </div>
+            <div class="preview-note">
+              <svg><use href="#i-info"/></svg>
+              <span>Les modifications seront visibles après l'enregistrement.</span>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
-  </div>
-</div>
-
-<!-- ============ MODAL ============ -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="modalTitle">Ajouter un projet</h3>
-      <button class="modal-close" id="modalCloseBtn"><svg><use href="#i-close"/></svg></button>
-    </div>
-    <form id="projectForm">
-      <div class="field"><label>Nom du projet *</label><input type="text" id="fName" required placeholder="Ex. Plateforme Santé Connect"></div>
-      <div class="field-row">
-        <div class="field"><label>Chef de projet *</label><input type="text" id="fLead" required placeholder="Ex. Jean K."></div>
-        <div class="field"><label>Catégorie *</label>
-          <select id="fCategory" required>
-            <option value="">Choisir...</option>
-            <option>Santé</option>
-            <option>Éducation</option>
-            <option>E-commerce</option>
-            <option>Secteur public</option>
-            <option>Formation</option>
-            <option>IA</option>
-            <option>Interne</option>
-            <option>Autre</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Statut *</label>
-          <select id="fStatus" required>
-            <option>En cours</option>
-            <option>Terminé</option>
-            <option>En attente</option>
-            <option>Annulé</option>
-          </select>
-        </div>
-        <div class="field"><label>Date *</label><input type="date" id="fDate" required></div>
-      </div>
-      <div class="field"><label>Description</label><textarea id="fDesc" placeholder="Décrivez le projet en quelques mots..."></textarea></div>
-      <div class="modal-actions">
-        <button type="button" class="btn-ghost-modal" id="modalCancelBtn">Annuler</button>
-        <button type="submit" class="btn-primary" id="modalSaveBtn">Enregistrer</button>
-      </div>
-    </form>
   </div>
 </div>
 
@@ -441,146 +541,59 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-let projects = [
-  { id:1, name:"Plateforme Santé Connect", lead:"Jean K.", category:"Santé", status:"En cours", date:"2026-05-26", desc:"Téléconsultation médicale et dossiers patients." },
-  { id:2, name:"Refonte Site UniBénin", lead:"Mariam T.", category:"Éducation", status:"En cours", date:"2026-05-25", desc:"Nouvelle interface pour la plateforme universitaire." },
-  { id:3, name:"Marketplace Yévé Market", lead:"Carlos D.", category:"E-commerce", status:"Terminé", date:"2026-05-23", desc:"Marketplace alimentaire avec paiement Mobile Money." },
-  { id:4, name:"Solution e-Gouvernement", lead:"Cédric A.", category:"Secteur public", status:"En attente", date:"2026-05-22", desc:"Portail numérique pour les services administratifs." },
-  { id:5, name:"Application Mobile BDH", lead:"Sophie M.", category:"Interne", date2:"", status:"En cours", date:"2026-05-21", desc:"Application mobile vitrine de l'agence." },
-  { id:6, name:"Site vitrine ThinQShop", lead:"Jean K.", category:"E-commerce", status:"Terminé", date:"2026-05-18", desc:"Site e-commerce pour un partenaire local." },
-  { id:7, name:"Plateforme Formation Tech", lead:"Mariam T.", category:"Formation", status:"En attente", date:"2026-05-15", desc:"Espace de cours en ligne pour le Hub." },
-  { id:8, name:"Chatbot IA Support Client", lead:"Carlos D.", category:"IA", status:"Annulé", date:"2026-05-10", desc:"Assistant conversationnel pour le support client." },
-];
-let nextId = 9;
-let editingId = null;
-
-const statusClass = { "En cours":"cours", "Terminé":"termine", "En attente":"attente", "Annulé":"annule" };
-
-function formatDate(iso){
-  const [y,m,d] = iso.split('-');
-  return `${d}/${m}/${y}`;
-}
-
-function populateCategoryFilter(){
-  const sel = document.getElementById('catFilter');
-  const current = sel.value;
-  const cats = [...new Set(projects.map(p => p.category))].sort();
-  sel.innerHTML = '<option value="">Toutes les catégories</option>' + cats.map(c => `<option ${c===current?'selected':''}>${c}</option>`).join('');
-}
-
-function updateStats(){
-  document.getElementById('statTotal').textContent = projects.length;
-  document.getElementById('statCours').textContent = projects.filter(p=>p.status==='En cours').length;
-  document.getElementById('statTermine').textContent = projects.filter(p=>p.status==='Terminé').length;
-  document.getElementById('statAttente').textContent = projects.filter(p=>p.status==='En attente').length;
-}
-
-function render(){
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const status = document.getElementById('statusFilter').value;
-  const cat = document.getElementById('catFilter').value;
-
-  const filtered = projects.filter(p => {
-    const matchSearch = !search || p.name.toLowerCase().includes(search) || p.lead.toLowerCase().includes(search);
-    const matchStatus = !status || p.status === status;
-    const matchCat = !cat || p.category === cat;
-    return matchSearch && matchStatus && matchCat;
-  }).sort((a,b) => b.date.localeCompare(a.date));
-
-  const tbody = document.getElementById('projectsBody');
-  tbody.innerHTML = filtered.map(p => `
-    <tr>
-      <td>
-        <div class="p-name-cell">
-          <img src="https://i.pravatar.cc/64?u=proj${p.id}" alt="">
-          <div><div class="n">${p.name}</div></div>
-        </div>
-      </td>
-      <td>${p.lead}</td>
-      <td><span class="cat-chip">${p.category}</span></td>
-      <td><span class="status-pill ${statusClass[p.status]}">${p.status}</span></td>
-      <td>${formatDate(p.date)}</td>
-      <td>
-        <div class="row-actions">
-          <button onclick="openEdit(${p.id})" title="Modifier"><svg><use href="#i-edit"/></svg></button>
-          <button class="danger" onclick="deleteProject(${p.id})" title="Supprimer"><svg><use href="#i-trash"/></svg></button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-
-  document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
-  updateStats();
-}
-
-function openModal(title){
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function closeModal(){
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.getElementById('projectForm').reset();
-  editingId = null;
-}
-
-document.getElementById('openAddBtn').addEventListener('click', () => {
-  editingId = null;
-  openModal('Ajouter un projet');
-});
-document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
-document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
-document.getElementById('modalOverlay').addEventListener('click', (e) => { if(e.target.id === 'modalOverlay') closeModal(); });
-
-window.openEdit = function(id){
-  const p = projects.find(x => x.id === id);
-  if(!p) return;
-  editingId = id;
-  document.getElementById('fName').value = p.name;
-  document.getElementById('fLead').value = p.lead;
-  document.getElementById('fCategory').value = p.category;
-  document.getElementById('fStatus').value = p.status;
-  document.getElementById('fDate').value = p.date;
-  document.getElementById('fDesc').value = p.desc || '';
-  openModal('Modifier le projet');
+// tab switching
+const tabLabels = {
+  apparence:"Apparence", utilisateurs:"Utilisateurs", roles:"Rôles & Permissions", securite:"Sécurité",
+  notifications:"Notifications", emails:"Emails", api:"API & Clés", integrations:"Intégrations",
+  seo:"SEO", sauvegardes:"Sauvegardes", journal:"Journal d'activités", avance:"Avancé"
 };
-
-window.deleteProject = function(id){
-  const p = projects.find(x => x.id === id);
-  if(!p) return;
-  if(confirm(`Supprimer le projet "${p.name}" ?`)){
-    projects = projects.filter(x => x.id !== id);
-    populateCategoryFilter();
-    render();
-  }
-};
-
-document.getElementById('projectForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const data = {
-    name: document.getElementById('fName').value.trim(),
-    lead: document.getElementById('fLead').value.trim(),
-    category: document.getElementById('fCategory').value,
-    status: document.getElementById('fStatus').value,
-    date: document.getElementById('fDate').value,
-    desc: document.getElementById('fDesc').value.trim(),
-  };
-  if(editingId){
-    const p = projects.find(x => x.id === editingId);
-    Object.assign(p, data);
+document.getElementById('settingsTabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('.settings-tab');
+  if(!btn) return;
+  document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const tab = btn.dataset.tab;
+  if(tab === 'general'){
+    document.getElementById('panelGeneral').style.display = '';
+    document.getElementById('panelOther').style.display = 'none';
   } else {
-    projects.push({ id: nextId++, ...data });
+    document.getElementById('panelGeneral').style.display = 'none';
+    document.getElementById('panelOther').style.display = '';
+    document.getElementById('otherTitle').textContent = tabLabels[tab] || tab;
   }
-  populateCategoryFilter();
-  closeModal();
-  render();
 });
 
-document.getElementById('searchInput').addEventListener('input', render);
-document.getElementById('statusFilter').addEventListener('change', render);
-document.getElementById('catFilter').addEventListener('change', render);
+// live preview: company name / description typed into fields
+document.getElementById('companyDesc').addEventListener('input', (e) => {
+  document.getElementById('previewDesc').textContent = e.target.value;
+});
 
-populateCategoryFilter();
-render();
+// logo upload -> update previews
+document.getElementById('logoInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const url = URL.createObjectURL(file);
+  document.getElementById('logoPreview').src = url;
+  document.getElementById('previewLogo').src = url;
+});
+document.getElementById('faviconInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  document.getElementById('faviconPreview').src = URL.createObjectURL(file);
+});
+
+function toast(msg){
+  let t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0d2748;color:#fff;padding:14px 26px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,0.3);opacity:0;transition:opacity .3s,transform .3s;font-family:Inter,sans-serif;';
+  document.body.appendChild(t);
+  requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(20px)'; setTimeout(()=>t.remove(),300); }, 3200);
+}
+
+document.getElementById('saveBtn').addEventListener('click', () => {
+  toast('Paramètres enregistrés (aperçu) — pas encore connecté à une base de données réelle.');
+});
 </script>
 </body>
 </html>
