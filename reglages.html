@@ -297,6 +297,50 @@ img{display:block;max-width:100%;}
   .settings-grid{grid-template-columns:1fr;}
 }
 </style>
+<style>
+.state-box{text-align:center;padding:50px 20px;color:#94a3b8;font-size:0.9rem;}
+.state-box svg{width:32px;height:32px;margin-bottom:12px;color:#cbd5e1;}
+
+.color-swatches{display:flex;gap:10px;margin-bottom:6px;}
+.color-swatch{width:34px;height:34px;border-radius:9px;cursor:pointer;border:2px solid transparent;flex-shrink:0;}
+.color-swatch.selected{border-color:#1e293b;box-shadow:0 0 0 2px #fff inset;}
+.density-opt{display:flex;gap:10px;}
+.density-btn{flex:1;padding:12px;border:1.5px solid var(--line);border-radius:10px;text-align:center;font-size:0.84rem;font-weight:600;color:#475569;cursor:pointer;}
+.density-btn.selected{border-color:var(--blue);background:#eff6ff;color:var(--blue);}
+
+.session-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9;}
+.session-row:last-child{border-bottom:none;}
+.session-ic{width:34px;height:34px;border-radius:9px;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.session-ic svg{width:16px;height:16px;}
+.session-info .n{font-size:0.86rem;font-weight:600;}
+.session-info .m{font-size:0.76rem;color:#94a3b8;}
+.session-badge{margin-left:auto;font-size:0.7rem;font-weight:700;color:#16a34a;background:#f0fdf4;padding:3px 9px;border-radius:100px;}
+
+.apikey-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9;}
+.apikey-row:last-child{border-bottom:none;}
+.apikey-info .n{font-size:0.86rem;font-weight:600;}
+.apikey-info .k{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:#94a3b8;}
+.apikey-info .m{font-size:0.72rem;color:#cbd5e1;}
+
+.integration-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.integration-card{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;align-items:flex-start;gap:12px;}
+.integration-ic{width:38px;height:38px;border-radius:10px;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.integration-ic svg{width:18px;height:18px;}
+.integration-body{flex:1;min-width:0;}
+.integration-body .n{font-size:0.9rem;font-weight:700;}
+.integration-body .d{font-size:0.76rem;color:#94a3b8;margin:2px 0 8px;}
+.integration-status{font-size:0.7rem;font-weight:700;padding:3px 9px;border-radius:100px;}
+.integration-status.on{background:#f0fdf4;color:#16a34a;}
+.integration-status.off{background:#f1f5f9;color:#94a3b8;}
+
+.danger-zone{border:1.5px solid #fecaca;background:#fff5f5;border-radius:12px;padding:18px;margin-top:10px;}
+.danger-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0;border-bottom:1px solid #fee2e2;}
+.danger-row:last-child{border-bottom:none;}
+.danger-row .t{font-size:0.88rem;font-weight:700;color:#991b1b;}
+.danger-row .d{font-size:0.78rem;color:#b91c1c;}
+.btn-danger{background:#dc2626;color:#fff;font-size:0.82rem;font-weight:700;padding:9px 16px;border-radius:8px;white-space:nowrap;}
+.btn-danger:hover{background:#b91c1c;}
+</style>
 
 </head>
 <body>
@@ -488,10 +532,191 @@ img{display:block;max-width:100%;}
           </div>
         </div>
 
-        <!-- OTHER TAB PLACEHOLDER (hidden by default) -->
-        <div class="card settings-panel" id="panelOther" style="display:none;">
-          <h2 id="otherTitle">Section</h2>
-          <p class="sub">Cette section est en cours de construction — dites-moi si vous voulez qu'on l'aborde ensuite.</p>
+        <!-- APPARENCE -->
+        <div class="card settings-panel" id="panel-apparence" style="display:none;">
+          <h2>Apparence</h2>
+          <p class="sub">Personnalisez l'affichage de l'espace d'administration.</p>
+          <div class="settings-grid">
+            <div class="field"><label>Thème</label>
+              <select id="apTheme"><option>Clair</option><option>Sombre</option><option selected>Automatique (selon l'appareil)</option></select>
+            </div>
+            <div class="field"><label>Densité d'affichage</label>
+              <select id="apDensity"><option selected>Confortable</option><option>Compacte</option></select>
+            </div>
+            <div class="field"><label>Couleur principale</label>
+              <div style="display:flex;gap:8px;">
+                <input type="color" value="#2563eb" style="height:42px;width:56px;padding:4px;">
+                <input type="text" value="#2563eb" style="flex:1;">
+              </div>
+            </div>
+            <div class="field"><label>Police du tableau de bord</label>
+              <select id="apFont"><option selected>Inter</option><option>System UI</option></select>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div><div class="t">Image de fond sur le tableau de bord</div><div class="d">Afficher un dégradé décoratif derrière les statistiques.</div></div>
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <!-- UTILISATEURS (résumé + lien) -->
+        <div class="card settings-panel" id="panel-utilisateurs" style="display:none;">
+          <h2>Utilisateurs</h2>
+          <p class="sub">Paramètres généraux liés aux comptes. La gestion détaillée se fait dans la page dédiée.</p>
+          <div class="field"><label>Rôle par défaut d'un nouveau compte</label>
+            <select><option>Contributeur</option><option>Éditeur</option><option>Support</option></select>
+          </div>
+          <div class="toggle-row">
+            <div><div class="t">Autoriser l'auto-inscription</div><div class="d">Permettre à toute personne avec un lien d'invitation de créer un compte.</div></div>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="t">Vérification d'email obligatoire</div><div class="d">Un nouveau compte doit confirmer son adresse avant de se connecter.</div></div>
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="quick-link-box">
+            <div class="l"><b id="utilisateursCount">5 comptes</b>gérés actuellement</div>
+            <a href="utilisateurs.html" class="link-out">Gérer les utilisateurs <svg style="width:14px;height:14px"><use href="#i-arrowup"/></svg></a>
+          </div>
+        </div>
+
+        <!-- ROLES (résumé + lien) -->
+        <div class="card settings-panel" id="panel-roles" style="display:none;">
+          <h2>Rôles &amp; Permissions</h2>
+          <p class="sub">La matrice complète des permissions se gère dans sa propre page.</p>
+          <div class="quick-link-box">
+            <div class="l"><b>4 rôles</b>configurés (Super Admin, Éditeur, Contributeur, Support)</div>
+            <a href="roles.html" class="link-out">Gérer les rôles <svg style="width:14px;height:14px"><use href="#i-arrowup"/></svg></a>
+          </div>
+        </div>
+
+        <!-- SECURITE -->
+        <div class="card settings-panel" id="panel-securite" style="display:none;">
+          <h2>Sécurité</h2>
+          <p class="sub">Protégez l'accès à votre espace d'administration.</p>
+          <div class="toggle-row">
+            <div><div class="t">Authentification à deux facteurs (2FA)</div><div class="d">Demander un code de vérification à chaque connexion.</div></div>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div><div class="t">Déconnexion automatique après inactivité</div><div class="d">Ferme la session après une période sans activité.</div></div>
+            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="settings-grid" style="margin-top:6px;">
+            <div class="field"><label>Durée avant expiration de session</label>
+              <select><option>15 minutes</option><option selected>1 heure</option><option>4 heures</option><option>24 heures</option></select>
+            </div>
+            <div class="field"><label>Longueur minimale du mot de passe</label>
+              <select><option>8 caractères</option><option selected>10 caractères</option><option>12 caractères</option></select>
+            </div>
+          </div>
+          <div class="field full"><label>Adresses IP autorisées (une par ligne, laisser vide pour autoriser toutes les IP)</label><textarea placeholder="Ex. 41.79.xx.xx"></textarea></div>
+          <a href="#" class="link-out">Voir l'historique des connexions <svg style="width:14px;height:14px"><use href="#i-arrowup"/></svg></a>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="card settings-panel" id="panel-notifications" style="display:none;">
+          <h2>Notifications</h2>
+          <p class="sub">Choisissez les événements qui vous alertent par email.</p>
+          <div class="toggle-row"><div><div class="t">Nouvelle demande de contact</div><div class="d">Un email à chaque message reçu via le formulaire du site.</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+          <div class="toggle-row"><div><div class="t">Nouveau projet ajouté</div><div class="d">Notification quand un membre de l'équipe crée un projet.</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+          <div class="toggle-row"><div><div class="t">Commentaire ou témoignage à approuver</div><div class="d">Rappel quotidien s'il reste des éléments en attente.</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+          <div class="toggle-row"><div><div class="t">Rapport hebdomadaire</div><div class="d">Résumé des statistiques envoyé chaque lundi matin.</div></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+          <div class="toggle-row"><div><div class="t">Alertes de sécurité</div><div class="d">Connexion depuis un nouvel appareil ou une nouvelle localisation.</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+        </div>
+
+        <!-- EMAILS -->
+        <div class="card settings-panel" id="panel-emails" style="display:none;">
+          <h2>Emails</h2>
+          <p class="sub">Configuration du serveur d'envoi des emails transactionnels.</p>
+          <div class="settings-grid">
+            <div class="field"><label>Serveur SMTP</label><input type="text" placeholder="smtp.exemple.com"></div>
+            <div class="field"><label>Port</label><input type="text" placeholder="587"></div>
+            <div class="field"><label>Nom d'expéditeur</label><input type="text" value="Bénin Digital Hub"></div>
+            <div class="field"><label>Email d'expéditeur</label><input type="email" value="contact@benindigitalhub.tech"></div>
+            <div class="field"><label>Utilisateur SMTP</label><input type="text" placeholder="utilisateur@exemple.com"></div>
+            <div class="field"><label>Mot de passe SMTP</label><input type="password" placeholder="••••••••"></div>
+          </div>
+          <button type="button" class="btn-upload" id="testEmailBtn" style="margin-top:6px;"><svg><use href="#i-mail"/></svg>Envoyer un email de test</button>
+        </div>
+
+        <!-- API & CLES -->
+        <div class="card settings-panel" id="panel-api" style="display:none;">
+          <h2>API &amp; Clés</h2>
+          <p class="sub">Clés utilisées pour connecter vos services externes. Ne les partagez jamais publiquement.</p>
+          <div class="apikey-row"><span class="lbl">Supabase (URL projet)</span><input type="text" readonly value="rzibogatodeondtlnepz.supabase.co"><button type="button" onclick="copyKey(this)">Copier</button></div>
+          <div class="apikey-row"><span class="lbl">Supabase (clé publique anon)</span><input type="text" readonly value="••••••••••••••••kjc"><button type="button" onclick="revealKey(this)">Afficher</button></div>
+          <div class="apikey-row"><span class="lbl">KKiaPay (clé publique)</span><input type="text" readonly value="••••••••••••••••"><button type="button" onclick="revealKey(this)">Afficher</button></div>
+          <div class="apikey-row"><span class="lbl">OpenAI (clé API)</span><input type="text" readonly value="Non configurée"><button type="button">Ajouter</button></div>
+          <div class="field" style="margin-top:16px;"><label>URL de webhook (notifications sortantes)</label><input type="url" placeholder="https://..."></div>
+          <button type="button" class="btn-upload" style="margin-top:6px;"><svg><use href="#i-plus"/></svg>Générer une nouvelle clé API interne</button>
+        </div>
+
+        <!-- INTEGRATIONS -->
+        <div class="card settings-panel" id="panel-integrations" style="display:none;">
+          <h2>Intégrations</h2>
+          <p class="sub">Services connectés à votre plateforme.</p>
+          <div class="integration-card"><div class="ic" style="background:#3ECF8E">SB</div><div class="info"><div class="n">Supabase</div><div class="d">Base de données et stockage des demandes de contact.</div></div><span class="badge-connected">Connecté</span><button class="btn-connect disconnect">Déconnecter</button></div>
+          <div class="integration-card"><div class="ic" style="background:#000">VC</div><div class="info"><div class="n">Vercel</div><div class="d">Hébergement et déploiement du site.</div></div><span class="badge-connected">Connecté</span><button class="btn-connect disconnect">Déconnecter</button></div>
+          <div class="integration-card"><div class="ic" style="background:#f59e0b">KK</div><div class="info"><div class="n">KKiaPay</div><div class="d">Paiements Mobile Money pour YéyéMarket.</div></div><span class="badge-connected">Connecté</span><button class="btn-connect disconnect">Déconnecter</button></div>
+          <div class="integration-card"><div class="ic" style="background:#e37400">GA</div><div class="info"><div class="n">Google Analytics</div><div class="d">Suivi d'audience du site public.</div></div><span class="badge-disconnected">Non connecté</span><button class="btn-connect">Connecter</button></div>
+          <div class="integration-card"><div class="ic" style="background:#4A154B">SL</div><div class="info"><div class="n">Slack</div><div class="d">Recevoir les nouvelles demandes de contact dans un canal.</div></div><span class="badge-disconnected">Non connecté</span><button class="btn-connect">Connecter</button></div>
+        </div>
+
+        <!-- SEO (résumé + lien) -->
+        <div class="card settings-panel" id="panel-seo" style="display:none;">
+          <h2>SEO</h2>
+          <p class="sub">Le référencement complet (méta-données, analytics) se gère dans sa propre page.</p>
+          <div class="quick-link-box">
+            <div class="l"><b>benindigitalhub.tech</b>titre et description configurés</div>
+            <a href="seo.html" class="link-out">Ouvrir SEO & Analytics <svg style="width:14px;height:14px"><use href="#i-arrowup"/></svg></a>
+          </div>
+        </div>
+
+        <!-- SAUVEGARDES (résumé + lien) -->
+        <div class="card settings-panel" id="panel-sauvegardes" style="display:none;">
+          <h2>Sauvegardes</h2>
+          <p class="sub">L'historique complet des sauvegardes se gère dans sa propre page.</p>
+          <div class="quick-link-box">
+            <div class="l"><b>Sauvegarde automatique</b>activée, tous les jours à 2h00</div>
+            <a href="sauvegardes.html" class="link-out">Ouvrir Sauvegardes <svg style="width:14px;height:14px"><use href="#i-arrowup"/></svg></a>
+          </div>
+        </div>
+
+        <!-- JOURNAL D'ACTIVITES -->
+        <div class="card settings-panel" id="panel-journal" style="display:none;">
+          <h2>Journal d'activités</h2>
+          <p class="sub">Historique des actions effectuées dans l'administration.</p>
+          <div class="log-filters">
+            <select id="logUserFilter"><option value="">Tous les utilisateurs</option></select>
+            <select id="logActionFilter">
+              <option value="">Toutes les actions</option>
+              <option>Création</option><option>Modification</option><option>Suppression</option><option>Connexion</option>
+            </select>
+          </div>
+          <table class="ptable">
+            <thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Détail</th></tr></thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+
+        <!-- AVANCE -->
+        <div class="card settings-panel" id="panel-avance" style="display:none;">
+          <h2>Avancé</h2>
+          <p class="sub">Options techniques, à manier avec précaution.</p>
+          <div class="toggle-row">
+            <div><div class="t">Mode maintenance</div><div class="d">Affiche une page d'attente aux visiteurs du site public.</div></div>
+            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+          </div>
+          <div class="field"><label>Message affiché en mode maintenance</label><textarea>Nous mettons à jour le site, merci de revenir dans quelques minutes.</textarea></div>
+          <div style="display:flex;gap:10px;margin:16px 0;">
+            <button type="button" class="btn-upload"><svg><use href="#i-close"/></svg>Vider le cache</button>
+            <button type="button" class="btn-upload"><svg><use href="#i-save"/></svg>Exporter toutes les données</button>
+          </div>
+          <div class="danger-zone">
+            <div class="row"><div><div class="t">Réinitialiser les données de démonstration</div><div class="d">Remet tous les onglets (Projets, Services...) à leur contenu d'exemple initial.</div></div><button type="button" class="btn-danger" id="resetDemoBtn">Réinitialiser</button></div>
+            <div class="row"><div><div class="t">Supprimer définitivement ce compte</div><div class="d">Cette action est irréversible.</div></div><button type="button" class="btn-danger" id="deleteAccountBtn">Supprimer</button></div>
+          </div>
         </div>
 
         <!-- RIGHT: LOGO / FAVICON / PREVIEW -->
@@ -544,25 +769,74 @@ document.getElementById('burgerBtn').addEventListener('click', () => {
 });
 
 // tab switching
-const tabLabels = {
-  apparence:"Apparence", utilisateurs:"Utilisateurs", roles:"Rôles & Permissions", securite:"Sécurité",
-  notifications:"Notifications", emails:"Emails", api:"API & Clés", integrations:"Intégrations",
-  seo:"SEO", sauvegardes:"Sauvegardes", journal:"Journal d'activités", avance:"Avancé"
-};
+const allPanelIds = ['panelGeneral','panel-apparence','panel-utilisateurs','panel-roles','panel-securite',
+  'panel-notifications','panel-emails','panel-api','panel-integrations','panel-seo','panel-sauvegardes',
+  'panel-journal','panel-avance'];
 document.getElementById('settingsTabs').addEventListener('click', (e) => {
   const btn = e.target.closest('.settings-tab');
   if(!btn) return;
   document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
   const tab = btn.dataset.tab;
-  if(tab === 'general'){
-    document.getElementById('panelGeneral').style.display = '';
-    document.getElementById('panelOther').style.display = 'none';
-  } else {
-    document.getElementById('panelGeneral').style.display = 'none';
-    document.getElementById('panelOther').style.display = '';
-    document.getElementById('otherTitle').textContent = tabLabels[tab] || tab;
+  const targetId = tab === 'general' ? 'panelGeneral' : 'panel-' + tab;
+  allPanelIds.forEach(id => {
+    document.getElementById(id).style.display = (id === targetId) ? '' : 'none';
+  });
+});
+
+// API key reveal/copy
+function revealKey(btn){
+  const input = btn.previousElementSibling;
+  input.type = input.type === 'password' || input.value.startsWith('•') ? 'text' : input.type;
+  toast('Clé affichée — pensez à la masquer à nouveau après usage.');
+}
+function copyKey(btn){
+  const input = btn.previousElementSibling;
+  navigator.clipboard?.writeText(input.value);
+  toast('Copié dans le presse-papiers.');
+}
+
+// activity log (demo data)
+const activityLog = [
+  { date:"2026-07-30 09:12", user:"Administrateur", action:"Connexion", detail:"Connexion réussie depuis Cotonou, Bénin" },
+  { date:"2026-07-29 16:40", user:"Mariam T.", action:"Modification", detail:"Projet « Refonte Site UniBénin » mis à jour" },
+  { date:"2026-07-29 11:05", user:"Carlos D.", action:"Création", detail:"Technologie « OpenAI » ajoutée" },
+  { date:"2026-07-28 18:22", user:"Administrateur", action:"Suppression", detail:"Document « Ancienne facture.pdf » supprimé" },
+  { date:"2026-07-28 08:50", user:"Jean K.", action:"Connexion", detail:"Connexion réussie depuis Cotonou, Bénin" },
+  { date:"2026-07-27 15:03", user:"Sophie M.", action:"Modification", detail:"Service « Support & Maintenance » mis à jour" },
+];
+function renderLog(){
+  const userSel = document.getElementById('logUserFilter');
+  if(userSel && !userSel.dataset.filled){
+    const users = [...new Set(activityLog.map(l => l.user))];
+    userSel.innerHTML += users.map(u => `<option>${u}</option>`).join('');
+    userSel.dataset.filled = '1';
   }
+  const uf = document.getElementById('logUserFilter')?.value || '';
+  const af = document.getElementById('logActionFilter')?.value || '';
+  const filtered = activityLog.filter(l => (!uf || l.user===uf) && (!af || l.action===af));
+  const tbody = document.getElementById('logBody');
+  if(tbody){
+    tbody.innerHTML = filtered.map(l => `<tr><td>${l.date}</td><td>${l.user}</td><td><span class="cat-chip">${l.action}</span></td><td>${l.detail}</td></tr>`).join('');
+  }
+}
+document.getElementById('logUserFilter')?.addEventListener('change', renderLog);
+document.getElementById('logActionFilter')?.addEventListener('change', renderLog);
+renderLog();
+
+// danger zone
+document.getElementById('resetDemoBtn')?.addEventListener('click', () => {
+  if(confirm('Réinitialiser toutes les données de démonstration ? Cette action ne peut pas être annulée.')){
+    toast('Données de démonstration réinitialisées (aperçu) — pas encore connecté à une base réelle.');
+  }
+});
+document.getElementById('deleteAccountBtn')?.addEventListener('click', () => {
+  if(confirm('Supprimer définitivement ce compte ? Cette action est irréversible.')){
+    toast('Suppression non disponible dans cet aperçu.');
+  }
+});
+document.getElementById('testEmailBtn')?.addEventListener('click', () => {
+  toast('Envoi de test non disponible dans cet aperçu — configurez un vrai serveur SMTP.');
 });
 
 // live preview: company name / description typed into fields
