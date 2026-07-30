@@ -3,824 +3,742 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="format-detection" content="telephone=no">
 <title>Bénin Digital Hub — Agence digitale & hub d'innovation au Bénin</title>
 <meta name="description" content="Bénin Digital Hub : agence digitale et hub d'innovation à Cotonou. Développement web & mobile, IA, formation tech et incubation de startups au Bénin.">
-<meta name="theme-color" content="#030a03">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://benindigitalhub.tech/">
-<meta property="og:title" content="Bénin Digital Hub — Agence digitale & hub d'innovation">
-<meta property="og:description" content="Nous transformons vos idées en solutions tech qui impactent l'économie béninoise. Web, mobile, IA et formation.">
-<meta property="og:image" content="https://benindigitalhub.tech/banner.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Bénin Digital Hub">
-<meta name="twitter:description" content="Agence digitale & hub d'innovation au Bénin.">
-<meta name="twitter:image" content="https://benindigitalhub.tech/banner.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{--g:#16a34a;--g2:#4ade80;--gold:#f5c518;--bg:#030a03;--bg2:#071007;}
-html{scroll-behavior:smooth;}
-body{font-family:'Inter',sans-serif;background:var(--bg);overflow-x:hidden;color:#111;}
-
-/* ─── CURSOR GLOW ─── */
-#cursor-glow{
-  position:fixed;width:300px;height:300px;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(22,163,74,0.12) 0%,transparent 70%);
-  transform:translate(-50%,-50%);z-index:9999;transition:opacity .3s;
+:root{
+  --navy:#0d2748;
+  --navy-2:#123363;
+  --blue:#2563eb;
+  --green:#16a34a;
+  --green-2:#22c55e;
+  --gold:#f59e0b;
+  --ink:#101828;
+  --muted:#65758b;
+  --line:#e7ecf3;
+  --bg-soft:#f6f8fb;
+  --radius:16px;
 }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+body{margin:0;font-family:'Inter',sans-serif;color:var(--ink);background:#fff;line-height:1.6;}
+h1,h2,h3,h4{margin:0;font-weight:800;letter-spacing:-0.02em;}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+.section{padding:90px 0}
+.section-soft{background:var(--bg-soft);}
 
-/* ─── NAV ─── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  background:rgba(3,10,3,0.85);backdrop-filter:blur(24px) saturate(180%);
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  padding:0 60px;height:64px;display:flex;align-items:center;
-  transition:height .3s,background .3s;
-}
-.logo{font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px;}
-.logo b{color:var(--g);}
-.nav-c{display:flex;gap:0;margin:0 auto;}
-.nav-c a{
-  font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;font-weight:500;
-  padding:8px 16px;border-radius:8px;transition:color .2s;position:relative;
-}
-.nav-c a::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
-  width:0;height:2px;background:var(--g);border-radius:1px;transition:width .25s;}
-.nav-c a:hover{color:#fff;}
-.nav-c a:hover::after{width:16px;}
-.nav-btn{background:transparent;border:1.5px solid rgba(22,163,74,0.5);
-  color:var(--g);border-radius:8px;padding:8px 20px;font-size:13px;font-weight:700;
-  cursor:pointer;transition:all .25s;position:relative;overflow:hidden;margin-right:10px;}
-.nav-btn::before{content:'';position:absolute;inset:0;background:var(--g);
-  transform:translateX(-101%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
-.nav-btn:hover{color:#fff;border-color:var(--g);}
-.nav-btn:hover::before{transform:translateX(0);}
-.nav-btn span{position:relative;z-index:1;}
-.nav-cta{background:var(--g);color:#fff;border:none;border-radius:8px;padding:9px 22px;
-  font-size:13px;font-weight:700;cursor:pointer;position:relative;overflow:hidden;
-  transition:transform .2s,box-shadow .2s;}
-.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(22,163,74,0.45);}
+/* ---------- eyebrow ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+.eyebrow::before{content:"";width:18px;height:2px;background:var(--gold);border-radius:2px;}
+.section-head{max-width:640px;margin-bottom:48px;}
+.section-head h2{font-size:clamp(1.7rem,2.4vw+1rem,2.5rem);}
+.section-head p{margin-top:14px;color:var(--muted);font-size:1.02rem;}
+.center{text-align:center;margin-left:auto;margin-right:auto;}
 
-/* ─── HERO ─── */
-#hero{
-  position:relative;height:100vh;min-height:600px;background:var(--bg);
-  display:flex;align-items:center;overflow:hidden;padding-top:64px;
-}
-canvas#c{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
-.hero-photo{position:absolute;inset:0;background:url('/banner.jpg') center/cover no-repeat;z-index:0;}
-.hero-photo::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(3,10,3,0.94) 0%,rgba(3,10,3,0.82) 45%,rgba(3,10,3,0.6) 100%);}
-.hero-grad{position:absolute;inset:0;
-  background:radial-gradient(ellipse 70% 70% at 75% 50%,rgba(22,163,74,0.12) 0%,transparent 60%),
-             radial-gradient(ellipse 50% 80% at 20% 80%,rgba(245,197,24,0.06) 0%,transparent 55%);
-  pointer-events:none;}
-.hero-border{position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--g),transparent);
-  animation:borderFlow 3s ease-in-out infinite;}
-@keyframes borderFlow{0%,100%{opacity:0.3;}50%{opacity:1;}}
-.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr 0.9fr;
-  gap:60px;align-items:center;padding:0 60px;width:100%;max-width:1200px;margin:0 auto;}
-.live-badge{display:inline-flex;align-items:center;gap:6px;
-  background:rgba(22,163,74,0.12);border:1px solid rgba(22,163,74,0.3);
-  border-radius:100px;padding:5px 16px;margin-bottom:24px;
-  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);
-  animation:badgePulse 2s ease-in-out infinite;}
-@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(22,163,74,0.3);}50%{box-shadow:0 0 0 8px rgba(22,163,74,0);}}
-.live-dot{width:6px;height:6px;background:var(--g);border-radius:50%;animation:blink 1.4s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.1;}}
-.hero-title{font-size:56px;font-weight:900;line-height:1.1;color:#fff;letter-spacing:-2px;margin-bottom:22px;}
-.word-reveal{overflow:hidden;display:block;}
-.word-reveal span{display:block;transform:translateY(100%);animation:wordUp 0.7s cubic-bezier(.4,0,.2,1) forwards;}
-@keyframes wordUp{to{transform:translateY(0);}}
-.glitch{background:linear-gradient(135deg,var(--g),var(--g2),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:gradShift 4s ease-in-out infinite;background-size:200% 200%;}
-@keyframes gradShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-.typed-text{background:linear-gradient(135deg,var(--g),var(--g2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.cursor{display:inline-block;width:3px;height:.85em;background:var(--g);
-  vertical-align:middle;animation:cur .75s step-end infinite;border-radius:2px;margin-left:2px;}
-@keyframes cur{0%,100%{opacity:1;}50%{opacity:0;}}
-.hero-sub{font-size:16px;color:rgba(255,255,255,0.45);line-height:1.8;margin-bottom:36px;
-  animation:fadeUp .8s .6s ease both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.hero-btns{display:flex;gap:14px;animation:fadeUp .8s .8s ease both;}
-.btn-glow{background:linear-gradient(135deg,var(--g),#22c55e);color:#fff;border:none;
-  border-radius:12px;padding:15px 30px;font-size:14px;font-weight:700;cursor:pointer;
-  position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;
-  box-shadow:0 4px 20px rgba(22,163,74,0.4);animation:glowPulse 2.5s ease-in-out infinite;}
-@keyframes glowPulse{0%,100%{box-shadow:0 4px 20px rgba(22,163,74,0.4),0 0 0 0 rgba(22,163,74,0);}50%{box-shadow:0 4px 30px rgba(22,163,74,0.6),0 0 0 12px rgba(22,163,74,0);}}
-.btn-glow::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
-  animation:sheen 2.5s ease-in-out infinite;transform:skewX(-15deg);}
-@keyframes sheen{0%{left:-100%;}60%,100%{left:150%;}}
-.btn-glow:hover{transform:translateY(-3px) scale(1.02);}
-.btn-outline{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);
-  color:rgba(255,255,255,0.8);border-radius:12px;padding:15px 30px;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .25s;backdrop-filter:blur(8px);}
-.btn-outline:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
-.float-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;animation:fadeUp .8s .5s ease both;}
-.fstat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
-  border-radius:18px;padding:24px;cursor:default;transition:all .3s;}
-.fstat:hover{transform:translateY(-5px) rotateX(5deg);border-color:rgba(22,163,74,0.3);}
-.fstat-num{font-size:38px;font-weight:900;color:var(--g);line-height:1;}
-.fstat-unit{font-size:20px;color:var(--gold);font-weight:700;}
-.fstat p{font-size:12px;color:rgba(255,255,255,0.38);margin-top:6px;line-height:1.4;}
-.fstat.au{background:rgba(245,197,24,0.05);border-color:rgba(245,197,24,0.15);}
-.fstat.au .fstat-num{color:var(--gold);}
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:10px;font-weight:700;font-size:0.92rem;border:1px solid transparent;transition:transform .15s ease, background .15s ease, box-shadow .15s ease;}
+.btn-primary{background:var(--navy);color:#fff;}
+.btn-primary:hover{background:var(--navy-2);transform:translateY(-2px);box-shadow:0 10px 24px rgba(13,39,72,0.25);}
+.btn-outline{background:#fff;border-color:var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.btn svg{width:16px;height:16px}
 
-/* ─── MARQUEE ─── */
-.mwrap{background:linear-gradient(90deg,var(--g),#15803d,var(--g));
-  overflow:hidden;padding:13px 0;position:relative;}
-.mwrap::before,.mwrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:1;}
-.mwrap::before{left:0;background:linear-gradient(90deg,var(--g),transparent);}
-.mwrap::after{right:0;background:linear-gradient(-90deg,var(--g),transparent);}
-.mtrack{display:flex;width:max-content;animation:mq 22s linear infinite;}
-.mtrack:hover{animation-play-state:paused;}
-.mi{display:flex;align-items:center;gap:10px;padding:0 26px;white-space:nowrap;}
-.mi span{font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);}
-.msep{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;}
-@keyframes mq{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+/* ---------- nav ---------- */
+header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;}
+.brand-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:0.9rem;flex-shrink:0;}
+.nav-links{display:flex;gap:28px;list-style:none;margin:0;padding:0;}
+.nav-links a{font-size:0.92rem;color:var(--muted);transition:color .2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-actions{display:flex;align-items:center;gap:12px;}
+.burger{display:none;background:none;border:0;padding:6px;}
+.burger svg{width:24px;height:24px}
+.mobile-menu{position:fixed;inset:0;background:#fff;z-index:200;display:flex;flex-direction:column;padding:24px;transform:translateY(-100%);transition:transform .3s ease;}
+.mobile-menu.open{transform:translateY(0)}
+.mobile-menu .top{display:flex;justify-content:space-between;align-items:center;}
+.mobile-menu ul{list-style:none;margin:auto 0;padding:0;display:flex;flex-direction:column;gap:22px;}
+.mobile-menu a{font-size:1.7rem;font-weight:700;}
 
-/* ─── SECTION ─── */
-.section{padding:80px 60px;}
-.s-label{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;
-  letter-spacing:2.5px;text-transform:uppercase;color:var(--g);margin-bottom:14px;}
-.s-label i{display:block;width:24px;height:2px;background:var(--g);border-radius:1px;}
-h2.st{font-size:40px;font-weight:900;letter-spacing:-1.5px;line-height:1.15;margin-bottom:12px;}
-p.ss{font-size:15px;color:#777;line-height:1.75;max-width:540px;}
+/* ---------- hero ---------- */
+.hero{padding:64px 0 0;background:linear-gradient(180deg,#fbfdff,#fff 60%);}
+.hero-inner{display:grid;grid-template-columns:1.05fr 0.95fr;gap:50px;align-items:center;padding-bottom:56px;}
+h1.hero-title{font-size:clamp(2.1rem,3.6vw+1rem,3.2rem);line-height:1.12;}
+h1.hero-title .grad{background:linear-gradient(120deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p.lead{margin-top:18px;color:var(--muted);font-size:1.05rem;max-width:48ch;}
+.hero-ctas{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;}
+.trust-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:32px;}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:0.86rem;font-weight:600;color:var(--ink);}
+.trust-item svg{width:16px;height:16px;color:#fff;background:var(--green);border-radius:50%;padding:3px;flex-shrink:0;}
 
-/* ─── SERVICES ─── */
-.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px;max-width:1080px;}
-.sv{background:#fff;border:1px solid #ebebeb;border-radius:20px;padding:32px;
-  position:relative;overflow:hidden;cursor:default;
-  transition:transform .35s cubic-bezier(.4,0,.2,1),border-color .35s,box-shadow .35s;}
-.sv::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--g),var(--g2));
-  transform:scaleX(0);transform-origin:left;transition:transform .35s;}
-.sv:hover{transform:translateY(-7px);border-color:rgba(22,163,74,0.25);box-shadow:0 24px 60px rgba(22,163,74,0.13);}
-.sv:hover::after{transform:scaleX(1);}
-.sv-icon{font-size:38px;display:block;margin-bottom:20px;transition:transform .3s;}
-.sv:hover .sv-icon{transform:scale(1.2) rotate(-8deg);}
-.sv h3{font-size:17px;font-weight:800;margin-bottom:10px;}
-.sv p{font-size:13px;color:#888;line-height:1.65;}
-.sv-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:18px;}
-.stag{font-size:9px;font-weight:700;padding:3px 9px;border-radius:5px;background:#f0fdf4;color:var(--g);}
-.sv-arrow{position:absolute;top:22px;right:22px;width:34px;height:34px;border-radius:50%;
-  background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:14px;color:#999;transition:all .3s;}
-.sv:hover .sv-arrow{background:var(--g);color:#fff;transform:translate(2px,-2px) rotate(45deg);}
-.sv.hero-sv{background:linear-gradient(135deg,#0a1f0a,#0f2d0f);border-color:rgba(255,255,255,0.06);
-  grid-column:span 2;display:grid;grid-template-columns:1.1fr 0.9fr;gap:0;align-items:center;}
-.sv.hero-sv:hover{border-color:rgba(22,163,74,0.3);box-shadow:0 24px 70px rgba(0,0,0,0.4);}
-.sv.hero-sv h3{color:#fff;font-size:24px;}
-.sv.hero-sv p{color:rgba(255,255,255,0.45);}
-.sv.hero-sv .stag{background:rgba(22,163,74,0.15);color:#4ade80;}
-.sv.hero-sv .sv-arrow{background:rgba(255,255,255,0.08);color:#fff;}
-.sv.hero-sv:hover .sv-arrow{background:var(--g);}
-.sv-visual{height:180px;border-radius:16px;background:linear-gradient(135deg,rgba(22,163,74,0.12),rgba(22,163,74,0.04));
-  border:1px solid rgba(22,163,74,0.15);display:flex;align-items:center;justify-content:center;font-size:80px;
-  position:relative;overflow:hidden;}
-.sv-visual::before{content:'';position:absolute;inset:0;
-  background:conic-gradient(from 0deg,transparent 0%,rgba(22,163,74,0.1) 25%,transparent 50%);
-  animation:rotate 4s linear infinite;}
-@keyframes rotate{to{transform:rotate(360deg);}}
+/* hero illustration */
+.hero-visual{position:relative;height:320px;}
+.hv-blob{position:absolute;inset:8% 4%;background:linear-gradient(135deg,#eaf1ff,#eefcf3);border-radius:32px;}
+.hv-laptop{position:absolute;left:12%;top:18%;width:62%;}
+.hv-screen{width:100%;aspect-ratio:16/10;background:var(--navy);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 40px rgba(13,39,72,0.25);}
+.hv-screen .mark{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.3rem;}
+.hv-base{width:112%;margin-left:-6%;height:12px;background:#c7cede;border-radius:0 0 10px 10px;}
+.hv-chip{position:absolute;background:#fff;border-radius:14px;box-shadow:0 14px 30px rgba(16,24,40,0.12);display:flex;align-items:center;justify-content:center;}
+.hv-chip svg{width:26px;height:26px}
+.hv-c1{top:4%;right:6%;width:58px;height:58px;color:var(--gold);}
+.hv-c2{bottom:10%;right:14%;width:64px;height:64px;color:var(--blue);}
+.hv-c3{bottom:0%;left:2%;width:54px;height:54px;color:var(--green);}
 
-/* ─── PROJECTS ─── */
-.pbg{background:linear-gradient(180deg,#f4f7f4,#eef2ee);}
-.pgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;margin-top:52px;max-width:1080px;}
-.pmain{background:linear-gradient(135deg,#071007,#0d2a10);border-radius:24px;padding:44px;
-  position:relative;overflow:hidden;border:1px solid rgba(22,163,74,0.15);
-  transition:border-color .4s,box-shadow .4s,transform .3s;}
-.pmain:hover{border-color:rgba(22,163,74,0.4);box-shadow:0 32px 90px rgba(0,0,0,0.5);transform:scale(1.01);}
-.pring{position:absolute;top:-100px;right:-100px;width:380px;height:380px;border-radius:50%;
-  border:1px solid rgba(22,163,74,0.1);animation:ringPulse 3s ease-in-out infinite;}
-.pring2{position:absolute;top:-70px;right:-70px;width:310px;height:310px;border-radius:50%;
-  border:1px solid rgba(22,163,74,0.07);animation:ringPulse 3s ease-in-out infinite .5s;}
-@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.6;}50%{transform:scale(1.08);opacity:1;}}
-.pemoji{position:absolute;bottom:24px;right:28px;font-size:120px;opacity:.1;
-  transition:opacity .4s,transform .4s;transform:rotate(-8deg);}
-.pmain:hover .pemoji{opacity:.2;transform:rotate(-3deg) scale(1.1);}
-.pmc{position:relative;z-index:1;}
-.plive{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:700;
-  letter-spacing:1.5px;text-transform:uppercase;background:rgba(22,163,74,0.12);
-  border:1px solid rgba(22,163,74,0.3);color:#4ade80;border-radius:100px;padding:4px 12px;margin-bottom:18px;}
-.plive::before{content:'●';font-size:7px;animation:blink 1.4s infinite;}
-.pmain h3{font-size:30px;font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:-0.5px;}
-.pmain p{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.75;margin-bottom:22px;}
-.ptags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:26px;}
-.ptag{font-size:10px;font-weight:600;padding:4px 11px;border-radius:6px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);}
-.plink{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--gold);
-  border:1px solid rgba(245,197,24,0.25);border-radius:10px;padding:10px 20px;
-  background:rgba(245,197,24,0.05);cursor:pointer;transition:all .25s;text-decoration:none;}
-.plink:hover{background:rgba(245,197,24,0.12);border-color:var(--gold);transform:translateX(4px);}
-.psidecards{display:flex;flex-direction:column;gap:18px;}
-.pcard{background:#fff;border:1px solid #ebebeb;border-radius:20px;padding:28px;flex:1;
-  transition:all .3s;position:relative;overflow:hidden;cursor:default;}
-.pcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--g);transform:scaleY(0);transition:transform .3s;transform-origin:bottom;}
-.pcard:hover{border-color:rgba(22,163,74,0.2);box-shadow:0 14px 36px rgba(22,163,74,0.08);transform:translateX(7px);}
-.pcard:hover::before{transform:scaleY(1);}
-.pcard-ic{font-size:42px;margin-bottom:14px;display:block;transition:transform .3s;}
-.pcard:hover .pcard-ic{transform:scale(1.1) rotate(-5deg);}
-.pbadge{display:inline-block;font-size:9px;font-weight:700;padding:3px 8px;border-radius:5px;margin-bottom:10px;}
-.pbadge.dev{background:#fff7d6;color:#9a6b00;}
-.pbadge.idea{background:#f0fdf4;color:var(--g);}
-.pcard h3{font-size:17px;font-weight:800;margin-bottom:8px;}
-.pcard p{font-size:13px;color:#888;line-height:1.6;}
-.pclink{font-size:12px;font-weight:700;color:var(--g);margin-top:14px;display:block;}
+/* ---------- stats bar ---------- */
+.stats-bar{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 50px rgba(16,24,40,0.06);padding:30px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;transform:translateY(-1px);}
+.stat{text-align:center;padding:0 8px;}
+.stat b{display:block;font-size:clamp(1.7rem,2.2vw,2.2rem);color:var(--navy);}
+.stat span{font-size:0.82rem;color:var(--muted);}
 
-/* ─── NUMBERS ─── */
-.nbg{background:var(--bg);position:relative;overflow:hidden;}
-.ngrid-bg{position:absolute;inset:0;
-  background-image:linear-gradient(rgba(22,163,74,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(22,163,74,0.04) 1px,transparent 1px);
-  background-size:52px 52px;animation:gridMove 20s linear infinite;}
-@keyframes gridMove{from{background-position:0 0;}to{background-position:52px 52px;}}
-.nglow{position:absolute;width:600px;height:600px;border-radius:50%;
-  background:radial-gradient(circle,rgba(22,163,74,0.12),transparent 65%);
-  top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 4s ease-in-out infinite;}
-@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.15);}}
-.ni{position:relative;z-index:1;}
-.ngrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.05);
-  border-radius:22px;overflow:hidden;margin-top:60px;max-width:900px;}
-.nc{background:rgba(3,10,3,0.9);padding:44px 28px;text-align:center;cursor:default;
-  transition:background .3s;position:relative;overflow:hidden;}
-.nc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--g),transparent);
-  transform:translateX(-100%);transition:transform .4s;}
-.nc:hover{background:rgba(22,163,74,0.06);}
-.nc:hover::after{transform:translateX(0);}
-.nc .big{font-size:56px;font-weight:900;color:var(--g);line-height:1;}
-.nc .suf{font-size:36px;color:var(--gold);}
-.nc p{font-size:13px;color:rgba(255,255,255,0.35);margin-top:12px;font-weight:500;}
+/* ---------- domains of expertise ---------- */
+.domains-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.domain-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px;transition:transform .25s ease, box-shadow .25s ease;}
+.domain-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(16,24,40,0.08);}
+.domain-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:18px;}
+.domain-icon svg{width:24px;height:24px}
+.domain-card h3{font-size:1.12rem;margin-bottom:12px;}
+.domain-card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}
+.domain-card li{font-size:0.9rem;color:var(--muted);padding-left:18px;position:relative;}
+.domain-card li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.domain-link{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:0.86rem;font-weight:700;color:var(--blue);}
 
-/* ─── HUB ─── */
-.hbg{background:#fff;}
-.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:56px;max-width:1080px;}
-.hcards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px;}
-.hc{background:#f4f9f4;border:1px solid #ddeedd;border-radius:16px;padding:22px;
-  cursor:default;transition:all .3s;position:relative;overflow:hidden;}
-.hc::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(22,163,74,0.05),transparent);opacity:0;transition:opacity .3s;}
-.hc:hover{border-color:var(--g);transform:translateY(-4px);box-shadow:0 10px 28px rgba(22,163,74,0.13);}
-.hc:hover::after{opacity:1;}
-.hc-ic{font-size:28px;margin-bottom:12px;display:block;transition:transform .3s;}
-.hc:hover .hc-ic{transform:scale(1.15) rotate(-8deg);}
-.hc h4{font-size:14px;font-weight:800;margin-bottom:4px;}
-.hc p{font-size:12px;color:#777;line-height:1.5;}
-.aip{background:linear-gradient(145deg,#050d05,#0a1f0a);border-radius:24px;padding:40px;
-  border:1px solid rgba(22,163,74,0.12);position:relative;overflow:hidden;}
-.aurora{position:absolute;width:420px;height:420px;border-radius:50%;
-  background:radial-gradient(circle,rgba(22,163,74,0.14),transparent 60%);
-  top:-100px;right:-100px;animation:aurora 6s ease-in-out infinite;}
-.aurora2{position:absolute;width:260px;height:260px;border-radius:50%;
-  background:radial-gradient(circle,rgba(245,197,24,0.07),transparent 60%);
-  bottom:-60px;left:-40px;animation:aurora 6s ease-in-out infinite 3s;}
-@keyframes aurora{0%,100%{transform:scale(1) translate(0,0);}33%{transform:scale(1.1) translate(20px,-20px);}66%{transform:scale(0.95) translate(-10px,15px);}}
-.aip-in{position:relative;z-index:1;}
-.aip-lbl{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
-.aip h3{font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;}
-.aip>.aip-in>p{font-size:13px;color:rgba(255,255,255,0.38);margin-bottom:28px;line-height:1.65;}
-.arows{display:flex;flex-direction:column;gap:11px;}
-.arow{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.06);border-radius:13px;padding:15px 18px;
-  transition:all .25s;cursor:default;position:relative;overflow:hidden;}
-.arow::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;
-  background:linear-gradient(90deg,rgba(22,163,74,0.12),transparent);transition:width .35s;}
-.arow:hover{border-color:rgba(22,163,74,0.25);}
-.arow:hover::before{width:100%;}
-.adot{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0;position:relative;z-index:1;}
-.adot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(22,163,74,0.3);animation:ringExpand 2s ease-out infinite;}
-@keyframes ringExpand{0%{transform:scale(1);opacity:.8;}100%{transform:scale(2.5);opacity:0;}}
-.arow-t{position:relative;z-index:1;}
-.arow-t strong{font-size:13px;color:#fff;font-weight:700;display:block;}
-.arow-t span{font-size:11px;color:rgba(255,255,255,0.38);}
+/* ---------- why us ---------- */
+.why-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:40px;}
+.why-item{background:var(--bg-soft);border-radius:14px;padding:26px;}
+.why-item svg{width:24px;height:24px;color:var(--blue);margin-bottom:14px;}
+.why-item h4{font-size:1rem;margin-bottom:8px;}
+.why-item p{font-size:0.88rem;color:var(--muted);}
+.why-top{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+.why-top p{color:var(--muted);margin-top:12px;}
 
-/* ─── PROCESS ─── */
-.pbg2{background:linear-gradient(180deg,#f4f7f4,#edf2ed);}
-.psteps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:60px;position:relative;max-width:900px;}
-.pline-wrap{position:absolute;top:40px;left:12.5%;right:12.5%;height:2px;z-index:0;}
-.pline-bg{position:absolute;inset:0;background:#e0e0e0;border-radius:1px;}
-.pline-fill{position:absolute;inset:0;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:1px;transform:scaleX(0);transform-origin:left;transition:transform 1.5s cubic-bezier(.4,0,.2,1);}
-.sw{text-align:center;padding:0 16px;position:relative;z-index:1;}
-.sc{width:80px;height:80px;border-radius:50%;background:#fff;border:2px solid #e0e0e0;
-  display:flex;align-items:center;justify-content:center;margin:0 auto 22px;position:relative;font-size:28px;
-  transition:border-color .4s,transform .35s,box-shadow .35s;}
-.sc.on{border-color:var(--g);box-shadow:0 0 0 8px rgba(22,163,74,0.12);transform:scale(1.1);}
-.sn{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;
-  background:var(--g);color:#fff;font-size:9px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;transform:scale(0);transition:transform .4s .2s;}
-.sc.on .sn{transform:scale(1);}
-.sw h4{font-size:15px;font-weight:800;margin-bottom:8px;}
-.sw p{font-size:12px;color:#888;line-height:1.6;}
+/* ---------- réalisations ---------- */
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.proj-card{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff;transition:transform .25s ease, box-shadow .25s ease;}
+.proj-card:hover{transform:translateY(-6px);box-shadow:0 22px 46px rgba(16,24,40,0.1);}
+.proj-banner{padding:26px 24px 22px;display:flex;align-items:center;gap:14px;}
+.proj-banner.unibenin{background:linear-gradient(120deg,#12335f,#1c4b8c);}
+.proj-banner.yeye{background:linear-gradient(120deg,#0f6b3a,#16a34a);}
+.proj-banner.sante{background:linear-gradient(120deg,#0e5f78,#1793b0);}
+.proj-logo{width:46px;height:46px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.proj-logo img{width:100%;height:100%;object-fit:cover;}
+.proj-banner h3{color:#fff;font-size:1.08rem;}
+.proj-body{padding:22px 24px 26px;}
+.proj-tag{display:inline-block;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:100px;margin-bottom:12px;}
+.proj-tag.blue{background:#eaf1ff;color:var(--blue);}
+.proj-tag.green{background:#eafaf0;color:var(--green);}
+.proj-tag.teal{background:#e6f7fb;color:#0e7fa0;}
+.proj-body p{font-size:0.9rem;color:var(--muted);margin-bottom:16px;}
+.proj-link{font-size:0.86rem;font-weight:700;color:var(--navy);display:inline-flex;align-items:center;gap:6px;}
 
-/* ─── TEAM ─── */
-.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:52px;max-width:900px;}
-.tc{border-radius:20px;overflow:hidden;border:1px solid #ebebeb;transition:all .35s;cursor:default;}
-.tc:hover{transform:translateY(-7px);box-shadow:0 22px 55px rgba(0,0,0,0.1);border-color:rgba(22,163,74,0.25);}
-.tc-av{height:120px;display:flex;align-items:center;justify-content:center;font-size:44px;}
-.tc-av.f{background:linear-gradient(135deg,#0a1f0a,#1e4d2b);}
-.tc-av.o{background:#f5f5f5;}
-.tc-av .pfp{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.9);box-shadow:0 8px 22px rgba(0,0,0,0.3);}
-.tc-info{padding:20px;background:#fff;}
-.tc-info h4{font-size:14px;font-weight:800;margin-bottom:3px;}
-.tc-info .role{font-size:11px;color:var(--g);font-weight:700;margin-bottom:8px;}
-.tc-info p{font-size:11px;color:#999;line-height:1.5;}
-.ob{display:inline-block;font-size:9px;background:#fff7d6;color:#9a6b00;border-radius:5px;padding:2px 7px;font-weight:700;}
+/* ---------- hub / ai lab ---------- */
+.hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+.hub-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px;}
+.hub-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;}
+.hub-card svg{width:22px;height:22px;color:var(--blue);margin-bottom:10px;}
+.hub-card h4{font-size:0.96rem;margin-bottom:6px;}
+.hub-card p{font-size:0.84rem;color:var(--muted);}
+.ailab-panel{background:linear-gradient(160deg,var(--navy),#173b6b);border-radius:20px;padding:32px;color:#fff;}
+.ailab-panel .eyebrow{color:var(--gold);}
+.ailab-panel .eyebrow::before{background:var(--gold);}
+.ailab-panel h3{color:#fff;font-size:1.3rem;margin-bottom:12px;}
+.ailab-panel > p{color:rgba(255,255,255,0.65);font-size:0.92rem;margin-bottom:22px;}
+.ai-row{display:flex;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.12);}
+.ai-row:first-of-type{border-top:none;}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);margin-top:7px;flex-shrink:0;}
+.ai-row strong{font-size:0.9rem;display:block;margin-bottom:2px;}
+.ai-row span{font-size:0.82rem;color:rgba(255,255,255,0.6);}
 
-/* ─── CONTACT ─── */
-.cbg{background:var(--bg);padding:80px 60px;}
-.cgrid{display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:start;max-width:1080px;margin:0 auto;}
-.cl h2{font-size:40px;font-weight:900;color:#fff;letter-spacing:-1.5px;margin-bottom:16px;}
-.cl h2 em{font-style:normal;background:linear-gradient(135deg,var(--g),var(--g2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.cl>p{font-size:14px;color:rgba(255,255,255,0.38);line-height:1.8;margin-bottom:36px;}
-.crows{display:flex;flex-direction:column;gap:13px;}
-.crow{display:flex;gap:16px;align-items:center;background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px 20px;
-  transition:all .25s;cursor:default;}
-.crow:hover{background:rgba(22,163,74,0.05);border-color:rgba(22,163,74,0.2);transform:translateX(5px);}
-.crow .cic{font-size:22px;flex-shrink:0;}
-.crow strong{font-size:11px;color:var(--g);display:block;margin-bottom:2px;font-weight:700;}
-.crow span{font-size:13px;color:rgba(255,255,255,0.55);}
-.fcard{background:#fff;border-radius:24px;padding:36px;position:relative;overflow:hidden;}
-.fcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--g),var(--g2),var(--gold));}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-.fg{display:flex;flex-direction:column;gap:5px;}
-.fg label{font-size:10px;font-weight:700;color:#555;letter-spacing:.7px;}
-.fg input,.fg select,.fg textarea{border:1.5px solid #ebebeb;border-radius:12px;padding:12px 16px;
-  font-size:13px;color:#333;outline:none;background:#fafafa;
-  transition:border-color .25s,box-shadow .25s,transform .2s;font-family:inherit;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{
-  border-color:var(--g);box-shadow:0 0 0 4px rgba(22,163,74,0.1);background:#fff;transform:scale(1.01);}
-.fg textarea{resize:none;min-height:100px;}
-.filebox{display:flex;align-items:center;gap:10px;border:1.5px dashed #cfcfcf;border-radius:12px;
-  padding:12px 16px;font-size:13px;color:#888;cursor:pointer;transition:all .2s;background:#fafafa;}
-.filebox:hover{border-color:var(--g);color:#555;background:#f4fbf6;}
-.filebox.has{border-style:solid;border-color:var(--g);color:#16a34a;background:#f0fbf3;}
-.fileico{font-size:16px;}
-.sbtn{width:100%;margin-top:16px;background:linear-gradient(135deg,var(--g),#22c55e);
-  color:#fff;border:none;border-radius:12px;padding:16px;font-size:14px;font-weight:700;
-  cursor:pointer;font-family:inherit;position:relative;overflow:hidden;
-  transition:transform .2s,box-shadow .2s;box-shadow:0 6px 24px rgba(22,163,74,0.35);}
-.sbtn::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
-  animation:sheen 2.5s ease-in-out infinite;transform:skewX(-15deg);}
-.sbtn:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(22,163,74,0.45);}
+/* ---------- process ---------- */
+.process-wrap{position:relative;}
+.process-line{position:absolute;top:26px;left:12.5%;right:12.5%;height:2px;background:var(--line);z-index:0;}
+.process-line-fill{position:absolute;top:0;left:0;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--green));transition:width 1.2s ease;}
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;z-index:1;}
+.process-step{text-align:center;}
+.process-circle{width:54px;height:54px;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-weight:800;color:var(--muted);transition:all .3s ease;}
+.process-circle.on{border-color:var(--blue);color:var(--blue);box-shadow:0 0 0 6px rgba(37,99,235,0.1);}
+.process-step h4{font-size:0.98rem;margin-bottom:8px;}
+.process-step p{font-size:0.85rem;color:var(--muted);}
 
-/* ─── FOOTER ─── */
-footer{background:#020602;padding:28px 60px;display:flex;align-items:center;
-  justify-content:space-between;border-top:1px solid rgba(255,255,255,0.04);}
-.fl{font-size:16px;font-weight:900;color:#fff;letter-spacing:-0.5px;}
-.fl b{color:var(--g);}
-.flinks{display:flex;gap:28px;}
-.flinks a{font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none;transition:color .2s;}
-.flinks a:hover{color:rgba(255,255,255,0.7);}
-.fc{font-size:11px;color:rgba(255,255,255,0.18);}
+/* ---------- tech stack ---------- */
+.tech-grid{display:flex;flex-wrap:wrap;gap:12px;}
+.tech-chip{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:0.86rem;font-weight:600;}
+.tech-dot{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.62rem;font-weight:800;flex-shrink:0;}
 
-/* ─── REVEAL ─── */
-.rv{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease;}
-.rvl{opacity:0;transform:translateX(-36px);transition:opacity .7s ease,transform .7s ease;}
-.rvr{opacity:0;transform:translateX(36px);transition:opacity .7s ease,transform .7s ease;}
-.rv.in,.rvl.in,.rvr.in{opacity:1;transform:none;}
-.d1{transition-delay:.05s!important;}.d2{transition-delay:.12s!important;}
-.d3{transition-delay:.19s!important;}.d4{transition-delay:.26s!important;}
-.d5{transition-delay:.33s!important;}.d6{transition-delay:.40s!important;}
-/* ============ RESPONSIVE / MOBILE ============ */
+/* ---------- team ---------- */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.team-card{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff;transition:transform .25s ease, box-shadow .25s ease;}
+.team-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(16,24,40,0.08);}
+.team-photo{height:120px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy),#1c4b8c);}
+.team-photo img{width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.85);}
+.team-photo.open{background:var(--bg-soft);font-size:2rem;color:#c2cadb;}
+.team-info{padding:20px;}
+.team-info h4{font-size:0.98rem;margin-bottom:4px;}
+.team-role{font-size:0.78rem;font-weight:700;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.03em;}
+.team-info p{font-size:0.84rem;color:var(--muted);}
+.open-badge{display:inline-block;font-size:0.68rem;font-weight:700;background:#fff7d6;color:#9a6b00;border-radius:5px;padding:3px 8px;}
+
+/* ---------- CTA banner ---------- */
+.cta-banner{background:var(--navy);border-radius:24px;padding:48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;color:#fff;position:relative;overflow:hidden;}
+.cta-banner::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 90% 0%,rgba(37,99,235,0.35),transparent 60%);}
+.cta-banner h3{position:relative;font-size:1.4rem;color:#fff;}
+.cta-banner p{position:relative;color:rgba(255,255,255,0.65);margin-top:8px;}
+.cta-banner .btn-primary{position:relative;background:#fff;color:var(--navy);}
+.cta-banner .btn-primary:hover{background:#eef2f8;}
+
+/* ---------- contact ---------- */
+.contact-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:50px;align-items:start;}
+.contact-lines{display:flex;flex-direction:column;gap:20px;margin-top:26px;}
+.contact-line{display:flex;gap:14px;align-items:flex-start;}
+.contact-line .ic{width:38px;height:38px;border-radius:10px;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;}
+.contact-line .ic svg{width:18px;height:18px}
+.contact-line b{display:block;font-size:0.9rem;}
+.contact-line span,.contact-line a{color:var(--muted);font-size:0.88rem;}
+form.contact-form{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:0 20px 50px rgba(16,24,40,0.06);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.field label{display:block;font-size:0.76rem;font-weight:700;letter-spacing:0.03em;color:var(--muted);margin-bottom:6px;}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:0.92rem;background:var(--bg-soft);}
+.field textarea{resize:vertical;min-height:90px;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);background:#fff;}
+.file-drop{display:flex;align-items:center;gap:10px;border:1.5px dashed var(--line);border-radius:10px;padding:12px 14px;font-size:0.86rem;color:var(--muted);cursor:pointer;background:var(--bg-soft);}
+.file-drop.has{border-style:solid;border-color:var(--green);color:var(--green);}
+.submit-btn{width:100%;justify-content:center;margin-top:6px;padding:14px;}
+
+/* ---------- footer ---------- */
+footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.foot-brand p{margin-top:14px;font-size:0.86rem;color:rgba(255,255,255,0.5);max-width:32ch;}
+.foot-col h5{color:#fff;font-size:0.86rem;margin-bottom:14px;}
+.foot-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+.foot-col a{font-size:0.86rem;color:rgba(255,255,255,0.55);}
+.foot-col a:hover{color:#fff;}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;font-size:0.8rem;color:rgba(255,255,255,0.4);flex-wrap:wrap;gap:12px;}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease, transform .6s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
 @media (max-width:980px){
-  .hero-in{grid-template-columns:1fr;gap:40px;}
-  .sg{grid-template-columns:1fr 1fr;}
-  .pgrid{grid-template-columns:1fr;}
-  .pfeature{grid-column:span 1;grid-template-columns:1fr;}
-  .ngrid{grid-template-columns:1fr 1fr;}
-  .hgrid{grid-template-columns:1fr;gap:32px;}
-  .cgrid{grid-template-columns:1fr;gap:36px;}
-  .tgrid{grid-template-columns:1fr 1fr;}
-  .psteps{grid-template-columns:1fr 1fr;gap:30px 0;}
+  .nav-links{display:none;}
+  .burger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-visual{order:-1;height:240px;}
+  .stats-bar{grid-template-columns:repeat(2,1fr);}
+  .domains-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .why-top{grid-template-columns:1fr;}
+  .proj-grid{grid-template-columns:1fr;}
+  .hub-grid{grid-template-columns:1fr;}
+  .process-grid{grid-template-columns:1fr 1fr;row-gap:30px;}
+  .process-line{display:none;}
+  .team-grid{grid-template-columns:1fr 1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;}
 }
-@media (max-width:640px){
-  .nav-c{display:none;}
-  #nav,nav#nav{padding:0 18px;}
-  #hero{height:auto;min-height:0;padding:118px 0 64px;}
-  .hero-in{padding:0 18px;grid-template-columns:1fr;}
-  .hero-in h1{font-size:clamp(40px,12vw,62px)!important;line-height:1.03;}
-  .st{font-size:clamp(30px,8.5vw,42px)!important;line-height:1.08;}
-  .float-stats{grid-template-columns:1fr 1fr;gap:12px;}
-  .sg{grid-template-columns:1fr;}
-  .ngrid{grid-template-columns:1fr;}
-  .tgrid{grid-template-columns:1fr;}
-  .hcards{grid-template-columns:1fr;}
-  .psteps{grid-template-columns:1fr;}
-  .frow{grid-template-columns:1fr;}
-  .hero-btns{flex-direction:column;align-items:stretch;}
-  .hero-btns .btn-glow,.hero-btns .btn-outline{width:100%;text-align:center;justify-content:center;}
-  .hero-photo::after{background:linear-gradient(180deg,rgba(3,10,3,0.85),rgba(3,10,3,0.93));}
-  .pfeature .pmc{padding:28px 22px;}
-  .mtrack{font-size:34px;}
-  /* cartes services : empiler proprement, retirer layout 2 colonnes */
-  .sv{padding:26px 22px;}
-  .sv.hero-sv{grid-column:span 1;display:block;}
-  .sv.hero-sv > div[style]{padding-right:0!important;}
-  .sv.hero-sv h3{font-size:21px;}
-  .sv-visual{display:none;}
-  .sv-arrow{top:18px;right:18px;width:30px;height:30px;}
-  .sv h3{padding-right:40px;}
-  /* footer empilé et centré */
-  footer{flex-direction:column;gap:18px;text-align:center;padding:32px 20px;}
-  .flinks{flex-wrap:wrap;justify-content:center;gap:18px;}
-  .fc{font-size:11px;line-height:1.5;}
+@media (max-width:600px){
+  .section{padding:64px 0;}
+  .process-grid{grid-template-columns:1fr;}
+  .team-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr;}
+  .cta-banner{flex-direction:column;align-items:flex-start;}
 }
 </style>
 </head>
 <body>
-<div id="cursor-glow"></div>
 
-<nav id="nav">
-  <div class="logo">BDH<b>.</b></div>
-  <div class="nav-c">
-    <a href="#services">Services</a><a href="#projets">Projets</a>
-    <a href="#hub">Le Hub</a><a href="#ailabs">AI Lab</a><a href="#equipe">Équipe</a>
+<svg style="display:none">
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 6l-2 12"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M12 9V5m-3-1h6"/><circle cx="9" cy="14" r="1.2"/><circle cx="15" cy="14" r="1.2"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-1-7.9A5 5 0 0 1 16 9a4 4 0 0 1 1 9H7z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11.2c.6.4 1 1 1 1.8h4c0-.8.4-1.4 1-1.8A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l-2 6 6-2 9-9a4 4 0 0 0-4-4l-9 9z"/><circle cx="15" cy="9" r="1.2"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.6 7-12a7 7 0 1 0-14 0c0 5.4 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 1h2a2 2 0 0 1 2 1.7c.1 1.1.3 2.1.7 3.1a2 2 0 0 1-.4 2.1L7 9.5a16 16 0 0 0 6 6l1.6-1.4a2 2 0 0 1 2.1-.4c1 .4 2 .6 3.1.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 2v6h6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="brand"><span class="brand-mark">BH</span>Bénin Digital Hub</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#realisations">Réalisations</a></li>
+      <li><a href="#hub">Le Hub</a></li>
+      <li><a href="#equipe">Équipe</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#contact" class="btn btn-outline" style="padding:10px 18px;">Nous contacter</a>
+      <button class="burger" id="burgerBtn" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    </div>
   </div>
-  <button class="nav-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><span>Contact</span></button>
-  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Démarrer →</button>
-</nav>
+</header>
 
-<div id="hero">
-  <div class="hero-photo"></div>
-  <canvas id="c"></canvas>
-  <div class="hero-grad"></div>
-  <div class="hero-border"></div>
-  <div class="hero-in">
+<div class="mobile-menu" id="mobileMenu">
+  <div class="top">
+    <span class="brand"><span class="brand-mark">BH</span>BDH</span>
+    <button class="burger" id="closeBtn" style="display:flex" aria-label="Fermer"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#realisations">Réalisations</a></li>
+    <li><a href="#hub">Le Hub</a></li>
+    <li><a href="#equipe">Équipe</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-inner">
     <div>
-      <div class="live-badge"><div class="live-dot"></div>Basé à Cotonou · Bénin · 2024</div>
-      <h1 class="hero-title">
-        <span class="word-reveal"><span style="animation-delay:.1s">Construisons</span></span>
-        <span class="word-reveal"><span style="animation-delay:.2s" class="glitch">l'avenir</span></span>
-        <span class="word-reveal"><span style="animation-delay:.3s"><span id="typed" class="typed-text"></span><span class="cursor"></span></span></span>
-        <span class="word-reveal"><span style="animation-delay:.4s">du Bénin</span></span>
-      </h1>
-      <p class="hero-sub">Agence digitale & hub d'innovation. Nous transformons vos idées en solutions tech qui impactent réellement l'économie béninoise.</p>
-      <div class="hero-btns">
-        <button class="btn-glow" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Démarrer un projet →</button>
-        <button class="btn-outline" onclick="document.getElementById('hub').scrollIntoView({behavior:'smooth'})">Rejoindre le Hub</button>
+      <div class="eyebrow">Basé à Cotonou · Bénin · depuis 2024</div>
+      <h1 class="hero-title">Transformer le Bénin grâce au <span class="grad">numérique</span></h1>
+      <p class="lead">Bénin Digital Hub accompagne entreprises, administrations et startups dans leur transformation digitale, avec des solutions web, mobile et IA pensées pour les réalités du marché béninois.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-primary">Démarrer un projet <svg><use href="#i-arrow"/></svg></a>
+        <a href="#hub" class="btn btn-outline">Rejoindre le Hub</a>
+      </div>
+      <div class="trust-row">
+        <div class="trust-item"><svg><use href="#i-check"/></svg>Innovation</div>
+        <div class="trust-item"><svg><use href="#i-check"/></svg>Expertise</div>
+        <div class="trust-item"><svg><use href="#i-check"/></svg>Impact local</div>
+        <div class="trust-item"><svg><use href="#i-check"/></svg>Confiance</div>
       </div>
     </div>
-    <div class="float-stats">
-      <div class="fstat"><div class="fstat-num counter-h" data-to="5"><span class="fstat-unit">+</span></div><p>Projets livrés avec succès</p></div>
-      <div class="fstat"><div class="fstat-num counter-h" data-to="3"></div><p>Secteurs d'impact couverts</p></div>
-      <div class="fstat"><div class="fstat-num counter-h" data-to="100"><span class="fstat-unit">%</span></div><p>Clients satisfaits</p></div>
-      <div class="fstat au"><div class="fstat-num">2026</div><p>Lancement du Hub national</p></div>
-    </div>
-  </div>
-</div>
-
-<div class="mwrap">
-  <div class="mtrack">
-    <div class="mi"><div class="msep"></div><span>Développement Web</span></div>
-    <div class="mi"><div class="msep"></div><span>Applications Mobile</span></div>
-    <div class="mi"><div class="msep"></div><span>Intelligence Artificielle</span></div>
-    <div class="mi"><div class="msep"></div><span>Formation Tech</span></div>
-    <div class="mi"><div class="msep"></div><span>Startups & Innovation</span></div>
-    <div class="mi"><div class="msep"></div><span>Mobile Money</span></div>
-    <div class="mi"><div class="msep"></div><span>Flutter</span></div>
-    <div class="mi"><div class="msep"></div><span>React · Next.js</span></div>
-    <div class="mi"><div class="msep"></div><span>Supabase · Vercel</span></div>
-    <div class="mi"><div class="msep"></div><span>IA Générative</span></div>
-    <div class="mi"><div class="msep"></div><span>Développement Web</span></div>
-    <div class="mi"><div class="msep"></div><span>Applications Mobile</span></div>
-    <div class="mi"><div class="msep"></div><span>Intelligence Artificielle</span></div>
-    <div class="mi"><div class="msep"></div><span>Formation Tech</span></div>
-    <div class="mi"><div class="msep"></div><span>Startups & Innovation</span></div>
-    <div class="mi"><div class="msep"></div><span>Mobile Money</span></div>
-    <div class="mi"><div class="msep"></div><span>Flutter</span></div>
-    <div class="mi"><div class="msep"></div><span>React · Next.js</span></div>
-    <div class="mi"><div class="msep"></div><span>Supabase · Vercel</span></div>
-    <div class="mi"><div class="msep"></div><span>IA Générative</span></div>
-  </div>
-</div>
-
-<div class="section" id="services" style="background:#fff;">
-  <div class="rv"><div class="s-label"><i></i>NOS SERVICES</div>
-    <h2 class="st">Ce que nous construisons<br>pour vous</h2>
-    <p class="ss">Des solutions digitales sur mesure, adaptées aux réalités du marché béninois.</p>
-  </div>
-  <div class="sg">
-    <div class="sv hero-sv rv d1">
-      <div style="padding-right:24px;">
-        <span class="sv-icon">💻</span>
-        <h3>Développement Web</h3>
-        <p>Sites vitrines, marketplaces, e-commerce et applications web performantes. Technologies modernes et performances optimisées.</p>
-        <div class="sv-tags"><span class="stag">React</span><span class="stag">Next.js</span><span class="stag">Supabase</span><span class="stag">Vercel</span></div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hv-blob"></div>
+      <div class="hv-laptop">
+        <div class="hv-screen"><div class="mark">BH</div></div>
+        <div class="hv-base"></div>
       </div>
-      <div class="sv-visual">💻</div>
-      <div class="sv-arrow">→</div>
+      <div class="hv-chip hv-c1"><svg><use href="#i-cloud"/></svg></div>
+      <div class="hv-chip hv-c2"><svg><use href="#i-chart"/></svg></div>
+      <div class="hv-chip hv-c3"><svg><use href="#i-code"/></svg></div>
     </div>
-    <div class="sv rv d2"><span class="sv-icon">📱</span><h3>Applications Mobiles</h3><p>iOS & Android natif avec Flutter. Paiement Mobile Money intégré (KKiaPay, MTN, Moov).</p><div class="sv-tags"><span class="stag">Flutter</span><span class="stag">iOS</span><span class="stag">Android</span><span class="stag">KKiaPay</span></div><div class="sv-arrow">→</div></div>
-    <div class="sv rv d3"><span class="sv-icon">🎓</span><h3>Formation Tech</h3><p>Programmes pratiques en développement web, mobile et outils digitaux pour professionnels béninois.</p><div class="sv-tags"><span class="stag">HTML/CSS</span><span class="stag">JavaScript</span><span class="stag">Flutter</span></div><div class="sv-arrow">→</div></div>
-    <div class="sv rv d4"><span class="sv-icon">🎯</span><h3>Conseil Digital</h3><p>Audit de votre présence digitale, stratégie de transformation numérique et roadmap personnalisée.</p><div class="sv-tags"><span class="stag">Stratégie</span><span class="stag">Audit</span><span class="stag">Roadmap</span></div><div class="sv-arrow">→</div></div>
-    <div class="sv rv d5"><span class="sv-icon">☁️</span><h3>Infrastructure Cloud</h3><p>Hébergement, déploiement continu et bases de données scalables et sécurisées.</p><div class="sv-tags"><span class="stag">Supabase</span><span class="stag">Vercel</span><span class="stag">PostgreSQL</span></div><div class="sv-arrow">→</div></div>
-    <div class="sv rv d6"><span class="sv-icon">🤝</span><h3>Support & Maintenance</h3><p>Maintenance continue, mises à jour, corrections de bugs et support réactif 6j/7.</p><div class="sv-tags"><span class="stag">6j/7</span><span class="stag">SLA garanti</span><span class="stag">Mises à jour</span></div><div class="sv-arrow">→</div></div>
   </div>
-</div>
+  <div class="wrap">
+    <div class="stats-bar reveal">
+      <div class="stat"><b class="cnt" data-to="5">0</b><span>Projets livrés</span></div>
+      <div class="stat"><b class="cnt" data-to="4">0</b><span>Plateformes en construction</span></div>
+      <div class="stat"><b class="cnt" data-to="100" data-suffix="%">0</b><span>Clients satisfaits</span></div>
+      <div class="stat"><b>2026</b><span>Lancement du Hub national</span></div>
+    </div>
+  </div>
+</section>
 
-<div class="section pbg" id="projets">
-  <div class="rv"><div class="s-label"><i></i>NOS RÉALISATIONS</div>
-    <h2 class="st">Des projets qui transforment</h2>
-    <p class="ss">Chaque projet crée un impact réel sur l'économie numérique béninoise.</p>
+<!-- ============ DOMAINES D'EXPERTISE ============ -->
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Nos domaines d'expertise</div>
+      <h2>Ce que nous construisons pour vous</h2>
+      <p>Des solutions digitales sur mesure, adaptées aux réalités du marché béninois.</p>
+    </div>
+    <div class="domains-grid">
+      <div class="domain-card reveal">
+        <div class="domain-icon" style="background:var(--blue);"><svg><use href="#i-code"/></svg></div>
+        <h3>Développement logiciel</h3>
+        <ul>
+          <li>Sites web & marketplaces</li>
+          <li>Applications mobiles iOS/Android (Flutter)</li>
+          <li>Paiement Mobile Money intégré (KKiaPay)</li>
+          <li>Maintenance & support 6j/7</li>
+        </ul>
+        <a href="#contact" class="domain-link">En savoir plus <svg style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="domain-card reveal">
+        <div class="domain-icon" style="background:var(--green);"><svg><use href="#i-bot"/></svg></div>
+        <h3>Intelligence Artificielle</h3>
+        <ul>
+          <li>Assistants et chatbots IA</li>
+          <li>Automatisation de tâches métier</li>
+          <li>IA en langues locales (Fon, Yoruba)</li>
+          <li>Formation et prompt engineering</li>
+        </ul>
+        <a href="#contact" class="domain-link">En savoir plus <svg style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="domain-card reveal">
+        <div class="domain-icon" style="background:var(--gold);"><svg><use href="#i-cloud"/></svg></div>
+        <h3>Cloud & Infrastructure</h3>
+        <ul>
+          <li>Hébergement Vercel & Supabase</li>
+          <li>Bases de données PostgreSQL</li>
+          <li>Déploiement continu</li>
+          <li>Sécurité & sauvegardes</li>
+        </ul>
+        <a href="#contact" class="domain-link">En savoir plus <svg style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
   </div>
-  <div class="pgrid">
-    <div class="pmain rvl">
-      <div class="pring"></div><div class="pring2"></div>
-      <div class="pemoji">🌿</div>
-      <div class="pmc">
-        <div class="plive">En production</div>
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
-          <img src="/yeyemarket.jpg" alt="Logo Yéyé Market" style="width:60px;height:60px;border-radius:14px;object-fit:cover;background:#fff;flex-shrink:0;">
-          <h3 style="margin:0;">Yéyé Market</h3>
+</section>
+
+<!-- ============ POURQUOI BDH ============ -->
+<section class="section section-soft">
+  <div class="wrap">
+    <div class="why-top reveal">
+      <div>
+        <div class="eyebrow">Pourquoi choisir BDH ?</div>
+        <h2>Une approche pensée pour le Bénin</h2>
+        <p>Nous combinons technologie, créativité et compréhension des réalités locales pour construire des solutions qui ont un impact réel et durable.</p>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-item reveal"><svg><use href="#i-bulb"/></svg><h4>Innovation</h4><p>Nous adoptons les meilleures technologies pour créer des solutions modernes et adaptées.</p></div>
+      <div class="why-item reveal"><svg><use href="#i-users"/></svg><h4>Expertise</h4><p>Une équipe passionnée, formée aux standards actuels du développement web et mobile.</p></div>
+      <div class="why-item reveal"><svg><use href="#i-target"/></svg><h4>Impact</h4><p>Nous contribuons activement à la transformation numérique de l'économie béninoise.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RÉALISATIONS ============ -->
+<section class="section" id="realisations">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Nos réalisations</div>
+      <h2>Des projets qui transforment</h2>
+      <p>Chaque projet crée un impact réel sur l'économie et les services numériques du Bénin.</p>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card reveal">
+        <div class="proj-banner unibenin">
+          <div class="proj-logo"><img src="assets/unibenin-icon-192.png" alt="Logo UniBénin"></div>
+          <h3>UniBénin</h3>
         </div>
-        <p>Marketplace alimentaire béninoise — livraison en 2h, paiement Mobile Money, gestion vendeurs & livreurs, assistant IA intégré.</p>
-        <div class="ptags"><span class="ptag">KKiaPay</span><span class="ptag">Flutter</span><span class="ptag">IA</span><span class="ptag">Multi-vendeurs</span></div>
-        <a class="plink" href="#">Voir le projet →</a>
+        <div class="proj-body">
+          <span class="proj-tag blue">Plateforme universitaire</span>
+          <p>Plateforme nationale qui réunit universités, étudiants et enseignants béninois dans un seul espace connecté.</p>
+          <a href="https://unibenin.vercel.app/#/" target="_blank" rel="noopener" class="proj-link">Voir le projet <svg style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="proj-card reveal">
+        <div class="proj-banner yeye">
+          <div class="proj-logo"><img src="assets/yeyemarket-logo.png" alt="Logo YéyéMarket"></div>
+          <h3>YéyéMarket</h3>
+        </div>
+        <div class="proj-body">
+          <span class="proj-tag green">Marketplace</span>
+          <p>Marketplace alimentaire béninoise — livraison rapide, paiement Mobile Money, gestion vendeurs & livreurs.</p>
+          <a href="#" class="proj-link">Voir le projet <svg style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="proj-card reveal">
+        <div class="proj-banner sante">
+          <div class="proj-logo"><img src="assets/santebenin-logo.png" alt="Logo SantéBénin"></div>
+          <h3>SantéBénin</h3>
+        </div>
+        <div class="proj-body">
+          <span class="proj-tag teal">Santé numérique</span>
+          <p>Téléconsultation médicale, dossiers patients et mise en relation entre médecins et patients — en développement.</p>
+          <a href="#" class="proj-link">Suivre le projet <svg style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+        </div>
       </div>
     </div>
-    <div class="psidecards">
-      <div class="pcard rvr d1"><img src="/santebenin.jpg" alt="Logo SantéBénin" style="width:54px;height:54px;border-radius:12px;object-fit:cover;background:#000;margin-bottom:14px;display:block;"><div class="pbadge dev">⏳ En développement</div><h3>SantéBénin</h3><p>Téléconsultation médicale, dossiers patients et mise en relation médecins/patients.</p><a class="pclink" href="#">Suivre le projet →</a></div>
-      <div class="pcard rvr d2"><span class="pcard-ic">🚀</span><div class="pbadge idea">💡 Votre projet</div><h3>Le prochain, c'est le vôtre</h3><p>Vous avez une idée ? Transformons-la en produit digital complet, du concept au lancement.</p><a class="pclink" href="#">Discutons-en →</a></div>
-    </div>
   </div>
-</div>
+</section>
 
-<div class="section nbg">
-  <div class="ngrid-bg"></div><div class="nglow"></div>
-  <div class="ni">
-    <div class="rv" style="text-align:center;"><div class="s-label" style="justify-content:center;"><i></i>EN CHIFFRES</div><h2 class="st" style="color:#fff;text-align:center;">Notre impact</h2></div>
-    <div class="ngrid rv">
-      <div class="nc"><div class="big cnt" data-to="5"><span class="suf">+</span></div><p>Projets livrés</p></div>
-      <div class="nc"><div class="big cnt" data-to="2"></div><p>Plateformes en production</p></div>
-      <div class="nc"><div class="big cnt" data-to="100"><span class="suf">%</span></div><p>Clients satisfaits</p></div>
-      <div class="nc"><div class="big cnt" data-to="3"></div><p>Secteurs couverts</p></div>
+<!-- ============ HUB + AI LAB ============ -->
+<section class="section section-soft" id="hub">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Le Hub · Lancement 2026</div>
+      <h2>Bien plus qu'une agence : un écosystème</h2>
     </div>
-  </div>
-</div>
-
-<div class="section hbg" id="hub">
-  <div class="rv"><div class="s-label"><i></i>LE HUB · LANCEMENT 2026</div>
-    <h2 class="st">Bien plus qu'une agence :<br><span style="color:var(--g);">un écosystème</span></h2>
-  </div>
-  <div class="hgrid">
-    <div class="rvl">
-      <p class="ss">Nous lançons le premier hub numérique du Bénin dédié à l'IA, aux startups et aux compétences digitales.</p>
-      <div class="hcards">
-        <div class="hc"><span class="hc-ic">🎓</span><h4>Formation</h4><p>Programmes intensifs pour la jeunesse béninoise.</p></div>
-        <div class="hc"><span class="hc-ic">🚀</span><h4>Incubation</h4><p>Mentorat & accompagnement des startups.</p></div>
-        <div class="hc"><span class="hc-ic">🤝</span><h4>Communauté</h4><p>Meetups pour connecter les talents tech.</p></div>
-        <div class="hc"><span class="hc-ic">💼</span><h4>Emploi Tech</h4><p>Pont entre entreprises et talents locaux.</p></div>
+    <div class="hub-grid">
+      <div class="reveal">
+        <p style="color:var(--muted);font-size:1rem;">Nous lançons le premier hub numérique du Bénin dédié à l'IA, aux startups et aux compétences digitales.</p>
+        <div class="hub-cards">
+          <div class="hub-card"><svg><use href="#i-cap"/></svg><h4>Formation</h4><p>Programmes intensifs pour la jeunesse béninoise.</p></div>
+          <div class="hub-card"><svg><use href="#i-rocket"/></svg><h4>Incubation</h4><p>Mentorat & accompagnement des startups.</p></div>
+          <div class="hub-card"><svg><use href="#i-users"/></svg><h4>Communauté</h4><p>Meetups pour connecter les talents tech.</p></div>
+          <div class="hub-card"><svg><use href="#i-briefcase"/></svg><h4>Emploi Tech</h4><p>Pont entre entreprises et talents locaux.</p></div>
+        </div>
+        <a href="#contact" class="btn btn-primary" style="margin-top:26px;">Rejoindre la communauté <svg><use href="#i-arrow"/></svg></a>
       </div>
-      <button class="btn-glow" style="margin-top:28px;animation:none;box-shadow:0 4px 20px rgba(22,163,74,0.3);">Rejoindre la communauté →</button>
-    </div>
-    <div class="aip rvr" id="ailabs">
-      <div class="aurora"></div><div class="aurora2"></div>
-      <div class="aip-in">
-        <div class="aip-lbl">BÉNIN AI LAB · EN LANCEMENT</div>
+      <div class="ailab-panel reveal">
+        <div class="eyebrow">Bénin AI Lab · en lancement</div>
         <h3>L'IA au service du Bénin</h3>
-        <p>Notre laboratoire explore les technologies qui façonnent demain — avec un focus sur les réalités locales.</p>
-        <div class="arows">
-          <div class="arow"><div class="adot"></div><div class="arow-t"><strong>IA Générative</strong><span>Contenus et assistants basés sur les LLM.</span></div></div>
-          <div class="arow"><div class="adot" style="animation-delay:.4s"></div><div class="arow-t"><strong>Agents IA</strong><span>Automatisation de tâches métiers sur mesure.</span></div></div>
-          <div class="arow"><div class="adot" style="animation-delay:.8s"></div><div class="arow-t"><strong>IA en langues locales</strong><span>Fon, Yoruba et langues béninoises.</span></div></div>
-          <div class="arow"><div class="adot" style="animation-delay:1.2s"></div><div class="arow-t"><strong>Data Science</strong><span>Modèles prédictifs pour entreprises locales.</span></div></div>
-          <div class="arow"><div class="adot" style="animation-delay:1.6s"></div><div class="arow-t"><strong>Prompt Engineering</strong><span>Maîtrisez les IA génératives.</span></div></div>
+        <p>Notre laboratoire explore les technologies qui façonnent demain, avec un focus sur les réalités locales.</p>
+        <div class="ai-row"><span class="ai-dot"></span><div><strong>IA générative</strong><span>Contenus et assistants basés sur les grands modèles de langage.</span></div></div>
+        <div class="ai-row"><span class="ai-dot"></span><div><strong>Agents IA</strong><span>Automatisation de tâches métier sur mesure.</span></div></div>
+        <div class="ai-row"><span class="ai-dot"></span><div><strong>IA en langues locales</strong><span>Fon, Yoruba et autres langues béninoises.</span></div></div>
+        <div class="ai-row"><span class="ai-dot"></span><div><strong>Data science</strong><span>Modèles prédictifs pour entreprises locales.</span></div></div>
+        <div class="ai-row"><span class="ai-dot"></span><div><strong>Prompt engineering</strong><span>Ateliers pour maîtriser les IA génératives.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESSUS ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <div class="eyebrow" style="justify-content:center;">Comment on travaille</div>
+      <h2>Un processus éprouvé</h2>
+      <p class="center">De l'idée au lancement, avec transparence et rigueur à chaque étape.</p>
+    </div>
+    <div class="process-wrap reveal" id="processWrap">
+      <div class="process-line"><div class="process-line-fill" id="lineFill"></div></div>
+      <div class="process-grid">
+        <div class="process-step"><div class="process-circle" id="pc1">01</div><h4>Découverte</h4><p>Analyse de vos besoins, de votre marché et de vos objectifs.</p></div>
+        <div class="process-step"><div class="process-circle" id="pc2">02</div><h4>Conception</h4><p>UX/UI et prototypage. Vous validez avant qu'on ne code.</p></div>
+        <div class="process-step"><div class="process-circle" id="pc3">03</div><h4>Développement</h4><p>Livraisons agiles, avec un suivi d'avancement en temps réel.</p></div>
+        <div class="process-step"><div class="process-circle" id="pc4">04</div><h4>Lancement</h4><p>Tests, mise en production et formation de vos équipes.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TECH STACK ============ -->
+<section class="section section-soft">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Notre stack</div>
+      <h2>Technologies que nous utilisons</h2>
+    </div>
+    <div class="tech-grid reveal">
+      <div class="tech-chip"><span class="tech-dot" style="background:#111;">N</span>Next.js</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#2563eb;">R</span>React</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#02569B;">F</span>Flutter</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#5FA04E;">N</span>Node.js</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#3ECF8E;">S</span>Supabase</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#111;">V</span>Vercel</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#336791;">P</span>PostgreSQL</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#3178C6;">TS</span>TypeScript</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#06B6D4;">T</span>Tailwind CSS</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#f59e0b;">K</span>KKiaPay</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#111;">AI</span>OpenAI</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#111;">G</span>GitHub</div>
+      <div class="tech-chip"><span class="tech-dot" style="background:#a259ff;">Fi</span>Figma</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉQUIPE ============ -->
+<section class="section" id="equipe">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <div class="eyebrow" style="justify-content:center;">Notre équipe</div>
+      <h2>Des experts passionnés</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-photo"><img src="https://www.benindigitalhub.tech/eboun.jpg" alt="EWEDJE Eboun Benjamin" onerror="this.parentElement.textContent='EB'"></div>
+        <div class="team-info"><h4>EWEDJE Eboun Benjamin</h4><div class="team-role">CEO & Fondateur</div><p>Entrepreneur digital, passionné de tech et de développement économique au Bénin.</p></div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-photo open">+</div>
+        <div class="team-info"><h4>Développeur Web/Mobile</h4><div class="open-badge">Poste ouvert</div><p style="margin-top:8px;">Vous maîtrisez React, Flutter ou Node.js ? Rejoignez l'aventure.</p></div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-photo open">+</div>
+        <div class="team-info"><h4>Designer UX/UI</h4><div class="open-badge">Poste ouvert</div><p style="margin-top:8px;">Créatif et orienté expérience utilisateur ? On a besoin de vous.</p></div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-photo open">+</div>
+        <div class="team-info"><h4>Commercial Digital</h4><div class="open-badge">Poste ouvert</div><p style="margin-top:8px;">Réseau et passion pour le digital ? Développons notre clientèle.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA BANNER ============ -->
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="cta-banner reveal">
+      <div>
+        <h3>Vous avez un projet numérique ?</h3>
+        <p>Discutons de vos besoins et construisons ensemble votre solution.</p>
+      </div>
+      <a href="#contact" class="btn btn-primary">Prendre rendez-vous <svg><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section section-soft" id="contact">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <div class="eyebrow">Nous contacter</div>
+      <h2>Parlons de votre projet</h2>
+      <p style="color:var(--muted);margin-top:14px;">Que ce soit pour un projet, un partenariat ou juste une question — nous répondons dans les 24h.</p>
+      <div class="contact-lines">
+        <div class="contact-line"><div class="ic"><svg><use href="#i-pin"/></svg></div><div><b>Adresse</b><span>Tokan, Togba · Abomey-Calavi, Bénin</span></div></div>
+        <div class="contact-line"><div class="ic"><svg><use href="#i-phone"/></svg></div><div><b>WhatsApp / Téléphone</b><a href="https://wa.me/2290157021269" target="_blank" rel="noopener">+229 01 57 02 12 69</a></div></div>
+        <div class="contact-line"><div class="ic"><svg><use href="#i-mail"/></svg></div><div><b>Email</b><a href="mailto:contact@benindigitalhub.tech">contact@benindigitalhub.tech</a></div></div>
+        <div class="contact-line"><div class="ic"><svg><use href="#i-clock"/></svg></div><div><b>Horaires</b><span>Lundi – Samedi : 8h00 – 18h00</span></div></div>
+      </div>
+    </div>
+    <form class="contact-form reveal">
+      <div class="form-row">
+        <div class="field"><label for="c-nom">Nom complet *</label><input type="text" id="c-nom" placeholder="Kofi Mensah"></div>
+        <div class="field"><label for="c-email">Email *</label><input type="email" id="c-email" placeholder="vous@email.com"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="c-tel">Téléphone</label><input type="tel" id="c-tel" placeholder="+229 ..."></div>
+        <div class="field"><label for="c-service">Service</label>
+          <select id="c-service">
+            <option>Développement Web</option>
+            <option>Application Mobile</option>
+            <option>Conseil Digital</option>
+            <option>Formation Tech</option>
+          </select>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="section pbg2">
-  <div class="rv" style="text-align:center;"><div class="s-label" style="justify-content:center;"><i></i>COMMENT ON TRAVAILLE</div>
-    <h2 class="st" style="text-align:center;">Un processus éprouvé</h2>
-    <p class="ss" style="margin:0 auto;text-align:center;">De l'idée au lancement, avec transparence et rigueur.</p>
-  </div>
-  <div class="psteps rv" id="psteps">
-    <div class="pline-wrap"><div class="pline-bg"></div><div class="pline-fill" id="plinefill"></div></div>
-    <div class="sw"><div class="sc" id="sc1"><span>🔍</span><div class="sn">01</div></div><h4>Découverte</h4><p>Analyse de vos besoins, marché et objectifs.</p></div>
-    <div class="sw"><div class="sc" id="sc2"><span>✏️</span><div class="sn">02</div></div><h4>Conception</h4><p>UX/UI et prototypage. Vous validez avant qu'on code.</p></div>
-    <div class="sw"><div class="sc" id="sc3"><span>⚙️</span><div class="sn">03</div></div><h4>Développement</h4><p>Livraisons agiles avec avancement en temps réel.</p></div>
-    <div class="sw"><div class="sc" id="sc4"><span>🚀</span><div class="sn">04</div></div><h4>Lancement</h4><p>Tests, déploiement et formation de vos équipes.</p></div>
-  </div>
-</div>
-
-<div class="section" id="equipe" style="background:#fff;">
-  <div class="rv" style="text-align:center;"><div class="s-label" style="justify-content:center;"><i></i>NOTRE ÉQUIPE</div>
-    <h2 class="st" style="text-align:center;">Des experts passionnés</h2>
-  </div>
-  <div class="tgrid">
-    <div class="tc rv d1"><div class="tc-av f"><img class="pfp" src="/eboun.jpg" alt="EWEDJE Eboun Benjamin"></div><div class="tc-info"><h4>EWEDJE Eboun Benjamin</h4><div class="role">CEO & Fondateur</div><p>Entrepreneur digital, passionné de tech et de développement économique au Bénin.</p></div></div>
-    <div class="tc rv d2"><div class="tc-av o">＋</div><div class="tc-info"><h4>Développeur Web/Mobile</h4><div class="role"><span class="ob">POSTE OUVERT</span></div><p>Vous maîtrisez React, Flutter ou Node.js ? Rejoignez l'aventure.</p></div></div>
-    <div class="tc rv d3"><div class="tc-av o">＋</div><div class="tc-info"><h4>Designer UX/UI</h4><div class="role"><span class="ob">POSTE OUVERT</span></div><p>Créatif et orienté expérience utilisateur ? On a besoin de vous.</p></div></div>
-    <div class="tc rv d4"><div class="tc-av o">＋</div><div class="tc-info"><h4>Commercial Digital</h4><div class="role"><span class="ob">POSTE OUVERT</span></div><p>Réseau et passion pour le digital ? Développons ensemble notre clientèle.</p></div></div>
-  </div>
-</div>
-
-<div class="cbg" id="contact">
-  <div class="cgrid">
-    <div class="cl rvl">
-      <div class="s-label"><i></i>NOUS CONTACTER</div>
-      <h2>Parlons de<br><em>votre projet</em></h2>
-      <p>Que ce soit pour un projet, un partenariat ou juste une question — nous répondons dans les 24h.</p>
-      <div class="crows">
-        <div class="crow"><div class="cic">📍</div><div><strong>Adresse</strong><span>Tokan, Togba · Abomey-Calavi, Bénin</span></div></div>
-        <div class="crow"><div class="cic">📱</div><div><strong>WhatsApp / Téléphone</strong><a href="https://wa.me/2290157021269" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;display:block;font-size:13px;">+229 01 57 02 12 69</a></div></div>
-        <div class="crow"><div class="cic">📧</div><div><strong>Email</strong><a href="mailto:contact@benindigitalhub.tech" style="color:#fff;text-decoration:none;display:block;font-size:13px;word-break:break-all;">contact@benindigitalhub.tech</a></div></div>
-        <div class="crow"><div class="cic">🕐</div><div><strong>Horaires</strong><span>Lundi – Samedi : 8h00 – 18h00</span></div></div>
-      </div>
-    </div>
-    <div class="fcard rvr">
-      <div class="frow">
-        <div class="fg"><label>NOM COMPLET *</label><input type="text" id="c-nom" placeholder="Kofi Mensah"></div>
-        <div class="fg"><label>EMAIL *</label><input type="email" id="c-email" placeholder="vous@email.com"></div>
-      </div>
-      <div class="frow">
-        <div class="fg"><label>TÉLÉPHONE</label><input type="tel" id="c-tel" placeholder="+229 ..."></div>
-        <div class="fg"><label>SERVICE</label><select id="c-service"><option>Développement Web</option><option>Application Mobile</option><option>Conseil Digital</option><option>Formation Tech</option></select></div>
-      </div>
-      <div class="fg" style="margin-bottom:0;"><label>VOTRE PROJET *</label><textarea id="c-message" placeholder="Décrivez votre idée ou besoin..."></textarea></div>
-      <div class="fg" style="margin-top:14px;"><label>PIÈCE JOINTE (CAHIER DES CHARGES, MAQUETTE…)</label>
-        <label for="c-file" class="filebox" id="c-filelabel"><span class="fileico">📎</span><span id="c-filetext">Choisir un fichier (PDF, image, doc — max 10 Mo)</span></label>
+      <div class="field" style="margin-bottom:14px;"><label for="c-message">Votre projet *</label><textarea id="c-message" placeholder="Décrivez votre idée ou besoin..."></textarea></div>
+      <div class="field" style="margin-bottom:20px;">
+        <label>Pièce jointe (cahier des charges, maquette…)</label>
+        <label for="c-file" class="file-drop" id="c-filelabel"><svg style="width:16px;height:16px"><use href="#i-file"/></svg><span id="c-filetext">Choisir un fichier (PDF, image, doc — max 10 Mo)</span></label>
         <input type="file" id="c-file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" style="display:none;">
       </div>
-      <button class="sbtn" id="c-submit">Envoyer le message →</button>
-    </div>
+      <button type="button" class="btn btn-primary submit-btn" id="c-submit">Envoyer le message <svg><use href="#i-arrow"/></svg></button>
+    </form>
   </div>
-</div>
+</section>
 
 <footer>
-  <div class="fl">Bénin Digital Hub<b>.</b></div>
-  <div class="flinks"><a href="#services">Services</a><a href="#projets">Projets</a><a href="#hub">Le Hub</a><a href="#contact">Contact</a></div>
-  <div class="fc">© 2026 BDH SARL · Abomey-Calavi, Bénin</div>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="brand" style="color:#fff;"><span class="brand-mark">BH</span>Bénin Digital Hub</span>
+        <p>Agence digitale & hub d'innovation. Nous concevons des solutions numériques pour un avenir meilleur au Bénin.</p>
+      </div>
+      <div class="foot-col"><h5>Solutions</h5><ul><li><a href="#services">Développement logiciel</a></li><li><a href="#services">Intelligence Artificielle</a></li><li><a href="#services">Cloud & Infrastructure</a></li></ul></div>
+      <div class="foot-col"><h5>Entreprise</h5><ul><li><a href="#realisations">Réalisations</a></li><li><a href="#hub">Le Hub</a></li><li><a href="#equipe">Équipe</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><ul><li><a href="mailto:contact@benindigitalhub.tech">contact@benindigitalhub.tech</a></li><li><a href="https://wa.me/2290157021269">+229 01 57 02 12 69</a></li><li><a href="#contact">Cotonou, Bénin</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 BDH SARL · Abomey-Calavi, Bénin</span>
+      <span>Tous droits réservés</span>
+    </div>
+  </div>
 </footer>
 
 <script>
-const glow=document.getElementById('cursor-glow');
-document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';});
-const cv=document.getElementById('c'),cx=cv.getContext('2d');
-const hero=document.getElementById('hero');
-let W,H;
-function rsz(){W=cv.width=hero.offsetWidth;H=cv.height=hero.offsetHeight;}
-rsz();window.addEventListener('resize',rsz);
-const pts=Array.from({length:80},()=>({x:Math.random()*2000,y:Math.random()*800,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.2,r:Math.random()*2+.4,a:Math.random()*.7+.2,pulse:Math.random()*Math.PI*2}));
-let mx=-999,my=-999,t=0;
-hero.addEventListener('mousemove',e=>{const r=hero.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;});
-hero.addEventListener('mouseleave',()=>{mx=-999;my=-999;});
-function draw(){
-  t+=.008;cx.clearRect(0,0,W,H);
-  pts.forEach(p=>{
-    p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-    const dx=p.x-mx,dy=p.y-my,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<150){p.x+=dx/d*.8;p.y+=dy/d*.8;}
-    const pulse=.5+.5*Math.sin(t+p.pulse);
-    cx.beginPath();cx.arc(p.x,p.y,p.r*(1+pulse*.3),0,Math.PI*2);
-    cx.fillStyle=`rgba(74,222,128,${p.a*(.3+pulse*.4)})`;cx.fill();
-  });
-  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
-    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<130){cx.beginPath();cx.moveTo(pts[i].x,pts[i].y);cx.lineTo(pts[j].x,pts[j].y);cx.strokeStyle=`rgba(74,222,128,${.18*(1-d/130)})`;cx.lineWidth=.6;cx.stroke();}
-  }
-  if(mx>0){cx.beginPath();cx.arc(mx,my,90,0,Math.PI*2);const g=cx.createRadialGradient(mx,my,0,mx,my,90);g.addColorStop(0,'rgba(22,163,74,0.12)');g.addColorStop(1,'rgba(22,163,74,0)');cx.fillStyle=g;cx.fill();}
-  requestAnimationFrame(draw);
-}
-draw();
-const words=['numérique','digital','innovant','inclusif'];
-let wi=0,ci=0,del=false,el=document.getElementById('typed');
-function type(){
-  const w=words[wi];
-  if(!del){el.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(type,2000);return;}}
-  else{el.textContent=w.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length;}}
-  setTimeout(type,del?45:100);
-}
-type();
-document.querySelectorAll('.counter-h').forEach(el=>{
-  const to=parseInt(el.dataset.to),sfx=el.innerHTML.replace(el.textContent,'');
-  let v=0,s=Math.max(1,Math.floor(to/30));
-  const timer=setInterval(()=>{v=Math.min(v+s,to);el.innerHTML=v+sfx;if(v>=to)clearInterval(timer);},40);
+// mobile menu
+const burgerBtn=document.getElementById('burgerBtn'),closeBtn=document.getElementById('closeBtn'),mobileMenu=document.getElementById('mobileMenu');
+burgerBtn.addEventListener('click',()=>mobileMenu.classList.add('open'));
+closeBtn.addEventListener('click',()=>mobileMenu.classList.remove('open'));
+mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobileMenu.classList.remove('open')));
+
+// reveal on scroll
+const revealEls=document.querySelectorAll('.reveal');
+const revealObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revealObserver.unobserve(e.target);} });
+},{threshold:.15});
+revealEls.forEach(el=>revealObserver.observe(el));
+
+// counters
+document.querySelectorAll('.cnt').forEach(el=>{
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      const to=parseInt(el.dataset.to,10), suffix=el.dataset.suffix||'+';
+      const dur=1200, start=performance.now();
+      function tick(now){
+        const p=Math.min((now-start)/dur,1), eased=1-Math.pow(1-p,3);
+        el.textContent=Math.round(eased*to)+(p===1?suffix:'');
+        if(p<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      obs.unobserve(el);
+    });
+  },{threshold:.5});
+  obs.observe(el);
 });
-const obs=new IntersectionObserver(entries=>{
+
+// process steps animate in when visible
+const processObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(!e.isIntersecting)return;
-    e.target.classList.add('in');
-    e.target.querySelectorAll('.cnt').forEach(el=>{
-      const to=parseInt(el.dataset.to),sfx=el.innerHTML.replace(el.textContent,'');
-      let v=0,s=Math.max(1,Math.ceil(to/50));
-      const timer=setInterval(()=>{v=Math.min(v+s,to);el.innerHTML=v+sfx;if(v>=to)clearInterval(timer);},35);
-    });
-    if(e.target.id==='psteps'){
-      [1,2,3,4].forEach((i,idx)=>setTimeout(()=>document.getElementById('sc'+i).classList.add('on'),idx*350+200));
-      setTimeout(()=>document.getElementById('plinefill').style.transform='scaleX(1)',400);
-    }
+    [1,2,3,4].forEach((i,idx)=>setTimeout(()=>document.getElementById('pc'+i).classList.add('on'),idx*300+150));
+    setTimeout(()=>document.getElementById('lineFill').style.width='100%',300);
+    processObs.unobserve(e.target);
   });
-},{threshold:.15});
-document.querySelectorAll('.rv,.rvl,.rvr,#psteps').forEach(el=>obs.observe(el));
-window.addEventListener('scroll',()=>{
-  const nav=document.getElementById('nav');
-  if(window.scrollY>60){nav.style.background='rgba(3,10,3,0.96)';nav.style.height='52px';}
-  else{nav.style.background='rgba(3,10,3,0.85)';nav.style.height='64px';}
-  nav.style.transition='height .2s,background .2s';
-},{passive:true});
-document.querySelectorAll('.sv,.fstat,.hc,.pcard,.arow').forEach(card=>{
-  card.addEventListener('mousemove',e=>{
-    const r=card.getBoundingClientRect();
-    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-    card.style.transform=`perspective(700px) rotateX(${-y*8}deg) rotateY(${x*8}deg) translateY(-5px)`;
-  });
-  card.addEventListener('mouseleave',()=>{card.style.transform='';});
-});
-document.querySelectorAll('.btn-glow,.btn-outline,.sbtn,.nav-cta').forEach(btn=>{
-  btn.addEventListener('click',e=>{
-    const r=btn.getBoundingClientRect();
-    const rip=document.createElement('span');
-    rip.style.cssText=`position:absolute;border-radius:50%;background:rgba(255,255,255,0.4);width:6px;height:6px;left:${e.clientX-r.left}px;top:${e.clientY-r.top}px;transform:translate(-50%,-50%) scale(0);transition:transform .5s,opacity .5s;pointer-events:none;`;
-    btn.style.position='relative';btn.style.overflow='hidden';btn.appendChild(rip);
-    requestAnimationFrame(()=>{rip.style.transform='translate(-50%,-50%) scale(60)';rip.style.opacity='0';});
-    setTimeout(()=>rip.remove(),600);
-  });
+},{threshold:.4});
+processObs.observe(document.getElementById('processWrap'));
+
+// file input label
+const fileInput=document.getElementById('c-file'),fileText=document.getElementById('c-filetext'),fileLabel=document.getElementById('c-filelabel');
+fileInput.addEventListener('change',()=>{
+  const f=fileInput.files[0];
+  if(f){fileText.textContent=f.name;fileLabel.classList.add('has');}
+  else{fileText.textContent='Choisir un fichier (PDF, image, doc — max 10 Mo)';fileLabel.classList.remove('has');}
 });
 
-const SUPA_URL='https://rzibogatodeondtlnepz.supabase.co';
-const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
-
+// toast
 function toast(msg,type){
   let t=document.createElement('div');
   t.textContent=msg;
-  t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:'+(type==='err'?'#b91c1c':'#16a34a')+';color:#fff;padding:14px 26px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,0.3);opacity:0;transition:opacity .3s,transform .3s;font-family:Inter,sans-serif;';
+  t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:'+(type==='err'?'#b91c1c':'#0d2748')+';color:#fff;padding:14px 26px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,0.3);opacity:0;transition:opacity .3s,transform .3s;font-family:Inter,sans-serif;';
   document.body.appendChild(t);
   requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';});
   setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';setTimeout(()=>t.remove(),300);},4000);
 }
 
-const fileInput=document.getElementById('c-file');
-const fileText=document.getElementById('c-filetext');
-const fileLabel=document.getElementById('c-filelabel');
-if(fileInput){
-  fileInput.addEventListener('change',()=>{
-    const f=fileInput.files[0];
-    if(f){fileText.textContent=f.name;fileLabel.classList.add('has');}
-    else{fileText.textContent='Choisir un fichier (PDF, image, doc — max 10 Mo)';fileLabel.classList.remove('has');}
-  });
-}
+// contact form -> same Supabase backend as the live site
+const SUPA_URL='https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
 
-const submitBtn=document.getElementById('c-submit');
-if(submitBtn){
-  submitBtn.addEventListener('click',async()=>{
-    const nom=document.getElementById('c-nom').value.trim();
-    const email=document.getElementById('c-email').value.trim();
-    const tel=document.getElementById('c-tel').value.trim();
-    const service=document.getElementById('c-service').value;
-    const message=document.getElementById('c-message').value.trim();
-    const file=fileInput?fileInput.files[0]:null;
-    if(!nom||!email||!message){toast('Merci de remplir nom, email et message.','err');return;}
-    if(file&&file.size>10*1024*1024){toast('Le fichier dépasse 10 Mo.','err');return;}
-    submitBtn.textContent='⏳ Envoi en cours...';submitBtn.disabled=true;
-    try{
-      let fichier_url=null;
-      if(file){
-        const ext=file.name.split('.').pop();
-        const path='contacts/'+Date.now()+'_'+nom.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,'')+'.'+ext;
-        const up=await fetch(SUPA_URL+'/storage/v1/object/bdh-contacts/'+path,{
-          method:'POST',
-          headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':file.type||'application/octet-stream','x-upsert':'true'},
-          body:file
-        });
-        if(up.ok)fichier_url=SUPA_URL+'/storage/v1/object/public/bdh-contacts/'+path;
-      }
-      const res=await fetch(SUPA_URL+'/rest/v1/contacts',{
+document.getElementById('c-submit').addEventListener('click',async()=>{
+  const nom=document.getElementById('c-nom').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const tel=document.getElementById('c-tel').value.trim();
+  const service=document.getElementById('c-service').value;
+  const message=document.getElementById('c-message').value.trim();
+  const file=fileInput.files[0];
+  if(!nom||!email||!message){toast('Merci de remplir nom, email et message.','err');return;}
+  if(file&&file.size>10*1024*1024){toast('Le fichier dépasse 10 Mo.','err');return;}
+  const submitBtn=document.getElementById('c-submit');
+  const original=submitBtn.innerHTML;
+  submitBtn.textContent='Envoi en cours...';submitBtn.disabled=true;
+  try{
+    let fichier_url=null;
+    if(file){
+      const ext=file.name.split('.').pop();
+      const path='contacts/'+Date.now()+'_'+nom.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,'')+'.'+ext;
+      const up=await fetch(SUPA_URL+'/storage/v1/object/bdh-contacts/'+path,{
         method:'POST',
-        headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
-        body:JSON.stringify({nom,email,telephone:tel,service,message,fichier_url})
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':file.type||'application/octet-stream','x-upsert':'true'},
+        body:file
       });
-      if(!res.ok)throw new Error('http '+res.status);
-      toast('✅ Message envoyé ! Nous vous répondons dans les 24h.','ok');
-      document.getElementById('c-nom').value='';document.getElementById('c-email').value='';
-      document.getElementById('c-tel').value='';document.getElementById('c-message').value='';
-      if(fileInput){fileInput.value='';fileText.textContent='Choisir un fichier (PDF, image, doc — max 10 Mo)';fileLabel.classList.remove('has');}
-    }catch(err){
-      toast('Une erreur est survenue. Réessayez ou écrivez-nous directement.','err');
+      if(up.ok)fichier_url=SUPA_URL+'/storage/v1/object/public/bdh-contacts/'+path;
     }
-    submitBtn.textContent='Envoyer le message →';submitBtn.disabled=false;
-  });
-}
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js')
-      .then(()=>console.log('SW registered'))
-      .catch(e=>console.log('SW error:',e));
-  });
-}
+    const res=await fetch(SUPA_URL+'/rest/v1/contacts',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
+      body:JSON.stringify({nom,email,telephone:tel,service,message,fichier_url})
+    });
+    if(!res.ok)throw new Error('http '+res.status);
+    toast('Message envoyé ! Nous vous répondons dans les 24h.','ok');
+    document.getElementById('c-nom').value='';document.getElementById('c-email').value='';
+    document.getElementById('c-tel').value='';document.getElementById('c-message').value='';
+    fileInput.value='';fileText.textContent='Choisir un fichier (PDF, image, doc — max 10 Mo)';fileLabel.classList.remove('has');
+  }catch(err){
+    toast('Une erreur est survenue. Réessayez ou écrivez-nous directement.','err');
+  }
+  submitBtn.innerHTML=original;submitBtn.disabled=false;
+});
 </script>
-<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
