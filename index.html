@@ -356,7 +356,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
       <h2>Ce que nous construisons pour vous</h2>
       <p>Des solutions digitales sur mesure, adaptées aux réalités du marché béninois.</p>
     </div>
-    <div class="domains-grid">
+    <div class="domains-grid" id="domainsGrid">
       <div class="domain-card reveal">
         <div class="domain-icon" style="background:var(--blue);"><svg><use href="#i-code"/></svg></div>
         <h3>Développement logiciel</h3>
@@ -517,7 +517,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
       <div class="eyebrow">Notre stack</div>
       <h2>Technologies que nous utilisons</h2>
     </div>
-    <div class="tech-grid reveal">
+    <div class="tech-grid reveal" id="techGridPublic">
       <div class="tech-chip"><span class="tech-dot" style="background:#111;">N</span>Next.js</div>
       <div class="tech-chip"><span class="tech-dot" style="background:#2563eb;">R</span>React</div>
       <div class="tech-chip"><span class="tech-dot" style="background:#02569B;">F</span>Flutter</div>
@@ -542,7 +542,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
       <div class="eyebrow" style="justify-content:center;">Notre équipe</div>
       <h2>Des experts passionnés</h2>
     </div>
-    <div class="team-grid">
+    <div class="team-grid" id="teamGrid">
       <div class="team-card reveal">
         <div class="team-photo"><img src="https://www.benindigitalhub.tech/eboun.jpg" alt="EWEDJE Eboun Benjamin" onerror="this.parentElement.textContent='EB'"></div>
         <div class="team-info"><h4>EWEDJE Eboun Benjamin</h4><div class="team-role">CEO & Fondateur</div><p>Entrepreneur digital, passionné de tech et de développement économique au Bénin.</p></div>
@@ -793,6 +793,94 @@ document.getElementById('c-submit').addEventListener('click',async()=>{
   }catch(err){
     // silencieux : le site public garde son contenu par défaut si Supabase est injoignable
     console.warn('Réglages du site non chargés depuis Supabase :', err.message);
+  }
+})();
+</script>
+
+<script>
+// Charge Services, Équipe et Technologies depuis Supabase. En cas d'échec,
+// le contenu statique déjà présent dans la page reste affiché (aucune casse visible).
+(async function loadDynamicSections(){
+  const URL_ = 'https://rzibogatodeondtlnepz.supabase.co';
+  const KEY_ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+  const HEADERS_ = { apikey: KEY_, Authorization: `Bearer ${KEY_}` };
+
+  async function fetchTable(table){
+    const res = await fetch(`${URL_}/rest/v1/${table}?select=*`, { headers: HEADERS_ });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  // ---------- SERVICES (regroupés par catégorie, comme les cartes d'origine) ----------
+  try{
+    const services = await fetchTable('services');
+    const actifs = services.filter(s => s.status === 'Actif' && s.category);
+    if(actifs.length){
+      const categoryMeta = {
+        "Développement": { icon:"i-code", color:"var(--blue)" },
+        "Intelligence Artificielle": { icon:"i-bot", color:"var(--green)" },
+        "Cloud & Infrastructure": { icon:"i-cloud", color:"var(--gold)" },
+        "Formation": { icon:"i-cap", color:"var(--navy)" },
+        "Conseil": { icon:"i-target", color:"var(--green-2)" },
+        "Support": { icon:"i-users", color:"var(--navy-2)" },
+      };
+      const byCategory = {};
+      actifs.forEach(s => { (byCategory[s.category] = byCategory[s.category] || []).push(s); });
+
+      const grid = document.getElementById('domainsGrid');
+      grid.innerHTML = Object.entries(byCategory).map(([cat, items]) => {
+        const meta = categoryMeta[cat] || { icon:"i-briefcase", color:"var(--blue)" };
+        return `
+          <div class="domain-card reveal in">
+            <div class="domain-icon" style="background:${meta.color};"><svg><use href="#${meta.icon}"/></svg></div>
+            <h3>${cat}</h3>
+            <ul>${items.map(s => `<li>${s.name}</li>`).join('')}</ul>
+            <a href="#contact" class="domain-link">En savoir plus <svg style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+          </div>`;
+      }).join('');
+    }
+  }catch(err){
+    console.warn('Services non chargés depuis Supabase :', err.message);
+  }
+
+  // ---------- ÉQUIPE ----------
+  try{
+    const team = await fetchTable('team_members');
+    if(team.length){
+      const grid = document.getElementById('teamGrid');
+      grid.innerHTML = team.map(m => {
+        const initials = (m.name || '?').split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+        if(m.status === 'Actif'){
+          return `
+            <div class="team-card reveal in">
+              <div class="team-photo" style="background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.4rem;">${initials}</div>
+              <div class="team-info"><h4>${m.name}</h4><div class="team-role">${m.role || ''}</div><p>${m.bio || ''}</p></div>
+            </div>`;
+        }
+        return `
+          <div class="team-card reveal in">
+            <div class="team-photo open">+</div>
+            <div class="team-info"><h4>${m.role || m.name}</h4><div class="open-badge">Poste ouvert</div><p style="margin-top:8px;">${m.bio || ''}</p></div>
+          </div>`;
+      }).join('');
+    }
+  }catch(err){
+    console.warn('Équipe non chargée depuis Supabase :', err.message);
+  }
+
+  // ---------- TECHNOLOGIES ----------
+  try{
+    const techs = await fetchTable('technologies');
+    const actives = techs.filter(t => t.status === 'Actif');
+    if(actives.length){
+      const grid = document.getElementById('techGridPublic');
+      grid.innerHTML = actives.map(t => {
+        const initials = (t.name || '?').replace(/\..*/, '').slice(0,2).toUpperCase();
+        return `<div class="tech-chip"><span class="tech-dot" style="background:${t.color || '#111'};">${initials}</span>${t.name}</div>`;
+      }).join('');
+    }
+  }catch(err){
+    console.warn('Technologies non chargées depuis Supabase :', err.message);
   }
 })();
 </script>
