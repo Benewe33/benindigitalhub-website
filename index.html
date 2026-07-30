@@ -279,7 +279,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
 
 <header>
   <div class="wrap nav">
-    <a href="#" class="brand"><span class="brand-mark">BH</span>Bénin Digital Hub</a>
+    <a href="#" class="brand"><span class="brand-mark">BH</span><span id="navBrandName">Bénin Digital Hub</span></a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
       <li><a href="#realisations">Réalisations</a></li>
@@ -314,7 +314,7 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
     <div>
       <div class="eyebrow">Basé à Cotonou · Bénin · depuis 2024</div>
       <h1 class="hero-title">Transformer le Bénin grâce au <span class="grad">numérique</span></h1>
-      <p class="lead">Bénin Digital Hub accompagne entreprises, administrations et startups dans leur transformation digitale, avec des solutions web, mobile et IA pensées pour les réalités du marché béninois.</p>
+      <p class="lead" id="heroLead">Bénin Digital Hub accompagne entreprises, administrations et startups dans leur transformation digitale, avec des solutions web, mobile et IA pensées pour les réalités du marché béninois.</p>
       <div class="hero-ctas">
         <a href="#contact" class="btn btn-primary">Démarrer un projet <svg><use href="#i-arrow"/></svg></a>
         <a href="#hub" class="btn btn-outline">Rejoindre le Hub</a>
@@ -583,9 +583,9 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
       <h2>Parlons de votre projet</h2>
       <p style="color:var(--muted);margin-top:14px;">Que ce soit pour un projet, un partenariat ou juste une question — nous répondons dans les 24h.</p>
       <div class="contact-lines">
-        <div class="contact-line"><div class="ic"><svg><use href="#i-pin"/></svg></div><div><b>Adresse</b><span>Tokan, Togba · Abomey-Calavi, Bénin</span></div></div>
-        <div class="contact-line"><div class="ic"><svg><use href="#i-phone"/></svg></div><div><b>WhatsApp / Téléphone</b><a href="https://wa.me/2290157021269" target="_blank" rel="noopener">+229 01 57 02 12 69</a></div></div>
-        <div class="contact-line"><div class="ic"><svg><use href="#i-mail"/></svg></div><div><b>Email</b><a href="mailto:contact@benindigitalhub.tech">contact@benindigitalhub.tech</a></div></div>
+        <div class="contact-line"><div class="ic"><svg><use href="#i-pin"/></svg></div><div><b>Adresse</b><span id="contactAddress">Tokan, Togba · Abomey-Calavi, Bénin</span></div></div>
+        <div class="contact-line"><div class="ic"><svg><use href="#i-phone"/></svg></div><div><b>WhatsApp / Téléphone</b><a id="contactPhone" href="https://wa.me/2290157021269" target="_blank" rel="noopener">+229 01 57 02 12 69</a></div></div>
+        <div class="contact-line"><div class="ic"><svg><use href="#i-mail"/></svg></div><div><b>Email</b><a id="contactEmail" href="mailto:contact@benindigitalhub.tech">contact@benindigitalhub.tech</a></div></div>
         <div class="contact-line"><div class="ic"><svg><use href="#i-clock"/></svg></div><div><b>Horaires</b><span>Lundi – Samedi : 8h00 – 18h00</span></div></div>
       </div>
     </div>
@@ -620,12 +620,12 @@ footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:56px 0 26px;}
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <span class="brand" style="color:#fff;"><span class="brand-mark">BH</span>Bénin Digital Hub</span>
-        <p>Agence digitale & hub d'innovation. Nous concevons des solutions numériques pour un avenir meilleur au Bénin.</p>
+        <span class="brand" style="color:#fff;"><span class="brand-mark">BH</span><span id="footBrandName">Bénin Digital Hub</span></span>
+        <p id="footBrandDesc">Agence digitale & hub d'innovation. Nous concevons des solutions numériques pour un avenir meilleur au Bénin.</p>
       </div>
       <div class="foot-col"><h5>Solutions</h5><ul><li><a href="#services">Développement logiciel</a></li><li><a href="#services">Intelligence Artificielle</a></li><li><a href="#services">Cloud & Infrastructure</a></li></ul></div>
       <div class="foot-col"><h5>Entreprise</h5><ul><li><a href="#realisations">Réalisations</a></li><li><a href="#hub">Le Hub</a></li><li><a href="#equipe">Équipe</a></li></ul></div>
-      <div class="foot-col"><h5>Contact</h5><ul><li><a href="mailto:contact@benindigitalhub.tech">contact@benindigitalhub.tech</a></li><li><a href="https://wa.me/2290157021269">+229 01 57 02 12 69</a></li><li><a href="#contact">Cotonou, Bénin</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><ul><li><a id="footEmail" href="mailto:contact@benindigitalhub.tech">contact@benindigitalhub.tech</a></li><li><a id="footPhone" href="https://wa.me/2290157021269">+229 01 57 02 12 69</a></li><li><a href="#contact" id="footAddress">Cotonou, Bénin</a></li></ul></div>
     </div>
     <div class="foot-bottom">
       <span>© 2026 BDH SARL · Abomey-Calavi, Bénin</span>
@@ -739,6 +739,49 @@ document.getElementById('c-submit').addEventListener('click',async()=>{
   }
   submitBtn.innerHTML=original;submitBtn.disabled=false;
 });
+</script>
+
+<script>
+// Charge les informations générales (Réglages > Général) depuis Supabase
+// et les applique à la page publique.
+(async function loadSiteSettings(){
+  const SETTINGS_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+  const SETTINGS_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+  try{
+    const res = await fetch(`${SETTINGS_URL}/rest/v1/site_settings?select=*&limit=1`, {
+      headers: { apikey: SETTINGS_KEY, Authorization: `Bearer ${SETTINGS_KEY}` }
+    });
+    if(!res.ok) return; // pas de policy de lecture ou table absente : on garde le contenu par défaut
+    const rows = await res.json();
+    if(!rows.length) return;
+    const s = rows[0];
+
+    const setText = (id, value) => { const el = document.getElementById(id); if(el && value) el.textContent = value; };
+    const setHref = (id, hrefFn, value) => { const el = document.getElementById(id); if(el && value) el.href = hrefFn(value); };
+
+    setText('navBrandName', s.company_name);
+    setText('footBrandName', s.company_name);
+    setText('heroLead', s.description);
+    setText('footBrandDesc', s.description);
+    setText('contactAddress', s.address);
+    setText('footAddress', s.address);
+
+    if(s.contact_email){
+      setText('contactEmail', s.contact_email);
+      setHref('contactEmail', v => 'mailto:' + v, s.contact_email);
+      setText('footEmail', s.contact_email);
+      setHref('footEmail', v => 'mailto:' + v, s.contact_email);
+    }
+    if(s.phone){
+      const displayPhone = (s.phone.startsWith('+') ? s.phone : '+229 ' + s.phone);
+      setText('contactPhone', displayPhone);
+      setText('footPhone', displayPhone);
+    }
+  }catch(err){
+    // silencieux : le site public garde son contenu par défaut si Supabase est injoignable
+    console.warn('Réglages du site non chargés depuis Supabase :', err.message);
+  }
+})();
 </script>
 </body>
 </html>
