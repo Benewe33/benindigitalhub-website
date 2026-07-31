@@ -478,6 +478,20 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 let contacts = [];
 let loadError = null;
 
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+function safeUrl(url){
+  if(!url) return '';
+  try{
+    const u = new URL(url, window.location.origin);
+    if(u.protocol === 'http:' || u.protocol === 'https:') return u.href;
+  }catch(e){}
+  return '';
+}
+
 function timeAgo(iso){
   if(!iso) return '';
   const d = new Date(iso);
@@ -547,15 +561,15 @@ function render(){
     <div class="contact-card ${c.lu ? '' : 'unread'}">
       <div class="contact-top">
         <div>
-          <div class="n">${c.nom || 'Sans nom'}</div>
-          <div class="meta">${c.email || ''} ${c.telephone ? '· ' + c.telephone : ''} · ${timeAgo(c.created_at)}</div>
+          <div class="n">${escapeHtml(c.nom) || 'Sans nom'}</div>
+          <div class="meta">${escapeHtml(c.email)} ${c.telephone ? '· ' + escapeHtml(c.telephone) : ''} · ${timeAgo(c.created_at)}</div>
         </div>
-        ${c.service ? `<span class="contact-service">${c.service}</span>` : ''}
+        ${c.service ? `<span class="contact-service">${escapeHtml(c.service)}</span>` : ''}
       </div>
-      <div class="contact-msg">${(c.message || '').replace(/</g,'&lt;')}</div>
+      <div class="contact-msg">${escapeHtml(c.message).replace(/\n/g,'<br>')}</div>
       <div class="contact-actions">
         ${!c.lu ? `<button onclick="markRead(${c.id})">Marquer comme lu</button>` : ''}
-        ${c.fichier_url ? `<a class="file-link" href="${c.fichier_url}" target="_blank" rel="noopener"><svg style="width:13px;height:13px"><use href="#i-folder"/></svg>Pièce jointe</a>` : ''}
+        ${safeUrl(c.fichier_url) ? `<a class="file-link" href="${safeUrl(c.fichier_url)}" target="_blank" rel="noopener noreferrer"><svg style="width:13px;height:13px"><use href="#i-folder"/></svg>Pièce jointe</a>` : ''}
         <button class="danger" onclick="deleteContact(${c.id})">Supprimer</button>
       </div>
     </div>
