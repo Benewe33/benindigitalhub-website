@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion — Administration Bénin Digital Hub</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d2748; --blue:#2563eb; --green:#16a34a; --gold:#f59e0b;
+  --ink:#101828; --muted:#65758b; --line:#e7ecf3; --bg-soft:#f6f8fb;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--navy),#123363);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{background:#fff;border-radius:20px;padding:40px;width:100%;max-width:400px;box-shadow:0 30px 60px rgba(0,0,0,0.3);}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;}
+.brand-name{font-weight:800;font-size:1.05rem;color:var(--ink);}
+.brand-sub{font-size:0.72rem;color:var(--muted);}
+h1{font-size:1.3rem;margin-bottom:6px;color:var(--ink);}
+.sub{font-size:0.86rem;color:var(--muted);margin-bottom:26px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:0.8rem;font-weight:600;color:#475569;margin-bottom:6px;}
+.field input{width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid var(--line);font-size:0.92rem;font-family:inherit;background:var(--bg-soft);}
+.field input:focus{outline:none;border-color:var(--blue);background:#fff;}
+.btn-login{width:100%;padding:13px;border-radius:9px;background:var(--navy);color:#fff;font-weight:700;font-size:0.92rem;margin-top:8px;}
+.btn-login:hover{background:#123363;}
+.btn-login:disabled{opacity:0.6;}
+.error-box{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:9px;padding:11px 14px;font-size:0.82rem;margin-bottom:16px;display:none;}
+.error-box.show{display:block;}
+.footnote{text-align:center;font-size:0.76rem;color:#94a3b8;margin-top:22px;}
+</style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-mark">BH</div>
+      <div><div class="brand-name">Bénin Digital Hub</div><div class="brand-sub">Administration</div></div>
+    </div>
+    <h1>Connexion</h1>
+    <p class="sub">Accédez à l'espace d'administration.</p>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="email" required autocomplete="username" placeholder="vous@benindigitalhub.tech"></div>
+      <div class="field"><label>Mot de passe</label><input type="password" id="password" required autocomplete="current-password" placeholder="••••••••"></div>
+      <button type="submit" class="btn-login" id="loginBtn">Se connecter</button>
+    </form>
+
+    <p class="footnote">Accès réservé à l'équipe Bénin Digital Hub.</p>
+  </div>
+
+<script>
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+
+// Si déjà connecté avec une session valide, aller directement au tableau de bord.
+(function checkExisting(){
+  try{
+    const raw = localStorage.getItem('bdh_admin_session');
+    if(raw){
+      const session = JSON.parse(raw);
+      if(session.expires_at && session.expires_at * 1000 > Date.now()){
+        window.location.href = 'admin.html';
+      }
+    }
+  }catch(e){}
+})();
+
+function showError(msg){
+  const box = document.getElementById('errorBox');
+  box.textContent = msg;
+  box.classList.add('show');
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('loginBtn');
+  document.getElementById('errorBox').classList.remove('show');
+  btn.textContent = 'Connexion...'; btn.disabled = true;
+
+  try{
+    const res = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { apikey: SUPA_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if(!res.ok){
+      throw new Error(data.error_description || data.msg || 'Email ou mot de passe incorrect.');
+    }
+    const session = {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: data.expires_at || (Math.floor(Date.now()/1000) + (data.expires_in || 3600)),
+      email: data.user?.email || email
+    };
+    localStorage.setItem('bdh_admin_session', JSON.stringify(session));
+
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect') || 'admin.html';
+    window.location.href = redirect;
+  }catch(err){
+    showError(err.message || 'Impossible de se connecter. Vérifiez vos identifiants.');
+    btn.textContent = 'Se connecter'; btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

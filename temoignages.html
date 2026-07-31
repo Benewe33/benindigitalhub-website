@@ -328,8 +328,34 @@ img{display:block;max-width:100%;}
 </style>
 
 
+<style>
+.profile-dropdown{position:relative;}
+.profile-menu{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,0.15);min-width:200px;padding:8px;display:none;z-index:200;}
+.profile-menu.open{display:block;}
+.profile-menu .pm-email{font-size:0.76rem;color:#94a3b8;padding:8px 10px;border-bottom:1px solid var(--line);margin-bottom:6px;word-break:break-all;}
+.profile-menu button{width:100%;text-align:left;padding:9px 10px;border-radius:8px;font-size:0.86rem;color:#dc2626;font-weight:600;display:flex;align-items:center;gap:8px;}
+.profile-menu button:hover{background:#fef2f2;}
+.profile-menu button svg{width:15px;height:15px;}
+</style>
 </head>
 <body>
+<script>
+(function requireAuth(){
+  try{
+    const raw = localStorage.getItem('bdh_admin_session');
+    if(!raw) throw new Error('no session');
+    const session = JSON.parse(raw);
+    if(!session.access_token || !session.expires_at || session.expires_at * 1000 <= Date.now()){
+      throw new Error('expired');
+    }
+    window.BDH_AUTH_TOKEN = session.access_token;
+    window.BDH_AUTH_EMAIL = session.email || '';
+  }catch(e){
+    const current = encodeURIComponent(window.location.pathname.split('/').pop() || 'admin.html');
+    window.location.href = 'login.html?redirect=' + current;
+  }
+})();
+</script>
 
 <svg style="display:none">
   <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></symbol>
@@ -424,11 +450,17 @@ img{display:block;max-width:100%;}
       </div>
       <div class="topbar-right">
         <button class="icon-btn bell-wrap"><svg><use href="#i-bell"/></svg><span class="bell-dot" id="bellDot">5</span></button>
-        <button class="profile-btn">
+        <div class="profile-dropdown">
+        <button class="profile-btn" id="profileBtn">
           <img src="https://i.pravatar.cc/64?img=12" alt="Administrateur">
           <div><div class="name">Administrateur</div><div class="role">Super Admin</div></div>
           <svg style="width:14px;height:14px;color:#94a3b8"><use href="#i-chevron"/></svg>
         </button>
+        <div class="profile-menu" id="profileMenu">
+          <div class="pm-email" id="profileMenuEmail">admin@bdh.tech</div>
+          <button type="button" id="logoutBtn"><svg><use href="#i-close"/></svg>Se déconnecter</button>
+        </div>
+      </div>
       </div>
     </header>
 
@@ -505,7 +537,7 @@ let editingId = null;
 const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
 const TABLE = 'testimonials';
-const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+const SUPA_HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${window.BDH_AUTH_TOKEN || SUPA_KEY}` };
 
 async function loadData(){
   document.getElementById('tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:30px;">Chargement depuis Supabase...</td></tr>`;
@@ -670,7 +702,7 @@ loadData();
     const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
     const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
     const res = await fetch(`${SUPA_URL}/rest/v1/contacts?select=id,lu`, {
-      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` }, cache: 'no-store'
+      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${window.BDH_AUTH_TOKEN || SUPA_KEY}` }, cache: 'no-store'
     });
     if(!res.ok) return;
     const contacts = await res.json();
@@ -689,6 +721,22 @@ loadData();
     console.warn('Badge demandes de contact non mis à jour :', err.message);
   }
 })();
+
+document.getElementById('profileBtn')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('profileMenu')?.classList.toggle('open');
+});
+document.addEventListener('click', () => {
+  document.getElementById('profileMenu')?.classList.remove('open');
+});
+document.getElementById('logoutBtn')?.addEventListener('click', () => {
+  localStorage.removeItem('bdh_admin_session');
+  window.location.href = 'login.html';
+});
+if(window.BDH_AUTH_EMAIL){
+  const emailEl = document.getElementById('profileMenuEmail');
+  if(emailEl) emailEl.textContent = window.BDH_AUTH_EMAIL;
+}
 </script>
 </body>
 </html>
