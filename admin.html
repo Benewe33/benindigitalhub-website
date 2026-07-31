@@ -233,6 +233,7 @@ img{display:block;max-width:100%;}
         <a href="projets.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Projets</span></a>
         <a href="services.html" class="side-link"><svg><use href="#i-layers"/></svg><span class="grow">Services</span></a>
         <a href="technologies.html" class="side-link"><svg><use href="#i-cpu"/></svg><span class="grow">Technologies</span></a>
+        <a href="realisations.html" class="side-link"><svg><use href="#i-briefcase"/></svg><span class="grow">Réalisations</span></a>
         <a href="blog.html" class="side-link"><svg><use href="#i-file"/></svg><span class="grow">Blog</span></a>
         <a href="temoignages.html" class="side-link"><svg><use href="#i-star"/></svg><span class="grow">Témoignages</span></a>
         <a href="partenaires.html" class="side-link"><svg><use href="#i-building"/></svg><span class="grow">Partenaires</span></a>
@@ -242,7 +243,7 @@ img{display:block;max-width:100%;}
         <div class="side-group-label">Utilisateurs</div>
         <a href="utilisateurs.html" class="side-link"><svg><use href="#i-users"/></svg><span class="grow">Utilisateurs</span></a>
         <a href="roles.html" class="side-link"><svg><use href="#i-shield"/></svg><span class="grow">Rôles & Permissions</span></a>
-        <a href="demandes.html" class="side-link"><svg><use href="#i-mail"/></svg><span class="grow">Demandes de contact</span><span class="badge">5</span></a>
+        <a href="demandes.html" class="side-link"><svg><use href="#i-mail"/></svg><span class="grow">Demandes de contact</span><span class="badge" id="sidebarContactBadge">5</span></a>
       </div>
       <div class="side-group">
         <div class="side-group-label">Contenu</div>
@@ -276,7 +277,7 @@ img{display:block;max-width:100%;}
         <input type="text" placeholder="Rechercher (projets, services, utilisateurs...)">
       </div>
       <div class="topbar-right">
-        <button class="icon-btn bell-wrap"><svg><use href="#i-bell"/></svg><span class="bell-dot">5</span></button>
+        <button class="icon-btn bell-wrap"><svg><use href="#i-bell"/></svg><span class="bell-dot" id="bellDot">5</span></button>
         <button class="profile-btn">
           <img src="https://i.pravatar.cc/64?img=12" alt="Administrateur">
           <div><div class="name">Administrateur</div><div class="role">Super Admin</div></div>
@@ -414,7 +415,7 @@ img{display:block;max-width:100%;}
 
           <div class="card">
             <h3 style="margin-bottom:6px;">Alertes</h3>
-            <div class="alert-row"><span class="lbl">Demandes de contact non lues</span><span class="alert-count">5</span></div>
+            <div class="alert-row"><span class="lbl">Demandes de contact non lues</span><span class="alert-count" id="contactUnreadAlertCount">5</span></div>
             <div class="alert-row"><span class="lbl">Projets en attente de validation</span><span class="alert-count">3</span></div>
             <div class="alert-row"><span class="lbl">Commentaires à approuver</span><span class="alert-count">2</span></div>
             <div class="alert-row"><span class="lbl">Articles non publiés</span><span class="alert-count">4</span></div>
@@ -485,6 +486,32 @@ new Chart(document.getElementById('visitsChart'), {
 document.getElementById('burgerBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('collapsed');
 });
+</script>
+<script>
+(async function updateContactBadge(){
+  try{
+    const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+    const res = await fetch(`${SUPA_URL}/rest/v1/contacts?select=id,lu`, {
+      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` }, cache: 'no-store'
+    });
+    if(!res.ok) return;
+    const contacts = await res.json();
+    const unread = contacts.filter(c => !c.lu).length;
+
+    const sidebarBadge = document.getElementById('sidebarContactBadge');
+    const bellDot = document.getElementById('bellDot');
+    const dashboardAlert = document.getElementById('contactUnreadAlertCount');
+
+    [sidebarBadge, bellDot, dashboardAlert].forEach(el => {
+      if(!el) return;
+      if(unread > 0){ el.textContent = unread; el.style.display = ''; }
+      else { el.style.display = 'none'; }
+    });
+  }catch(err){
+    console.warn('Badge demandes de contact non mis à jour :', err.message);
+  }
+})();
 </script>
 </body>
 </html>
