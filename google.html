@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bénin Digital Hub</title>
+<style>
+  :root {
+    --navy: #0F3D5C;
+    --green: #1E7A4C;
+    --gold: #F4B400;
+    --red: #C0392B;
+    --teal: #1B5E7A;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --border: #E4E2DA;
+    --text: #232323;
+    --text-secondary: #6B7280;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .dots { display: flex; gap: 4px; }
+  .dot { width: 10px; height: 10px; }
+  .wordmark { font-size: 44px; font-weight: 600; letter-spacing: -0.5px; }
+  .search-wrap { position: relative; width: 100%; max-width: 560px; }
+  .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 19px; color: var(--text-secondary); }
+  #q {
+    width: 100%; height: 50px; border-radius: 25px; border: 1px solid var(--border);
+    padding: 0 48px; font-size: 16px; background: var(--surface); color: var(--text);
+    outline: none; transition: box-shadow .15s, border-color .15s;
+  }
+  #q:focus { border-color: var(--navy); box-shadow: 0 1px 8px rgba(15,61,92,0.12); }
+  .suggest {
+    position: absolute; left: 0; right: 0; top: 58px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px; padding: 6px; display: none; z-index: 5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .suggest-row {
+    display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px;
+    cursor: pointer; font-size: 15px;
+  }
+  .suggest-row:hover { background: var(--bg); }
+  .btns { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; justify-content: center; }
+  button {
+    font-family: inherit; font-size: 14px; padding: 10px 20px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    cursor: pointer; transition: border-color .15s, box-shadow .15s;
+  }
+  button:hover { border-color: #C9C7BE; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .quicklinks { display: flex; gap: 24px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
+  .quicklink { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+  .quicklink:hover { text-decoration: underline; }
+  footer { border-top: 1px solid var(--border); }
+  .footer-top { padding: 12px 26px; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    padding: 15px 26px; font-size: 13px; color: var(--text-secondary);
+  }
+  .footer-group { display: flex; gap: 22px; flex-wrap: wrap; }
+  .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+  .footer-bottom a:hover { text-decoration: underline; }
+  main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14181C; --surface: #1C2126; --border: #2C333A; --text: #EDEDE8; --text-secondary: #9CA3AF; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <div class="brand">
+    <div class="dots" aria-hidden="true">
+      <span class="dot" style="background:var(--navy)"></span>
+      <span class="dot" style="background:var(--green)"></span>
+      <span class="dot" style="background:var(--gold)"></span>
+      <span class="dot" style="background:var(--red)"></span>
+    </div>
+    <div class="wordmark">
+      <span style="color:var(--navy)">Bénin</span><span style="color:var(--green)"> Digital</span><span style="color:var(--navy)"> Hub</span>
+    </div>
+  </div>
+
+  <div class="search-wrap" id="search-wrap">
+    <svg class="search-icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="q" type="text" placeholder="Rechercher YéyéMarket, SantéBénin, UniBénin..." autocomplete="off">
+    <div class="suggest" id="suggest"></div>
+  </div>
+
+  <div class="btns">
+    <button id="go">Recherche BDH</button>
+    <button id="lucky">Un projet au hasard</button>
+  </div>
+
+  <div class="quicklinks">
+    <a class="quicklink" href="https://yeyemarket.com" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>YéyéMarket</a>
+    <a class="quicklink" href="https://santebenin.vercel.app" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>SantéBénin</a>
+    <a class="quicklink" href="https://unibenin.vercel.app" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>UniBénin</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-top">Bénin</div>
+  <div class="footer-bottom">
+    <div class="footer-group">
+      <a href="https://www.benindigitalhub.tech" target="_blank" rel="noopener">À propos de BDH</a>
+      <a href="https://www.benindigitalhub.tech" target="_blank" rel="noopener">Nos projets</a>
+    </div>
+    <div class="footer-group">
+      <a href="mailto:contact@benindigitalhub.tech">Contact</a>
+      <a href="https://www.benindigitalhub.tech" target="_blank" rel="noopener">Confidentialité</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const ICONS = {
+    cart: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
+    pulse: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+    cap: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>'
+  };
+  const projects = [
+    { name: "YéyéMarket", url: "https://yeyemarket.com", icon: "cart", color: "var(--green)" },
+    { name: "SantéBénin", url: "https://santebenin.vercel.app", icon: "pulse", color: "var(--teal)" },
+    { name: "UniBénin", url: "https://unibenin.vercel.app", icon: "cap", color: "var(--navy)" }
+  ];
+  const input = document.getElementById("q");
+  const suggest = document.getElementById("suggest");
+
+  function renderSuggest(list) {
+    suggest.innerHTML = "";
+    list.forEach(p => {
+      const row = document.createElement("div");
+      row.className = "suggest-row";
+      row.innerHTML = '<span style="color:' + p.color + '">' + ICONS[p.icon] + '</span><span>' + p.name + "</span>";
+      row.onclick = () => window.open(p.url, "_blank");
+      suggest.appendChild(row);
+    });
+    suggest.style.display = list.length ? "block" : "none";
+  }
+
+  input.addEventListener("focus", () => renderSuggest(projects));
+  input.addEventListener("input", () => {
+    const term = input.value.trim().toLowerCase();
+    renderSuggest(term ? projects.filter(p => p.name.toLowerCase().includes(term)) : projects);
+  });
+  document.getElementById("search-wrap").addEventListener("focusout", e => {
+    if (!e.currentTarget.contains(e.relatedTarget)) suggest.style.display = "none";
+  });
+
+  function runSearch() {
+    const term = input.value.trim();
+    if (!term) { window.open("https://www.benindigitalhub.tech", "_blank"); return; }
+    const match = projects.find(p => p.name.toLowerCase().includes(term.toLowerCase()));
+    if (match) window.open(match.url, "_blank");
+    else window.open("https://www.google.com/search?q=" + encodeURIComponent(term + " Bénin Digital Hub"), "_blank");
+  }
+  document.getElementById("go").addEventListener("click", runSearch);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") runSearch(); });
+  document.getElementById("lucky").addEventListener("click", () => {
+    const p = projects[Math.floor(Math.random() * projects.length)];
+    window.open(p.url, "_blank");
+  });
+</script>
+</body>
+</html>
