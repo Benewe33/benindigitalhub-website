@@ -639,7 +639,7 @@ document.getElementById('c-submit').addEventListener('click',async()=>{
   const SETTINGS_URL = 'https://rzibogatodeondtlnepz.supabase.co';
   const SETTINGS_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
   try{
-    const res = await fetch(`${SETTINGS_URL}/rest/v1/site_settings?select=*&limit=1`, {
+    const res = await fetch(`${SETTINGS_URL}/rest/v1/site_settings?select=*&order=id.asc&limit=1`, {
       headers: { apikey: SETTINGS_KEY, Authorization: `Bearer ${SETTINGS_KEY}` }, cache: 'no-store'
     });
     if(!res.ok) return;
