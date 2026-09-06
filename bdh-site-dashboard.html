@@ -4,55 +4,62 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tableau de bord — BDH Site Builder</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0f172a;--teal:#0d9488;--orange:#f97316;--bg:#f8fafc;--card:#ffffff;
-  --line:#e6eaf0;--muted:#64748b;--radius:16px;--success-bg:#ecfdf5;--success-text:#059669;
+  --paper:#faf7f2;--paper-2:#f2ece2;--ink:#1c1917;--ink-soft:#4a443c;
+  --rust:#b54834;--rust-dark:#8e3626;--pine:#1f5c4f;--pine-light:#e7efec;
+  --gold:#c08a28;--line:#e4ddd1;--line-strong:#d2c8b4;--card:#ffffff;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:'Inter',sans-serif;color:var(--navy);background:var(--bg);}
-h1,h2,h3{margin:0;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);}
+h1,h2,h3{margin:0;font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
 p{margin:0}
 button{font-family:inherit;cursor:pointer}
-.wrap{max-width:760px;margin:0 auto;padding:28px 20px 60px;}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
-.badge{font-size:12px;padding:4px 10px;border-radius:100px;font-weight:600;}
-.badge-live{background:var(--success-bg);color:var(--success-text);}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
-.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;}
-.stat-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
-.stat-value{font-size:1.5rem;font-weight:800;}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
-.card h3{font-size:1rem;margin-bottom:14px;}
-.field{margin-bottom:14px;}
-.field label{display:block;font-size:0.82rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
-.field input,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:0.9rem;}
+.wrap{max-width:740px;margin:0 auto;padding:32px 22px 70px;}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:10px;padding-bottom:22px;border-bottom:1px solid var(--line);}
+.eyebrow{font-size:0.78rem;color:var(--ink-soft);margin-bottom:4px;}
+.badge{font-size:11.5px;padding:4px 11px;font-weight:600;border:1px solid;}
+.badge-live{background:var(--pine-light);color:var(--pine);border-color:var(--pine);}
+.badge-cat{background:var(--paper-2);color:var(--ink-soft);border-color:var(--line-strong);}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:22px;}
+.stat-card{background:var(--card);padding:18px 16px;}
+.stat-label{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+.stat-value{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:600;}
+.card{background:var(--card);border:1px solid var(--line);padding:22px;margin-bottom:18px;}
+.card h3{font-size:1.05rem;margin-bottom:16px;}
+.field{margin-bottom:15px;}
+.field label{display:block;font-size:0.8rem;font-weight:600;color:var(--ink-soft);margin-bottom:6px;}
+.field input,.field textarea{width:100%;padding:11px 13px;border:1px solid var(--line-strong);border-radius:2px;font-family:inherit;font-size:0.9rem;background:#fff;}
 .field textarea{min-height:70px;resize:vertical;}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--rust);}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--line);gap:16px;}
 .toggle-row:first-of-type{border-top:none;}
-.toggle-row div p:first-child{font-size:0.9rem;font-weight:600;}
-.toggle-row div p:last-child{font-size:0.78rem;color:var(--muted);}
-.toggle{width:40px;height:22px;border-radius:100px;position:relative;flex-shrink:0;background:var(--line);transition:background .15s ease;}
-.toggle.on{background:var(--teal);}
+.toggle-row div p:first-child{font-size:0.92rem;font-weight:600;font-family:'Fraunces',serif;}
+.toggle-row div p:last-child{font-size:0.8rem;color:var(--ink-soft);margin-top:2px;}
+.toggle{width:40px;height:22px;border-radius:100px;position:relative;flex-shrink:0;background:var(--line-strong);transition:background .15s ease;}
+.toggle.on{background:var(--pine);}
 .toggle-dot{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .15s ease;}
 .toggle.on .toggle-dot{left:20px;}
-.disabled-note{font-size:0.78rem;color:#b45309;}
-.btn{padding:12px 20px;border-radius:10px;font-weight:700;font-size:0.88rem;border:1.5px solid transparent;}
-.btn-primary{background:var(--orange);color:#fff;}
-.btn-outline{background:#fff;border-color:var(--line);color:var(--navy);}
-.link-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border-radius:10px;padding:10px 14px;font-size:0.85rem;}
-.link-row a{color:var(--teal);font-weight:600;text-decoration:none;word-break:break-all;}
-.upsell{background:#fff7ed;border-radius:var(--radius);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
-.error-box{background:#fef2f2;color:#991b1b;padding:16px;border-radius:12px;text-align:center;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 22px;border-radius:10px;font-size:0.88rem;opacity:0;transition:opacity .3s ease;pointer-events:none;}
+.disabled-note{font-size:0.78rem;color:var(--gold);flex-shrink:0;}
+.btn{padding:12px 22px;border-radius:2px;font-weight:600;font-size:0.88rem;border:1px solid transparent;font-family:'Inter',sans-serif;}
+.btn-primary{background:var(--rust);color:#fff;}
+.btn-primary:hover{background:var(--rust-dark);}
+.btn-outline{background:transparent;border-color:var(--line-strong);color:var(--ink);}
+.link-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--paper-2);padding:12px 16px;font-size:0.85rem;}
+.link-row a{color:var(--pine);font-weight:600;text-decoration:none;word-break:break-all;}
+.upsell{background:var(--paper-2);border:1px solid var(--line-strong);border-left:3px solid var(--gold);padding:20px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.error-box{background:#fbeae7;color:#8e3626;padding:20px;text-align:center;border:1px solid #e3b8ac;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 22px;font-size:0.88rem;opacity:0;transition:opacity .3s ease;pointer-events:none;font-family:'Inter',sans-serif;}
 .toast.show{opacity:1;}
 </style>
 </head>
 <body>
 
 <div class="wrap" id="app">
-  <p style="text-align:center;color:var(--muted);padding:40px 0;">Chargement...</p>
+  <p style="text-align:center;color:var(--ink-soft);padding:50px 0;">Chargement...</p>
 </div>
 <div class="toast" id="toast">Enregistré</div>
 
@@ -105,12 +112,12 @@ function render(){
   document.getElementById('app').innerHTML = `
     <div class="top">
       <div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:2px;">Mon site</p>
+        <p class="eyebrow">Mon site</p>
         <h2>${s.business_name}</h2>
       </div>
       <div style="display:flex;gap:8px;">
         <span class="badge badge-live">En ligne</span>
-        <span class="badge" style="background:#e0f2fe;color:#0369a1;">${categoryLabels[s.category] || s.category}</span>
+        <span class="badge badge-cat">${categoryLabels[s.category] || s.category}</span>
       </div>
     </div>
 
@@ -161,8 +168,8 @@ function render(){
 
     <div class="upsell">
       <div>
-        <p style="font-weight:700;margin-bottom:4px;">Passez à un domaine personnalisé</p>
-        <p style="font-size:0.85rem;color:var(--muted);">${s.slug}.bj au lieu de bdh.site/s/${s.slug} — 6 000 F/an</p>
+        <p style="font-weight:600;margin-bottom:4px;font-family:'Fraunces',serif;">Passez à un domaine personnalisé</p>
+        <p style="font-size:0.85rem;color:var(--ink-soft);">${s.slug}.bj au lieu de bdh.site/s/${s.slug} — 6 000 F/an</p>
       </div>
       <button class="btn btn-primary">Passer au domaine perso</button>
     </div>
