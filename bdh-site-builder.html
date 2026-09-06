@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créez votre site en 10 minutes — BDH Site Builder</title>
+<meta name="description" content="Créez gratuitement votre site vitrine en quelques minutes, sans compétence technique. Un projet Bénin Digital Hub.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f172a;--navy-2:#1e293b;--teal:#0d9488;--teal-2:#14b8a6;
+  --orange:#f97316;--orange-2:#ea580c;--bg:#f8fafc;--card:#ffffff;
+  --line:#e6eaf0;--muted:#64748b;--radius:16px;--danger:#dc2626;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--navy);background:var(--bg);line-height:1.6;}
+h1,h2,h3{margin:0;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--navy);}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:720px;margin:0 auto;padding:32px 20px 80px;}
+header{padding:20px 0;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);margin-bottom:32px;}
+.brand{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.2rem;}
+.brand span{color:var(--orange);}
+.progress-label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;}
+.progress-bar{height:5px;background:var(--line);border-radius:100px;overflow:hidden;margin-bottom:28px;}
+.progress-fill{height:100%;background:var(--orange);transition:width .3s ease;}
+.step{display:none;}
+.step.active{display:block;animation:fadein .25s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+h2.step-title{font-size:1.5rem;margin-bottom:6px;}
+.step-sub{color:var(--muted);font-size:0.95rem;margin-bottom:24px;}
+.theme-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px;}
+.theme-card{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .15s ease,transform .15s ease;}
+.theme-card:hover{transform:translateY(-3px);}
+.theme-card.selected{border-color:var(--orange);}
+.theme-badge{font-size:10px;font-weight:700;padding:3px 8px;text-align:center;}
+.theme-preview{height:14px}
+.theme-hero{height:44px;display:flex;align-items:center;justify-content:center;}
+.theme-hero div{width:55%;height:6px;border-radius:2px;}
+.theme-body{padding:10px;background:#fff;}
+.theme-body .line{height:5px;border-radius:2px;background:var(--line);margin-bottom:5px;}
+.theme-name{padding:10px 12px 4px;font-weight:600;font-size:0.92rem;}
+.theme-desc{padding:0 12px 12px;font-size:0.78rem;color:var(--muted);}
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:0.85rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit;font-size:0.95rem;background:#fff;}
+.field textarea{resize:vertical;min-height:80px;}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--teal);}
+.field .hint{font-size:0.78rem;color:var(--muted);margin-top:4px;}
+.field .error{font-size:0.78rem;color:var(--danger);margin-top:4px;display:none;}
+.product-row{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center;}
+.product-row input{padding:10px 12px;font-size:0.88rem;}
+.remove-btn{background:none;border:none;color:var(--danger);font-size:1.2rem;cursor:pointer;padding:4px 8px;}
+.add-product-btn{background:none;border:1.5px dashed var(--line);border-radius:12px;padding:10px;width:100%;font-size:0.88rem;color:var(--muted);margin-top:4px;}
+.btn-row{display:flex;justify-content:space-between;gap:12px;margin-top:28px;}
+.btn{padding:13px 24px;border-radius:12px;font-weight:700;font-size:0.92rem;border:1.5px solid transparent;}
+.btn-primary{background:var(--orange);color:#fff;flex:1;}
+.btn-primary:hover{background:var(--orange-2);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-outline{background:#fff;border-color:var(--line);color:var(--navy);}
+.summary-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
+.summary-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:0.9rem;}
+.summary-row:last-child{border-bottom:none;}
+.success-box{text-align:center;padding:20px 0;}
+.success-icon{width:64px;height:64px;border-radius:50%;background:#ecfdf5;color:#059669;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;}
+.site-link{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:20px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.site-link a{color:var(--teal);font-weight:600;text-decoration:none;word-break:break-all;}
+.copy-btn{background:var(--navy);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:0.82rem;white-space:nowrap;}
+.manage-note{background:#fff7ed;border:1px solid #fde5cc;border-radius:12px;padding:14px 18px;font-size:0.85rem;color:#9a3412;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="brand">BDH<span>.</span> Site Builder</span>
+  </header>
+
+  <div class="progress-label"><span id="stepLabel">Étape 1 sur 4</span><span>Créer mon site</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:25%"></div></div>
+
+  <!-- ÉTAPE 1 : bienvenue / catégorie -->
+  <div class="step active" id="step1">
+    <h2 class="step-title">Créez votre site gratuitement</h2>
+    <p class="step-sub">En 10 minutes, sans compétence technique. Hébergement inclus.</p>
+    <div class="field">
+      <label for="category">Quelle est votre activité ?</label>
+      <select id="category">
+        <option value="artisan">Artisan / prestataire de service</option>
+        <option value="commerce">Commerce / vente de produits</option>
+        <option value="independant">Indépendant / consultant</option>
+        <option value="beaute">Beauté / bien-être</option>
+      </select>
+      <p class="hint">Ça nous aide à vous recommander un thème adapté.</p>
+    </div>
+    <div class="btn-row">
+      <span></span>
+      <button class="btn btn-primary" onclick="goToStep(2)">Continuer</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 : thème -->
+  <div class="step" id="step2">
+    <h2 class="step-title">Choisissez votre thème</h2>
+    <p class="step-sub">Vous pourrez en changer à tout moment depuis votre tableau de bord.</p>
+    <div class="theme-grid" id="themeGrid"></div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToStep(1)">Retour</button>
+      <button class="btn btn-primary" id="step2Next" onclick="goToStep(3)" disabled>Continuer</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 : formulaire -->
+  <div class="step" id="step3">
+    <h2 class="step-title">Vos informations</h2>
+    <p class="step-sub">Ce qui apparaîtra sur votre site.</p>
+
+    <div class="field">
+      <label for="businessName">Nom de l'entreprise *</label>
+      <input type="text" id="businessName" placeholder="Atelier Kofi Menuiserie">
+      <p class="error" id="businessNameError">Merci d'indiquer un nom.</p>
+    </div>
+
+    <div class="field">
+      <label for="description">Description courte</label>
+      <textarea id="description" placeholder="Menuiserie sur mesure, meubles et portes à Cotonou."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="whatsapp">Numéro WhatsApp *</label>
+      <input type="text" id="whatsapp" placeholder="+229 01 90 12 34 56">
+      <p class="error" id="whatsappError">Merci d'indiquer un numéro WhatsApp.</p>
+    </div>
+
+    <div class="field">
+      <label for="address">Adresse ou zone de couverture</label>
+      <input type="text" id="address" placeholder="Cotonou, Bénin">
+    </div>
+
+    <div class="field">
+      <label for="kkiapay">Lien de paiement KKiaPay (optionnel)</label>
+      <input type="text" id="kkiapay" placeholder="https://widget.kkiapay.me/...">
+      <p class="hint">Laissez vide si vous préférez encaisser directement via WhatsApp.</p>
+    </div>
+
+    <div class="field">
+      <label>Produits ou services (3 maximum au départ)</label>
+      <div id="productsList"></div>
+      <button class="add-product-btn" id="addProductBtn" onclick="addProduct()">+ Ajouter un produit</button>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToStep(2)">Retour</button>
+      <button class="btn btn-primary" onclick="validateStep3()">Continuer</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 4 : récap + publication -->
+  <div class="step" id="step4">
+    <h2 class="step-title">Vérifiez et publiez</h2>
+    <p class="step-sub">Dernière étape avant la mise en ligne.</p>
+    <div class="summary-card" id="summaryCard"></div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToStep(3)">Retour</button>
+      <button class="btn btn-primary" id="publishBtn" onclick="publishSite()">Publier mon site</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 5 : succès -->
+  <div class="step" id="step5">
+    <div class="success-box">
+      <div class="success-icon">✓</div>
+      <h2 class="step-title">Votre site est en ligne</h2>
+      <p class="step-sub">Partagez-le dès maintenant.</p>
+    </div>
+    <div class="site-link">
+      <a id="finalSiteLink" href="#" target="_blank">bdh.site/s/...</a>
+      <button class="copy-btn" onclick="copyLink()">Copier le lien</button>
+    </div>
+    <div class="manage-note">
+      <strong>Important :</strong> conservez ce lien de gestion, il vous permettra de modifier votre site plus tard — nous ne pouvons pas vous le renvoyer automatiquement au MVP.
+      <div class="site-link" style="margin-top:10px;">
+        <a id="manageLink" href="#" target="_blank">bdh.site/gerer/...</a>
+        <button class="copy-btn" onclick="copyManageLink()">Copier</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn-outline" id="viewSiteBtn" href="#" target="_blank" style="text-decoration:none;text-align:center;flex:1;">Voir mon site</a>
+      <a class="btn btn-primary" id="manageSiteBtn" href="#" target="_blank" style="text-decoration:none;text-align:center;flex:1;">Gérer mon site</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+
+const THEMES = [
+  { id:'aube', name:'Aube', desc:'Sobre, met en avant vos services', bar:'#0f766e', hero:'#134e4a', dot:'#5eead4', for:['artisan'] },
+  { id:'eclat', name:'Éclat', desc:'Vif, pensé pour un catalogue', bar:'#c2410c', hero:'#fff7ed', dot:'#c2410c', for:['commerce'] },
+  { id:'epure', name:'Épure', desc:'Épuré, pour indépendants', bar:'#1e293b', hero:'#f8fafc', dot:'#1e293b', for:['independant'] },
+  { id:'petale', name:'Pétale', desc:'Doux, pour soins et bien-être', bar:'#be185d', hero:'#fdf2f8', dot:'#be185d', for:['beaute'] },
+];
+
+let selectedTheme = null;
+let products = [];
+
+function renderThemeGrid(){
+  const category = document.getElementById('category').value;
+  const grid = document.getElementById('themeGrid');
+  grid.innerHTML = THEMES.map(t => {
+    const recommended = t.for.includes(category);
+    return `
+      <div class="theme-card ${selectedTheme===t.id?'selected':''}" data-theme="${t.id}" onclick="selectTheme('${t.id}')">
+        ${recommended ? '<div class="theme-badge" style="background:#fff7ed;color:#c2410c;">Recommandé</div>' : ''}
+        <div class="theme-preview" style="background:${t.bar}"></div>
+        <div class="theme-hero" style="background:${t.hero}"><div style="background:${t.dot}"></div></div>
+        <div class="theme-body"><div class="line" style="width:70%"></div><div class="line" style="width:45%"></div></div>
+        <div class="theme-name">${t.name}</div>
+        <div class="theme-desc">${t.desc}</div>
+      </div>`;
+  }).join('');
+}
+
+function selectTheme(id){
+  selectedTheme = id;
+  document.querySelectorAll('.theme-card').forEach(el => el.classList.toggle('selected', el.dataset.theme === id));
+  document.getElementById('step2Next').disabled = false;
+}
+
+function renderProducts(){
+  const list = document.getElementById('productsList');
+  list.innerHTML = products.map((p, i) => `
+    <div class="product-row">
+      <input type="text" placeholder="Nom du produit" value="${p.name}" oninput="products[${i}].name=this.value">
+      <input type="text" placeholder="Prix (FCFA)" value="${p.price}" oninput="products[${i}].price=this.value">
+      <button class="remove-btn" onclick="removeProduct(${i})" aria-label="Supprimer">×</button>
+    </div>`).join('');
+  document.getElementById('addProductBtn').style.display = products.length >= 3 ? 'none' : 'block';
+}
+function addProduct(){ if(products.length < 3){ products.push({name:'', price:''}); renderProducts(); } }
+function removeProduct(i){ products.splice(i,1); renderProducts(); }
+
+function goToStep(n){
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  document.getElementById('stepLabel').textContent = 'Étape ' + Math.min(n,4) + ' sur 4';
+  document.getElementById('progressFill').style.width = (Math.min(n,4) * 25) + '%';
+  if(n === 2) renderThemeGrid();
+  if(n === 4) renderSummary();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function validateStep3(){
+  const name = document.getElementById('businessName').value.trim();
+  const wa = document.getElementById('whatsapp').value.trim();
+  let valid = true;
+  document.getElementById('businessNameError').style.display = name ? 'none' : 'block';
+  document.getElementById('whatsappError').style.display = wa ? 'none' : 'block';
+  if(!name || !wa) valid = false;
+  if(!valid) return;
+  goToStep(4);
+}
+
+function slugify(text){
+  return text.toString().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'mon-site';
+}
+
+function renderSummary(){
+  const theme = THEMES.find(t => t.id === selectedTheme);
+  const name = document.getElementById('businessName').value.trim();
+  document.getElementById('summaryCard').innerHTML = `
+    <div class="summary-row"><span>Entreprise</span><strong>${name}</strong></div>
+    <div class="summary-row"><span>Thème</span><strong>${theme ? theme.name : '—'}</strong></div>
+    <div class="summary-row"><span>WhatsApp</span><strong>${document.getElementById('whatsapp').value.trim()}</strong></div>
+    <div class="summary-row"><span>Produits</span><strong>${products.filter(p=>p.name).length}</strong></div>
+    <div class="summary-row"><span>Adresse web</span><strong>bdh.site/s/${slugify(name)}</strong></div>
+  `;
+}
+
+async function publishSite(){
+  const btn = document.getElementById('publishBtn');
+  const original = btn.textContent;
+  btn.textContent = 'Publication en cours...';
+  btn.disabled = true;
+
+  const name = document.getElementById('businessName').value.trim();
+  const slug = slugify(name) + '-' + Math.random().toString(36).slice(2,6);
+  const payload = {
+    slug,
+    business_name: name,
+    category: document.getElementById('category').value,
+    theme: selectedTheme,
+    description: document.getElementById('description').value.trim(),
+    whatsapp: document.getElementById('whatsapp').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    kkiapay_link: document.getElementById('kkiapay').value.trim() || null,
+    products: products.filter(p => p.name),
+  };
+
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/sitebuilder_sites`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPA_KEY,
+        Authorization: `Bearer ${SUPA_KEY}`,
+        Prefer: 'return=representation',
+      },
+      body: JSON.stringify(payload),
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const rows = await res.json();
+    const site = rows[0];
+
+    const siteUrl = `${location.origin}${location.pathname.replace('bdh-site-builder.html','bdh-site-view.html')}?slug=${site.slug}`;
+    const manageUrl = `${location.origin}${location.pathname.replace('bdh-site-builder.html','bdh-site-dashboard.html')}?slug=${site.slug}&token=${site.manage_token}`;
+
+    document.getElementById('finalSiteLink').textContent = siteUrl;
+    document.getElementById('finalSiteLink').href = siteUrl;
+    document.getElementById('viewSiteBtn').href = siteUrl;
+    document.getElementById('manageLink').textContent = manageUrl;
+    document.getElementById('manageLink').href = manageUrl;
+    document.getElementById('manageSiteBtn').href = manageUrl;
+    window.__siteUrl = siteUrl;
+    window.__manageUrl = manageUrl;
+
+    goToStep(5);
+  }catch(err){
+    alert('Une erreur est survenue lors de la publication. Réessayez.');
+    console.error(err);
+  }
+  btn.textContent = original;
+  btn.disabled = false;
+}
+
+function copyLink(){ navigator.clipboard.writeText(window.__siteUrl || ''); }
+function copyManageLink(){ navigator.clipboard.writeText(window.__manageUrl || ''); }
+
+document.getElementById('category').addEventListener('change', () => { if(document.getElementById('step2').classList.contains('active')) renderThemeGrid(); });
+renderProducts();
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Chargement... — BDH Site Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--radius:16px}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',sans-serif;line-height:1.6;background:#f4f4f5;}
+h1,h2{margin:0;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;}
+p{margin:0}
+.wrap{max-width:480px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 40px rgba(0,0,0,0.06);}
+.hero{padding:28px 20px 22px;}
+.hero h1{font-size:1.4rem;margin-bottom:6px;}
+.hero p{font-size:0.9rem;opacity:0.85;}
+.hero .addr{display:flex;align-items:center;gap:6px;font-size:0.82rem;margin-top:10px;opacity:0.75;}
+.section{padding:20px;}
+.section-title{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;font-weight:700;margin-bottom:12px;opacity:0.55;}
+.product{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:10px;background:#fafafa;}
+.product-thumb{width:48px;height:48px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:700;}
+.product-info{flex:1;}
+.product-name{font-size:0.92rem;font-weight:600;}
+.product-price{font-size:0.85rem;opacity:0.6;margin-top:2px;}
+.cta-bar{position:sticky;bottom:0;background:#fff;padding:14px 20px;border-top:1px solid #eee;}
+.cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:12px;color:#fff;font-weight:700;font-size:0.95rem;text-decoration:none;border:none;}
+.kkia-btn{margin-top:8px;background:#fff;border:1.5px solid #ddd;color:#333;}
+.footer{text-align:center;padding:16px 20px 24px;font-size:0.72rem;color:#999;}
+.footer a{color:inherit;}
+.empty{padding:60px 20px;text-align:center;color:#999;}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app">
+  <div class="empty" id="loading">Chargement du site...</div>
+</div>
+
+<script>
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+
+const THEME_STYLES = {
+  aube:   { heroFrom:'#134e4a', heroTo:'#0f766e', accent:'#0f766e', text:'#fff', sub:'#5eead4', thumb:'#0f766e' },
+  eclat:  { heroFrom:'#c2410c', heroTo:'#ea580c', accent:'#c2410c', text:'#fff', sub:'#fed7aa', thumb:'#c2410c' },
+  epure:  { heroFrom:'#1e293b', heroTo:'#0f172a', accent:'#1e293b', text:'#fff', sub:'#cbd5e1', thumb:'#1e293b' },
+  petale: { heroFrom:'#be185d', heroTo:'#9d174d', accent:'#be185d', text:'#fff', sub:'#fbcfe8', thumb:'#be185d' },
+};
+
+function waLink(number, text){
+  const digits = (number||'').replace(/[^\d]/g,'');
+  return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
+}
+
+async function loadSite(){
+  const params = new URLSearchParams(location.search);
+  const slug = params.get('slug');
+  const app = document.getElementById('app');
+
+  if(!slug){
+    app.innerHTML = '<div class="empty">Aucun site spécifié.</div>';
+    return;
+  }
+
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/sitebuilder_sites?slug=eq.${encodeURIComponent(slug)}&select=*`, {
+      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+    });
+    const rows = await res.json();
+    if(!rows.length){
+      app.innerHTML = '<div class="empty">Ce site n\'existe pas ou plus.</div>';
+      return;
+    }
+    const site = rows[0];
+    const t = THEME_STYLES[site.theme] || THEME_STYLES.aube;
+
+    document.getElementById('pageTitle').textContent = site.business_name + ' — Propulsé par BDH';
+
+    const products = Array.isArray(site.products) ? site.products : [];
+    const productsHtml = products.length ? products.map(p => `
+      <div class="product">
+        <div class="product-thumb" style="background:${t.thumb}">${(p.name||'?').slice(0,2).toUpperCase()}</div>
+        <div class="product-info">
+          <div class="product-name">${p.name || ''}</div>
+          <div class="product-price">${p.price ? p.price + ' FCFA' : ''}</div>
+        </div>
+      </div>`).join('') : '<p style="font-size:0.85rem;color:#999;">Aucun produit renseigné pour le moment.</p>';
+
+    app.innerHTML = `
+      <div class="hero" style="background:linear-gradient(135deg, ${t.heroFrom}, ${t.heroTo}); color:${t.text};">
+        <h1>${site.business_name}</h1>
+        <p>${site.description || ''}</p>
+        ${site.address ? `<div class="addr" style="color:${t.sub}">${site.address}</div>` : ''}
+      </div>
+
+      <div class="section">
+        <div class="section-title">Nos produits et services</div>
+        ${productsHtml}
+      </div>
+
+      <div class="cta-bar">
+        ${site.whatsapp ? `<a class="cta-btn" style="background:${t.accent}" href="${waLink(site.whatsapp, 'Bonjour, je vous contacte depuis votre site ' + site.business_name)}" target="_blank" onclick="trackClick('${site.slug}')">Contacter sur WhatsApp</a>` : ''}
+        ${site.kkiapay_link ? `<a class="cta-btn kkia-btn" href="${site.kkiapay_link}" target="_blank">Payer / commander en ligne</a>` : ''}
+      </div>
+
+      <div class="footer">Propulsé par <a href="#" onclick="return false;">Bénin Digital Hub</a></div>
+    `;
+
+    fetch(`${SUPA_URL}/rest/v1/rpc/sitebuilder_increment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+      body: JSON.stringify({ p_slug: slug, p_field: 'views_count' }),
+    }).catch(()=>{});
+
+  }catch(err){
+    app.innerHTML = '<div class="empty">Une erreur est survenue.</div>';
+    console.error(err);
+  }
+}
+
+function trackClick(slug){
+  fetch(`${SUPA_URL}/rest/v1/rpc/sitebuilder_increment`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+    body: JSON.stringify({ p_slug: slug, p_field: 'whatsapp_clicks' }),
+  }).catch(()=>{});
+}
+
+loadSite();
+</script>
+</body>
+</html>

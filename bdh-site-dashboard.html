@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de bord — BDH Site Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f172a;--teal:#0d9488;--orange:#f97316;--bg:#f8fafc;--card:#ffffff;
+  --line:#e6eaf0;--muted:#64748b;--radius:16px;--success-bg:#ecfdf5;--success-text:#059669;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--navy);background:var(--bg);}
+h1,h2,h3{margin:0;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 60px;}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
+.badge{font-size:12px;padding:4px 10px;border-radius:100px;font-weight:600;}
+.badge-live{background:var(--success-bg);color:var(--success-text);}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.stat-value{font-size:1.5rem;font-weight:800;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.card h3{font-size:1rem;margin-bottom:14px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:0.82rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.field input,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:0.9rem;}
+.field textarea{min-height:70px;resize:vertical;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);}
+.toggle-row:first-of-type{border-top:none;}
+.toggle-row div p:first-child{font-size:0.9rem;font-weight:600;}
+.toggle-row div p:last-child{font-size:0.78rem;color:var(--muted);}
+.toggle{width:40px;height:22px;border-radius:100px;position:relative;flex-shrink:0;background:var(--line);transition:background .15s ease;}
+.toggle.on{background:var(--teal);}
+.toggle-dot{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .15s ease;}
+.toggle.on .toggle-dot{left:20px;}
+.disabled-note{font-size:0.78rem;color:#b45309;}
+.btn{padding:12px 20px;border-radius:10px;font-weight:700;font-size:0.88rem;border:1.5px solid transparent;}
+.btn-primary{background:var(--orange);color:#fff;}
+.btn-outline{background:#fff;border-color:var(--line);color:var(--navy);}
+.link-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border-radius:10px;padding:10px 14px;font-size:0.85rem;}
+.link-row a{color:var(--teal);font-weight:600;text-decoration:none;word-break:break-all;}
+.upsell{background:#fff7ed;border-radius:var(--radius);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.error-box{background:#fef2f2;color:#991b1b;padding:16px;border-radius:12px;text-align:center;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 22px;border-radius:10px;font-size:0.88rem;opacity:0;transition:opacity .3s ease;pointer-events:none;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app">
+  <p style="text-align:center;color:var(--muted);padding:40px 0;">Chargement...</p>
+</div>
+<div class="toast" id="toast">Enregistré</div>
+
+<script>
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+
+let currentSite = null;
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+async function loadDashboard(){
+  const params = new URLSearchParams(location.search);
+  const slug = params.get('slug');
+  const token = params.get('token');
+  const app = document.getElementById('app');
+
+  if(!slug || !token){
+    app.innerHTML = '<div class="error-box">Lien de gestion invalide. Vérifiez le lien reçu à la publication de votre site.</div>';
+    return;
+  }
+
+  const res = await fetch(`${SUPA_URL}/rest/v1/sitebuilder_sites?slug=eq.${encodeURIComponent(slug)}&select=*`, {
+    headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+  });
+  const rows = await res.json();
+
+  if(!rows.length || rows[0].manage_token !== token){
+    app.innerHTML = '<div class="error-box">Lien de gestion invalide ou expiré.</div>';
+    return;
+  }
+
+  currentSite = rows[0];
+  render();
+}
+
+function render(){
+  const s = currentSite;
+  const siteUrl = `${location.origin}${location.pathname.replace('bdh-site-dashboard.html','bdh-site-view.html')}?slug=${s.slug}`;
+  const categoryLabels = { artisan:'Artisan', commerce:'Commerce', independant:'Indépendant', beaute:'Beauté' };
+  const wezikaEligible = s.category === 'artisan';
+  const yeyeEligible = s.category === 'commerce';
+  const eloxEligible = s.category === 'beaute';
+
+  document.getElementById('app').innerHTML = `
+    <div class="top">
+      <div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:2px;">Mon site</p>
+        <h2>${s.business_name}</h2>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <span class="badge badge-live">En ligne</span>
+        <span class="badge" style="background:#e0f2fe;color:#0369a1;">${categoryLabels[s.category] || s.category}</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Visites</div><div class="stat-value">${s.views_count}</div></div>
+      <div class="stat-card"><div class="stat-label">Clics WhatsApp</div><div class="stat-value">${s.whatsapp_clicks}</div></div>
+      <div class="stat-card"><div class="stat-label">Produits</div><div class="stat-value">${(s.products||[]).length}</div></div>
+    </div>
+
+    <div class="card">
+      <h3>Mon site</h3>
+      <div class="link-row">
+        <a href="${siteUrl}" target="_blank">${siteUrl}</a>
+        <button class="btn btn-outline" onclick="navigator.clipboard.writeText('${siteUrl}');toast('Lien copié')">Copier</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Modifier mes informations</h3>
+      <div class="field"><label>Nom de l'entreprise</label><input id="editName" value="${s.business_name || ''}"></div>
+      <div class="field"><label>Description</label><textarea id="editDesc">${s.description || ''}</textarea></div>
+      <div class="field"><label>WhatsApp</label><input id="editWhatsapp" value="${s.whatsapp || ''}"></div>
+      <div class="field"><label>Adresse</label><input id="editAddress" value="${s.address || ''}"></div>
+      <button class="btn btn-primary" onclick="saveInfo()">Enregistrer</button>
+    </div>
+
+    <div class="card">
+      <h3>Visibilité sur l'écosystème BDH</h3>
+      <div class="toggle-row">
+        <div><p>Visible sur WEZIKA</p><p>${wezikaEligible ? 'Votre fiche apparaît dans la marketplace de services.' : 'Réservé aux artisans / prestataires de service.'}</p></div>
+        ${wezikaEligible
+          ? `<div class="toggle ${s.wezika_visible?'on':''}" id="toggleWezika" onclick="toggleField('wezika_visible','toggleWezika')"><div class="toggle-dot"></div></div>`
+          : `<span class="disabled-note">Non applicable</span>`}
+      </div>
+      <div class="toggle-row">
+        <div><p>Visible sur YéyéMarket</p><p>${yeyeEligible ? 'Vos produits apparaissent sur la marketplace alimentaire.' : 'Réservé aux commerces de produits.'}</p></div>
+        ${yeyeEligible
+          ? `<div class="toggle ${s.yeyemarket_visible?'on':''}" id="toggleYeye" onclick="toggleField('yeyemarket_visible','toggleYeye')"><div class="toggle-dot"></div></div>`
+          : `<span class="disabled-note">Non applicable</span>`}
+      </div>
+      <div class="toggle-row">
+        <div><p>Visible sur ELOX</p><p>${eloxEligible ? 'Votre profil apparaît sur la marketplace beauté et bien-être.' : 'Réservé aux prestataires beauté / bien-être.'}</p></div>
+        ${eloxEligible
+          ? `<div class="toggle ${s.elox_visible?'on':''}" id="toggleElox" onclick="toggleField('elox_visible','toggleElox')"><div class="toggle-dot"></div></div>`
+          : `<span class="disabled-note">Non applicable</span>`}
+      </div>
+    </div>
+
+    <div class="upsell">
+      <div>
+        <p style="font-weight:700;margin-bottom:4px;">Passez à un domaine personnalisé</p>
+        <p style="font-size:0.85rem;color:var(--muted);">${s.slug}.bj au lieu de bdh.site/s/${s.slug} — 6 000 F/an</p>
+      </div>
+      <button class="btn btn-primary">Passer au domaine perso</button>
+    </div>
+  `;
+}
+
+async function toggleField(field, elId){
+  const newValue = !currentSite[field];
+  document.getElementById(elId).classList.toggle('on', newValue);
+  currentSite[field] = newValue;
+  await fetch(`${SUPA_URL}/rest/v1/sitebuilder_sites?slug=eq.${encodeURIComponent(currentSite.slug)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+    body: JSON.stringify({ [field]: newValue }),
+  });
+  toast(newValue ? 'Activé' : 'Désactivé');
+}
+
+async function saveInfo(){
+  const payload = {
+    business_name: document.getElementById('editName').value.trim(),
+    description: document.getElementById('editDesc').value.trim(),
+    whatsapp: document.getElementById('editWhatsapp').value.trim(),
+    address: document.getElementById('editAddress').value.trim(),
+  };
+  await fetch(`${SUPA_URL}/rest/v1/sitebuilder_sites?slug=eq.${encodeURIComponent(currentSite.slug)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+    body: JSON.stringify(payload),
+  });
+  Object.assign(currentSite, payload);
+  toast('Modifications enregistrées');
+  render();
+}
+
+loadDashboard();
+</script>
+</body>
+</html>
