@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
 <style>
 :root{
   --ink:#17161c;--ink-2:#232128;--paper:#faf9f7;--card:#ffffff;
@@ -206,16 +207,26 @@ async function submitRsvp(response){
   if(btnNo) btnNo.disabled = true;
 
   try{
-    await fetch(`${SUPA_URL}/rest/v1/invite_rsvps`, {
+    const res = await fetch(`${SUPA_URL}/rest/v1/invite_rsvps`, {
       method: 'POST',
       headers: { ...headers(), Prefer: 'resolution=merge-duplicates,return=representation' },
       body: JSON.stringify({ guest_id: guestData.id, response }),
     });
+    if(!res.ok){
+      const errBody = await res.text().catch(() => '');
+      throw new Error('HTTP ' + res.status + ' ' + errBody);
+    }
     guestData.invite_rsvps = [{ response }];
     render();
   }catch(err){
+    console.error('Échec de l\'envoi du RSVP :', err);
     if(btnYes) btnYes.disabled = false;
     if(btnNo) btnNo.disabled = false;
+    const app = document.getElementById('app');
+    const notice = document.createElement('p');
+    notice.style.cssText = 'color:var(--danger);font-size:0.82rem;text-align:center;padding:0 28px 16px;';
+    notice.textContent = "Votre réponse n'a pas pu être enregistrée. Merci de réessayer.";
+    app.querySelector('.card').insertBefore(notice, app.querySelector('.footer-note'));
   }
 }
 
