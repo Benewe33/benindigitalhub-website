@@ -117,7 +117,7 @@ async function loadInvitation(){
 function render(){
   const g = guestData;
   const e = g.invite_events;
-  const existingResponse = g.invite_rsvps?.[0]?.response;
+  const existingResponse = g.invite_rsvps?.response;
 
   document.title = `Invitation — ${e.name}`;
 
@@ -196,7 +196,7 @@ function render(){
 
 function showActions(){
   document.getElementById('app').querySelector('.card').insertAdjacentHTML('beforeend', '');
-  guestData.invite_rsvps = [];
+  guestData.invite_rsvps = null;
   render();
 }
 
@@ -216,7 +216,7 @@ async function submitRsvp(response){
       const errBody = await res.text().catch(() => '');
       throw new Error('HTTP ' + res.status + ' ' + errBody);
     }
-    guestData.invite_rsvps = [{ response }];
+    guestData.invite_rsvps = { response };
     render();
   }catch(err){
     console.error('Échec de l\'envoi du RSVP :', err);

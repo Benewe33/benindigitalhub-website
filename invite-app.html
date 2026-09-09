@@ -403,8 +403,8 @@ async function loadGuests(){
 
 function renderStats(){
   const total = currentGuests.length;
-  const confirmed = currentGuests.filter(g => g.invite_rsvps?.[0]?.response === 'oui').length;
-  const pending = currentGuests.filter(g => !g.invite_rsvps?.length).length;
+  const confirmed = currentGuests.filter(g => g.invite_rsvps?.response === 'oui').length;
+  const pending = currentGuests.filter(g => !g.invite_rsvps).length;
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statConfirmed').textContent = confirmed;
   document.getElementById('statPending').textContent = pending;
@@ -427,7 +427,7 @@ function renderGuestList(){
   }
 
   list.innerHTML = filtered.map(g => {
-    const rsvp = g.invite_rsvps?.[0]?.response;
+    const rsvp = g.invite_rsvps?.response;
     let pillHtml = `<span class="status-pill status-draft">En attente</span>`;
     if(rsvp === 'oui') pillHtml = `<span class="status-pill" style="background:var(--success-bg);color:var(--success);">Confirmé</span>`;
     if(rsvp === 'non') pillHtml = `<span class="status-pill" style="background:var(--danger-bg);color:var(--danger);">Décliné</span>`;
