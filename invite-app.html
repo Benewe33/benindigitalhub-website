@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BDH Invite — Espace organisateur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17161c;--ink-2:#232128;--paper:#faf9f7;--card:#ffffff;
+  --gold:#b08d3f;--gold-light:#f4ecd8;--line:#e7e3db;--line-strong:#d8d2c4;
+  --muted:#6f6a5f;--success:#1f7a4d;--success-bg:#e7f5ec;
+  --warning:#a5710f;--warning-bg:#fbf1de;--danger:#a5311f;--danger-bg:#fbeae7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.55;}
+h1,h2,h3{margin:0;font-family:'Playfair Display',serif;font-weight:600;color:var(--ink);}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+input,select{font-family:inherit}
+.hide{display:none !important;}
+
+/* ---------- shell ---------- */
+.topbar{background:var(--ink);color:#fff;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;}
+.topbar .brand{font-family:'Playfair Display',serif;font-size:1.05rem;display:flex;align-items:center;gap:8px;}
+.topbar .brand span{color:var(--gold);}
+.topbar .user{font-size:0.82rem;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:12px;}
+.topbar .user button{background:none;border:1px solid rgba(255,255,255,0.25);color:#fff;padding:6px 12px;border-radius:6px;font-size:0.78rem;}
+.wrap{max-width:640px;margin:0 auto;padding:28px 20px 70px;}
+
+/* ---------- auth ---------- */
+.auth-wrap{max-width:380px;margin:70px auto;padding:0 20px;text-align:center;}
+.auth-mark{width:44px;height:44px;background:var(--ink);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;margin:0 auto 18px;border-radius:10px;}
+.auth-wrap h1{font-size:1.5rem;margin-bottom:6px;}
+.auth-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+.auth-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;text-align:left;}
+.tab-row{display:flex;gap:4px;background:var(--paper);border-radius:8px;padding:3px;margin-bottom:20px;}
+.tab-btn{flex:1;padding:8px;border:none;background:transparent;border-radius:6px;font-size:0.85rem;color:var(--muted);font-weight:600;}
+.tab-btn.active{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,0.06);}
+.field{margin-bottom:14px;text-align:left;}
+.field label{display:block;font-size:0.82rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.field input{width:100%;padding:11px 13px;border:1px solid var(--line-strong);border-radius:8px;font-size:0.92rem;}
+.field input:focus{outline:none;border-color:var(--gold);}
+.auth-error{background:var(--danger-bg);color:var(--danger);font-size:0.82rem;padding:10px 12px;border-radius:8px;margin-bottom:14px;display:none;}
+.btn{padding:12px 20px;border-radius:8px;font-weight:600;font-size:0.9rem;border:1px solid transparent;width:100%;}
+.btn-primary{background:var(--ink);color:#fff;}
+.btn-primary:hover{background:var(--ink-2);}
+.btn-primary:disabled{opacity:0.5;}
+.btn-outline{background:transparent;border-color:var(--line-strong);color:var(--ink);}
+
+/* ---------- events list ---------- */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.event-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:12px;cursor:pointer;transition:border-color .15s ease;}
+.event-card:hover{border-color:var(--gold);}
+.event-card h3{font-size:1.15rem;margin-bottom:4px;}
+.event-meta{font-size:0.82rem;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;}
+.status-pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:0.02em;}
+.status-draft{background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);}
+.status-active{background:var(--success-bg);color:var(--success);}
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty-state i{font-size:32px;color:var(--line-strong);margin-bottom:12px;display:block;}
+
+/* ---------- modal ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(23,22,28,0.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal{background:var(--card);border-radius:14px;padding:26px;max-width:420px;width:100%;max-height:88vh;overflow-y:auto;}
+.modal h3{font-size:1.2rem;margin-bottom:18px;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;color:var(--muted);}
+.modal-actions{display:flex;gap:10px;margin-top:20px;}
+
+/* ---------- event detail / guests ---------- */
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--muted);margin-bottom:16px;background:none;border:none;padding:0;}
+.event-header{margin-bottom:20px;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
+.stat-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center;}
+.stat-box .num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;}
+.stat-box .lbl{font-size:0.75rem;color:var(--muted);margin-top:2px;}
+.guest-toolbar{display:flex;gap:8px;margin-bottom:14px;}
+.guest-toolbar input{flex:1;padding:10px 13px;border:1px solid var(--line-strong);border-radius:8px;font-size:0.88rem;}
+.guest-toolbar button{padding:10px 14px;border-radius:8px;font-size:0.85rem;white-space:nowrap;}
+.guest-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--gold-light);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.guest-info{flex:1;min-width:0;}
+.guest-info .name{font-size:0.92rem;font-weight:600;}
+.guest-info .meta{font-size:0.78rem;color:var(--muted);}
+.guest-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.copy-icon{background:none;border:none;color:var(--muted);font-size:16px;padding:4px;}
+.copy-icon:hover{color:var(--ink);}
+.del-icon{background:none;border:none;color:var(--danger);font-size:16px;padding:4px;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 22px;font-size:0.86rem;border-radius:8px;opacity:0;transition:opacity .25s ease;pointer-events:none;z-index:200;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ========== AUTH ========== -->
+<div id="authScreen" class="auth-wrap">
+  <div class="auth-mark">BI</div>
+  <h1>BDH Invite</h1>
+  <p class="auth-sub">Espace organisateur</p>
+  <div class="auth-card">
+    <div class="tab-row">
+      <button class="tab-btn active" id="tabLogin" onclick="switchAuthTab('login')">Connexion</button>
+      <button class="tab-btn" id="tabSignup" onclick="switchAuthTab('signup')">Créer un compte</button>
+    </div>
+    <div class="auth-error" id="authError"></div>
+    <div class="field">
+      <label for="authEmail">Email</label>
+      <input type="email" id="authEmail" placeholder="vous@email.com">
+    </div>
+    <div class="field">
+      <label for="authPassword">Mot de passe</label>
+      <input type="password" id="authPassword" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary" id="authSubmitBtn" onclick="submitAuth()">Se connecter</button>
+  </div>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="appScreen" class="hide">
+  <div class="topbar">
+    <span class="brand">BDH <span>Invite</span></span>
+    <span class="user">
+      <span id="userEmail"></span>
+      <button onclick="logout()">Déconnexion</button>
+    </span>
+  </div>
+
+  <div class="wrap">
+
+    <!-- Liste des événements -->
+    <div id="eventsView">
+      <div class="section-head">
+        <h2 style="font-size:1.4rem;">Mes événements</h2>
+        <button class="btn btn-primary" style="width:auto;" onclick="openCreateEventModal()">+ Nouvel événement</button>
+      </div>
+      <div id="eventsList"></div>
+    </div>
+
+    <!-- Détail d'un événement : invités -->
+    <div id="eventDetailView" class="hide">
+      <button class="back-link" onclick="showEventsView()"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Tous les événements</button>
+      <div class="event-header">
+        <h2 id="detailEventName" style="font-size:1.5rem;"></h2>
+        <p id="detailEventMeta" style="font-size:0.88rem;color:var(--muted);margin-top:4px;"></p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box"><div class="num" id="statTotal">0</div><div class="lbl">Invités</div></div>
+        <div class="stat-box"><div class="num" id="statConfirmed" style="color:var(--success);">0</div><div class="lbl">Confirmés</div></div>
+        <div class="stat-box"><div class="num" id="statPending" style="color:var(--warning);">0</div><div class="lbl">En attente</div></div>
+      </div>
+
+      <div class="guest-toolbar">
+        <input type="text" id="guestSearch" placeholder="Rechercher un invité..." oninput="renderGuestList()">
+        <button class="btn-primary" style="border-radius:8px;" onclick="openAddGuestModal()">+ Invité</button>
+      </div>
+
+      <div id="guestList"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+
+let session = JSON.parse(localStorage.getItem('bdh_invite_session') || 'null');
+let authMode = 'login';
+let currentEvents = [];
+let currentEventId = null;
+let currentGuests = [];
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ---------------- AUTH ---------------- */
+
+function switchAuthTab(mode){
+  authMode = mode;
+  document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
+  document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Se connecter' : 'Créer mon compte';
+  document.getElementById('authError').style.display = 'none';
+}
+
+async function submitAuth(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errBox = document.getElementById('authError');
+  errBox.style.display = 'none';
+
+  if(!email || !password){
+    errBox.textContent = 'Merci de renseigner un email et un mot de passe.';
+    errBox.style.display = 'block';
+    return;
+  }
+  if(password.length < 6){
+    errBox.textContent = 'Le mot de passe doit contenir au moins 6 caractères.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('authSubmitBtn');
+  btn.disabled = true;
+
+  const endpoint = authMode === 'login' ? 'token?grant_type=password' : 'signup';
+
+  try{
+    const res = await fetch(`${SUPA_URL}/auth/v1/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error_description || data.msg || 'Une erreur est survenue.');
+
+    if(authMode === 'signup' && !data.access_token){
+      errBox.textContent = 'Compte créé. Vérifiez votre email pour confirmer, puis connectez-vous.';
+      errBox.style.color = 'var(--success)';
+      errBox.style.background = 'var(--success-bg)';
+      errBox.style.display = 'block';
+      switchAuthTab('login');
+      btn.disabled = false;
+      return;
+    }
+
+    session = { access_token: data.access_token, user: data.user };
+    localStorage.setItem('bdh_invite_session', JSON.stringify(session));
+    showApp();
+  }catch(err){
+    errBox.textContent = err.message;
+    errBox.style.color = 'var(--danger)';
+    errBox.style.background = 'var(--danger-bg)';
+    errBox.style.display = 'block';
+  }
+  btn.disabled = false;
+}
+
+function logout(){
+  session = null;
+  localStorage.removeItem('bdh_invite_session');
+  document.getElementById('appScreen').classList.add('hide');
+  document.getElementById('authScreen').classList.remove('hide');
+}
+
+function authHeaders(){
+  return {
+    'Content-Type': 'application/json',
+    apikey: SUPA_KEY,
+    Authorization: `Bearer ${session.access_token}`,
+  };
+}
+
+/* ---------------- APP SHELL ---------------- */
+
+function showApp(){
+  document.getElementById('authScreen').classList.add('hide');
+  document.getElementById('appScreen').classList.remove('hide');
+  document.getElementById('userEmail').textContent = session.user.email;
+  loadEvents();
+}
+
+function showEventsView(){
+  document.getElementById('eventDetailView').classList.add('hide');
+  document.getElementById('eventsView').classList.remove('hide');
+  loadEvents();
+}
+
+/* ---------------- EVENTS ---------------- */
+
+async function loadEvents(){
+  const res = await fetch(`${SUPA_URL}/rest/v1/invite_events?select=*&order=event_date.asc`, { headers: authHeaders() });
+  currentEvents = res.ok ? await res.json() : [];
+  renderEventsList();
+}
+
+function renderEventsList(){
+  const list = document.getElementById('eventsList');
+  if(!currentEvents.length){
+    list.innerHTML = `<div class="empty-state"><i class="ti ti-calendar-event"></i>Aucun événement pour l'instant.<br>Créez le premier.</div>`;
+    return;
+  }
+  list.innerHTML = currentEvents.map(e => {
+    const d = new Date(e.event_date);
+    const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    return `
+      <div class="event-card" onclick="openEvent('${e.id}')">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <h3>${e.name}</h3>
+          <span class="status-pill status-${e.status === 'active' ? 'active' : 'draft'}">${e.status === 'active' ? 'Actif' : 'Brouillon'}</span>
+        </div>
+        <div class="event-meta">
+          <span>${dateStr}</span>
+          ${e.location_name ? `<span>${e.location_name}</span>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openCreateEventModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'eventModalOverlay';
+  overlay.innerHTML = `
+    <div class="modal" style="position:relative;">
+      <button class="modal-close" onclick="closeModal('eventModalOverlay')">&times;</button>
+      <h3>Nouvel événement</h3>
+      <div class="field"><label>Nom de l'événement *</label><input type="text" id="newEventName" placeholder="Benjamin & Marie"></div>
+      <div class="field">
+        <label>Type</label>
+        <select id="newEventType" style="width:100%;padding:11px 13px;border:1px solid var(--line-strong);border-radius:8px;font-size:0.92rem;">
+          <option value="mariage">Mariage</option>
+          <option value="anniversaire">Anniversaire</option>
+          <option value="bapteme">Baptême</option>
+          <option value="fiancailles">Fiançailles</option>
+          <option value="evenement_professionnel">Événement professionnel</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="field"><label>Date *</label><input type="date" id="newEventDate"></div>
+      <div class="field"><label>Lieu</label><input type="text" id="newEventLocation" placeholder="Jardin Brésil, Cotonou"></div>
+      <div class="auth-error" id="eventModalError"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal('eventModalOverlay')">Annuler</button>
+        <button class="btn btn-primary" onclick="createEvent()">Créer</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function closeModal(id){
+  const el = document.getElementById(id);
+  if(el) el.remove();
+}
+
+async function createEvent(){
+  const name = document.getElementById('newEventName').value.trim();
+  const type = document.getElementById('newEventType').value;
+  const date = document.getElementById('newEventDate').value;
+  const location = document.getElementById('newEventLocation').value.trim();
+  const errBox = document.getElementById('eventModalError');
+
+  if(!name || !date){
+    errBox.textContent = 'Le nom et la date sont obligatoires.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  const res = await fetch(`${SUPA_URL}/rest/v1/invite_events`, {
+    method: 'POST',
+    headers: { ...authHeaders(), Prefer: 'return=representation' },
+    body: JSON.stringify({
+      organizer_id: session.user.id,
+      name, event_type: type, event_date: date,
+      location_name: location || null, status: 'active',
+    }),
+  });
+
+  if(!res.ok){
+    errBox.textContent = "Impossible de créer l'événement. Réessayez.";
+    errBox.style.display = 'block';
+    return;
+  }
+
+  closeModal('eventModalOverlay');
+  toast('Événement créé');
+  loadEvents();
+}
+
+/* ---------------- EVENT DETAIL / GUESTS ---------------- */
+
+async function openEvent(eventId){
+  currentEventId = eventId;
+  const ev = currentEvents.find(e => e.id === eventId);
+  document.getElementById('eventsView').classList.add('hide');
+  document.getElementById('eventDetailView').classList.remove('hide');
+  document.getElementById('detailEventName').textContent = ev.name;
+  const d = new Date(ev.event_date);
+  document.getElementById('detailEventMeta').textContent =
+    d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) + (ev.location_name ? ' · ' + ev.location_name : '');
+  await loadGuests();
+}
+
+async function loadGuests(){
+  const res = await fetch(
+    `${SUPA_URL}/rest/v1/invite_guests?event_id=eq.${currentEventId}&select=*,invite_rsvps(response)`,
+    { headers: authHeaders() }
+  );
+  currentGuests = res.ok ? await res.json() : [];
+  renderStats();
+  renderGuestList();
+}
+
+function renderStats(){
+  const total = currentGuests.length;
+  const confirmed = currentGuests.filter(g => g.invite_rsvps?.[0]?.response === 'oui').length;
+  const pending = currentGuests.filter(g => !g.invite_rsvps?.length).length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statConfirmed').textContent = confirmed;
+  document.getElementById('statPending').textContent = pending;
+}
+
+function initialsOf(first, last){
+  return ((first?.[0]||'') + (last?.[0]||'')).toUpperCase() || '?';
+}
+
+function renderGuestList(){
+  const q = document.getElementById('guestSearch').value.trim().toLowerCase();
+  const list = document.getElementById('guestList');
+  const filtered = currentGuests.filter(g =>
+    !q || `${g.first_name} ${g.last_name||''}`.toLowerCase().includes(q)
+  );
+
+  if(!filtered.length){
+    list.innerHTML = `<div class="empty-state"><i class="ti ti-users"></i>Aucun invité${q ? ' ne correspond à cette recherche' : " pour l'instant"}.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(g => {
+    const rsvp = g.invite_rsvps?.[0]?.response;
+    let pillHtml = `<span class="status-pill status-draft">En attente</span>`;
+    if(rsvp === 'oui') pillHtml = `<span class="status-pill" style="background:var(--success-bg);color:var(--success);">Confirmé</span>`;
+    if(rsvp === 'non') pillHtml = `<span class="status-pill" style="background:var(--danger-bg);color:var(--danger);">Décliné</span>`;
+
+    const inviteUrl = `${location.origin}${location.pathname.replace('invite-app.html','invite-guest.html')}?token=${g.invite_token}`;
+
+    return `
+      <div class="guest-row">
+        <div class="avatar">${initialsOf(g.first_name, g.last_name)}</div>
+        <div class="guest-info">
+          <div class="name">${g.first_name} ${g.last_name||''}</div>
+          <div class="meta">${g.phone || g.email || 'Pas de contact renseigné'}</div>
+        </div>
+        ${pillHtml}
+        <div class="guest-actions">
+          <button class="copy-icon" title="Copier le lien d'invitation" onclick="navigator.clipboard.writeText('${inviteUrl}');toast('Lien copié')"><i class="ti ti-link"></i></button>
+          <button class="del-icon" title="Supprimer" onclick="deleteGuest('${g.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openAddGuestModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'guestModalOverlay';
+  overlay.innerHTML = `
+    <div class="modal" style="position:relative;">
+      <button class="modal-close" onclick="closeModal('guestModalOverlay')">&times;</button>
+      <h3>Ajouter un invité</h3>
+      <div class="field"><label>Prénom *</label><input type="text" id="newGuestFirst" placeholder="Aïcha"></div>
+      <div class="field"><label>Nom</label><input type="text" id="newGuestLast" placeholder="Koudjo"></div>
+      <div class="field"><label>Téléphone / WhatsApp</label><input type="text" id="newGuestPhone" placeholder="+229 97 00 11 22"></div>
+      <div class="auth-error" id="guestModalError"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal('guestModalOverlay')">Annuler</button>
+        <button class="btn btn-primary" onclick="addGuest()">Ajouter</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+async function addGuest(){
+  const first = document.getElementById('newGuestFirst').value.trim();
+  const last = document.getElementById('newGuestLast').value.trim();
+  const phone = document.getElementById('newGuestPhone').value.trim();
+  const errBox = document.getElementById('guestModalError');
+
+  if(!first){
+    errBox.textContent = 'Le prénom est obligatoire.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  const res = await fetch(`${SUPA_URL}/rest/v1/invite_guests`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ event_id: currentEventId, first_name: first, last_name: last || null, phone: phone || null }),
+  });
+
+  if(!res.ok){
+    errBox.textContent = "Impossible d'ajouter l'invité. Réessayez.";
+    errBox.style.display = 'block';
+    return;
+  }
+
+  closeModal('guestModalOverlay');
+  toast('Invité ajouté');
+  loadGuests();
+}
+
+async function deleteGuest(guestId){
+  if(!confirm('Retirer cet invité de la liste ?')) return;
+  await fetch(`${SUPA_URL}/rest/v1/invite_guests?id=eq.${guestId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  });
+  toast('Invité retiré');
+  loadGuests();
+}
+
+/* ---------------- INIT ---------------- */
+
+if(session && session.access_token){
+  showApp();
+}
+</script>
+</body>
+</html>
