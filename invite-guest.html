@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Invitation — BDH Invite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17161c;--ink-2:#232128;--paper:#faf9f7;--card:#ffffff;
+  --gold:#b08d3f;--gold-light:#f4ecd8;--line:#e7e3db;--line-strong:#d8d2c4;
+  --muted:#6f6a5f;--success:#1f7a4d;--success-bg:#e7f5ec;
+  --danger:#a5311f;--danger-bg:#fbeae7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+h1,h2,h3{margin:0;font-family:'Playfair Display',serif;font-weight:600;}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:420px;width:100%;}
+.card{background:var(--card);border-radius:16px;border:1px solid var(--line);overflow:hidden;}
+
+.hero{background:var(--ink);color:#fff;padding:40px 28px 32px;text-align:center;position:relative;}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(176,141,63,0.15) 1px, transparent 1px);background-size:16px 16px;}
+.hero-inner{position:relative;z-index:1;}
+.eyebrow{font-size:11px;letter-spacing:0.12em;color:var(--gold);margin-bottom:16px;text-transform:uppercase;}
+.hero h1{font-size:1.9rem;line-height:1.25;margin-bottom:10px;}
+.hero-sub{font-size:0.88rem;color:rgba(255,255,255,0.65);}
+
+.details{padding:26px 28px;display:flex;flex-direction:column;gap:16px;border-bottom:1px solid var(--line);}
+.detail-row{display:flex;align-items:flex-start;gap:14px;}
+.detail-row i{font-size:19px;color:var(--gold);margin-top:1px;flex-shrink:0;}
+.detail-row .primary{font-size:0.94rem;font-weight:500;}
+.detail-row .secondary{font-size:0.82rem;color:var(--muted);margin-top:1px;}
+
+.guest-name{padding:20px 28px;text-align:center;border-bottom:1px solid var(--line);}
+.guest-name .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.guest-name .name{font-family:'Playfair Display',serif;font-size:1.15rem;}
+
+.actions{padding:24px 28px 28px;}
+.btn{width:100%;padding:14px;border-radius:10px;font-weight:600;font-size:0.92rem;border:1px solid transparent;margin-bottom:10px;}
+.btn-primary{background:var(--ink);color:#fff;}
+.btn-primary:hover{background:var(--ink-2);}
+.btn-outline{background:transparent;border-color:var(--line-strong);color:var(--ink);margin-bottom:0;}
+.btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+.rsvp-done{padding:40px 28px;text-align:center;}
+.rsvp-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;}
+.rsvp-done.yes .rsvp-icon{background:var(--success-bg);color:var(--success);}
+.rsvp-done.no .rsvp-icon{background:var(--danger-bg);color:var(--danger);}
+.rsvp-done h2{font-size:1.25rem;margin-bottom:8px;}
+.rsvp-done p{font-size:0.88rem;color:var(--muted);}
+.change-response{margin-top:20px;background:none;border:none;font-size:0.82rem;color:var(--muted);text-decoration:underline;}
+
+.footer-note{text-align:center;padding:14px;font-size:11px;color:var(--muted);}
+
+.empty-state{text-align:center;padding:60px 28px;color:var(--muted);}
+.empty-state i{font-size:32px;color:var(--line-strong);margin-bottom:14px;display:block;}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app">
+  <div class="empty-state" id="loading">Chargement de votre invitation...</div>
+</div>
+
+<script>
+const SUPA_URL = 'https://rzibogatodeondtlnepz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6aWJvZ2F0b2Rlb25kdGxuZXB6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTU4NTksImV4cCI6MjA5Njk5MTg1OX0.iKGsoabgJPpRLXW7aQ0ooKu_HB5ncnqkOtPA1pp9kjc';
+
+let guestData = null;
+
+function headers(){
+  return { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+}
+
+async function loadInvitation(){
+  const token = new URLSearchParams(location.search).get('token');
+  const app = document.getElementById('app');
+
+  if(!token){
+    app.innerHTML = `<div class="card"><div class="empty-state"><i class="ti ti-mail-off"></i>Aucune invitation spécifiée.</div></div>`;
+    return;
+  }
+
+  try{
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/invite_guests?invite_token=eq.${encodeURIComponent(token)}&select=*,invite_events(*),invite_rsvps(response),invite_tables(name)`,
+      { headers: headers() }
+    );
+    const rows = await res.json();
+
+    if(!res.ok || !rows.length || !rows[0].invite_events){
+      app.innerHTML = `<div class="card"><div class="empty-state"><i class="ti ti-mail-off"></i>Cette invitation est introuvable ou n'est plus valide.</div></div>`;
+      return;
+    }
+
+    guestData = rows[0];
+    render();
+
+    if(!guestData.invitation_opened_at){
+      fetch(`${SUPA_URL}/rest/v1/invite_guests?id=eq.${guestData.id}`, {
+        method: 'PATCH',
+        headers: headers(),
+        body: JSON.stringify({ invitation_opened_at: new Date().toISOString() }),
+      }).catch(()=>{});
+    }
+
+  }catch(err){
+    app.innerHTML = `<div class="card"><div class="empty-state"><i class="ti ti-mail-off"></i>Une erreur est survenue.</div></div>`;
+  }
+}
+
+function render(){
+  const g = guestData;
+  const e = g.invite_events;
+  const existingResponse = g.invite_rsvps?.[0]?.response;
+
+  document.title = `Invitation — ${e.name}`;
+
+  const eventDate = new Date(e.event_date);
+  const dateStr = eventDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const timeStr = e.event_time ? ` · À partir de ${e.event_time.slice(0,5)}` : '';
+
+  const eyebrowLabel = { mariage: 'Vous êtes invité·e', anniversaire: 'Vous êtes convié·e', bapteme: 'Vous êtes invité·e' }[e.event_type] || 'Vous êtes invité·e';
+  const verbLabel = { mariage: 'se marient' }[e.event_type] || '';
+
+  let bodyHtml;
+
+  if(existingResponse){
+    const isYes = existingResponse === 'oui';
+    bodyHtml = `
+      <div class="rsvp-done ${isYes ? 'yes' : 'no'}">
+        <div class="rsvp-icon"><i class="ti ti-${isYes ? 'check' : 'x'}"></i></div>
+        <h2>${isYes ? 'Présence confirmée' : 'Réponse enregistrée'}</h2>
+        <p>${isYes ? `Merci ${g.first_name}, nous avons hâte de vous voir.` : `Merci de nous avoir prévenus, ${g.first_name}.`}</p>
+        <button class="change-response" onclick="showActions()">Modifier ma réponse</button>
+      </div>`;
+  } else {
+    bodyHtml = `
+      <div class="actions" id="actionsBlock">
+        <button class="btn btn-primary" onclick="submitRsvp('oui')" id="btnYes">Confirmer ma présence</button>
+        <button class="btn btn-outline" onclick="submitRsvp('non')" id="btnNo">Je ne pourrai pas venir</button>
+      </div>`;
+  }
+
+  document.getElementById('app').innerHTML = `
+    <div class="card">
+      <div class="hero">
+        <div class="hero-inner">
+          <div class="eyebrow">${eyebrowLabel}</div>
+          <h1>${e.name}</h1>
+          ${verbLabel ? `<p class="hero-sub">${verbLabel}</p>` : ''}
+        </div>
+      </div>
+
+      <div class="details">
+        <div class="detail-row">
+          <i class="ti ti-calendar" aria-hidden="true"></i>
+          <div>
+            <p class="primary" style="text-transform:capitalize;">${dateStr}</p>
+            ${timeStr ? `<p class="secondary">${timeStr.replace(' · ','')}</p>` : ''}
+          </div>
+        </div>
+        ${e.location_name ? `
+        <div class="detail-row">
+          <i class="ti ti-map-pin" aria-hidden="true"></i>
+          <div>
+            <p class="primary">${e.location_name}</p>
+            ${e.address ? `<p class="secondary">${e.address}</p>` : ''}
+          </div>
+        </div>` : ''}
+        ${g.invite_tables?.name ? `
+        <div class="detail-row">
+          <i class="ti ti-armchair" aria-hidden="true"></i>
+          <div>
+            <p class="primary">${g.invite_tables.name}</p>
+          </div>
+        </div>` : ''}
+      </div>
+
+      <div class="guest-name">
+        <div class="lbl">Invitation pour</div>
+        <div class="name">${g.first_name} ${g.last_name || ''}</div>
+      </div>
+
+      ${bodyHtml}
+
+      <div class="footer-note">Invitation envoyée par Bénin Digital Hub</div>
+    </div>
+  `;
+}
+
+function showActions(){
+  document.getElementById('app').querySelector('.card').insertAdjacentHTML('beforeend', '');
+  guestData.invite_rsvps = [];
+  render();
+}
+
+async function submitRsvp(response){
+  const btnYes = document.getElementById('btnYes');
+  const btnNo = document.getElementById('btnNo');
+  if(btnYes) btnYes.disabled = true;
+  if(btnNo) btnNo.disabled = true;
+
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/invite_rsvps`, {
+      method: 'POST',
+      headers: { ...headers(), Prefer: 'resolution=merge-duplicates,return=representation' },
+      body: JSON.stringify({ guest_id: guestData.id, response }),
+    });
+    guestData.invite_rsvps = [{ response }];
+    render();
+  }catch(err){
+    if(btnYes) btnYes.disabled = false;
+    if(btnNo) btnNo.disabled = false;
+  }
+}
+
+loadInvitation();
+</script>
+</body>
+</html>
