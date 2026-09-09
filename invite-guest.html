@@ -207,7 +207,7 @@ async function submitRsvp(response){
   if(btnNo) btnNo.disabled = true;
 
   try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/invite_rsvps`, {
+    const res = await fetch(`${SUPA_URL}/rest/v1/invite_rsvps?on_conflict=guest_id`, {
       method: 'POST',
       headers: { ...headers(), Prefer: 'resolution=merge-duplicates,return=representation' },
       body: JSON.stringify({ guest_id: guestData.id, response }),
