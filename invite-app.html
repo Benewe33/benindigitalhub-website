@@ -234,7 +234,12 @@ async function submitAuth(){
       return;
     }
 
-    session = { access_token: data.access_token, user: data.user };
+    session = {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: data.expires_at || (Math.floor(Date.now()/1000) + (data.expires_in || 3600)),
+      user: data.user,
+    };
     localStorage.setItem('bdh_invite_session', JSON.stringify(session));
     showApp();
   }catch(err){
@@ -253,12 +258,69 @@ function logout(){
   document.getElementById('authScreen').classList.remove('hide');
 }
 
+function sessionExpired(message){
+  logout();
+  const errBox = document.getElementById('authError');
+  if(errBox){
+    errBox.textContent = message || 'Votre session a expiré. Merci de vous reconnecter.';
+    errBox.style.color = 'var(--danger)';
+    errBox.style.background = 'var(--danger-bg)';
+    errBox.style.display = 'block';
+  }
+}
+
+async function refreshSession(){
+  if(!session || !session.refresh_token) return false;
+  try{
+    const res = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY },
+      body: JSON.stringify({ refresh_token: session.refresh_token }),
+    });
+    if(!res.ok) return false;
+    const data = await res.json();
+    session = {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: data.expires_at || (Math.floor(Date.now()/1000) + (data.expires_in || 3600)),
+      user: data.user || session.user,
+    };
+    localStorage.setItem('bdh_invite_session', JSON.stringify(session));
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
 function authHeaders(){
   return {
     'Content-Type': 'application/json',
     apikey: SUPA_KEY,
     Authorization: `Bearer ${session.access_token}`,
   };
+}
+
+// Enrobe fetch : rafraîchit la session automatiquement si le jeton a expiré,
+// et redirige proprement vers la connexion si ça échoue — au lieu de laisser
+// l'écran afficher silencieusement "aucun résultat".
+async function authFetch(url, options = {}){
+  if(!session){ sessionExpired(); return null; }
+  const merged = { ...options, headers: { ...authHeaders(), ...(options.headers || {}) } };
+  let res = await fetch(url, merged);
+  if(res.status === 401){
+    const refreshed = await refreshSession();
+    if(!refreshed){
+      sessionExpired();
+      return null;
+    }
+    const retryHeaders = { ...authHeaders(), ...(options.headers || {}) };
+    res = await fetch(url, { ...options, headers: retryHeaders });
+    if(res.status === 401){
+      sessionExpired();
+      return null;
+    }
+  }
+  return res;
 }
 
 /* ---------------- APP SHELL ---------------- */
@@ -279,8 +341,10 @@ function showEventsView(){
 /* ---------------- EVENTS ---------------- */
 
 async function loadEvents(){
-  const res = await fetch(`${SUPA_URL}/rest/v1/invite_events?select=*&order=event_date.asc`, { headers: authHeaders() });
+  const res = await authFetch(`${SUPA_URL}/rest/v1/invite_events?select=*&order=event_date.asc`);
+  if(!res) return; // session expirée : authFetch a déjà redirigé vers la connexion
   currentEvents = res.ok ? await res.json() : [];
+  if(!res.ok) toast("Impossible de charger les événements. Réessayez.");
   renderEventsList();
 }
 
@@ -356,9 +420,9 @@ async function createEvent(){
     return;
   }
 
-  const res = await fetch(`${SUPA_URL}/rest/v1/invite_events`, {
+  const res = await authFetch(`${SUPA_URL}/rest/v1/invite_events`, {
     method: 'POST',
-    headers: { ...authHeaders(), Prefer: 'return=representation' },
+    headers: { Prefer: 'return=representation' },
     body: JSON.stringify({
       organizer_id: session.user.id,
       name, event_type: type, event_date: date,
@@ -366,7 +430,7 @@ async function createEvent(){
     }),
   });
 
-  if(!res.ok){
+  if(!res || !res.ok){
     errBox.textContent = "Impossible de créer l'événement. Réessayez.";
     errBox.style.display = 'block';
     return;
@@ -392,11 +456,12 @@ async function openEvent(eventId){
 }
 
 async function loadGuests(){
-  const res = await fetch(
-    `${SUPA_URL}/rest/v1/invite_guests?event_id=eq.${currentEventId}&select=*,invite_rsvps(response)`,
-    { headers: authHeaders() }
+  const res = await authFetch(
+    `${SUPA_URL}/rest/v1/invite_guests?event_id=eq.${currentEventId}&select=*,invite_rsvps(response)`
   );
+  if(!res) return;
   currentGuests = res.ok ? await res.json() : [];
+  if(!res.ok) toast("Impossible de charger les invités. Réessayez.");
   renderStats();
   renderGuestList();
 }
@@ -482,13 +547,12 @@ async function addGuest(){
     return;
   }
 
-  const res = await fetch(`${SUPA_URL}/rest/v1/invite_guests`, {
+  const res = await authFetch(`${SUPA_URL}/rest/v1/invite_guests`, {
     method: 'POST',
-    headers: authHeaders(),
     body: JSON.stringify({ event_id: currentEventId, first_name: first, last_name: last || null, phone: phone || null }),
   });
 
-  if(!res.ok){
+  if(!res || !res.ok){
     errBox.textContent = "Impossible d'ajouter l'invité. Réessayez.";
     errBox.style.display = 'block';
     return;
@@ -501,9 +565,8 @@ async function addGuest(){
 
 async function deleteGuest(guestId){
   if(!confirm('Retirer cet invité de la liste ?')) return;
-  await fetch(`${SUPA_URL}/rest/v1/invite_guests?id=eq.${guestId}`, {
+  await authFetch(`${SUPA_URL}/rest/v1/invite_guests?id=eq.${guestId}`, {
     method: 'DELETE',
-    headers: authHeaders(),
   });
   toast('Invité retiré');
   loadGuests();
@@ -511,9 +574,15 @@ async function deleteGuest(guestId){
 
 /* ---------------- INIT ---------------- */
 
-if(session && session.access_token){
+(async function initSession(){
+  if(!session || !session.access_token) return;
+  const now = Math.floor(Date.now()/1000);
+  if(session.expires_at && session.expires_at <= now){
+    const ok = await refreshSession();
+    if(!ok){ sessionExpired(); return; }
+  }
   showApp();
-}
+})();
 </script>
 </body>
 </html>
