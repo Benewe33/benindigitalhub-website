@@ -143,8 +143,13 @@ input,select{font-family:inherit}
     <div id="eventDetailView" class="hide">
       <button class="back-link" onclick="showEventsView()"><i class="ti ti-arrow-left" style="font-size:15px;"></i> Tous les événements</button>
       <div class="event-header">
+        <img id="detailEventImage" style="display:none;width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-bottom:14px;" alt="">
         <h2 id="detailEventName" style="font-size:1.5rem;"></h2>
         <p id="detailEventMeta" style="font-size:0.88rem;color:var(--muted);margin-top:4px;"></p>
+        <label class="btn btn-outline" style="display:inline-block;margin-top:10px;cursor:pointer;font-size:0.82rem;padding:8px 14px;">
+          Changer l'image de couverture
+          <input type="file" accept="image/*" style="display:none;" onchange="handleChangeEventImage(this)">
+        </label>
       </div>
 
       <div class="stats-row">
@@ -175,6 +180,45 @@ let authMode = 'login';
 let currentEvents = [];
 let currentEventId = null;
 let currentGuests = [];
+let pendingHeroImageDataUrl = null;
+
+function fileToDataUrl(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function resizeImageDataUrl(dataUrl, maxDim){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if(width > maxDim || height > maxDim){
+        const ratio = Math.min(maxDim / width, maxDim / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+async function handleImagePick(inputEl, previewImgId){
+  const file = inputEl.files[0];
+  if(!file) return null;
+  if(file.size > 6*1024*1024){ toast('Image trop lourde (max 6 Mo).'); return null; }
+  const raw = await fileToDataUrl(file);
+  const resized = await resizeImageDataUrl(raw, 1600);
+  const previewEl = document.getElementById(previewImgId);
+  if(previewEl){ previewEl.src = resized; previewEl.style.display = ''; }
+  return resized;
+}
 
 function toast(msg){
   const t = document.getElementById('toast');
@@ -372,6 +416,7 @@ function renderEventsList(){
 }
 
 function openCreateEventModal(){
+  pendingHeroImageDataUrl = null;
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.id = 'eventModalOverlay';
@@ -380,6 +425,12 @@ function openCreateEventModal(){
       <button class="modal-close" onclick="closeModal('eventModalOverlay')">&times;</button>
       <h3>Nouvel événement</h3>
       <div class="field"><label>Nom de l'événement *</label><input type="text" id="newEventName" placeholder="Benjamin & Marie"></div>
+      <div class="field">
+        <label>Image de couverture (optionnel)</label>
+        <img id="newEventImagePreview" style="display:none;width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;" alt="">
+        <input type="file" accept="image/*" id="newEventImageInput" onchange="handleImagePick(this, 'newEventImagePreview').then(r => pendingHeroImageDataUrl = r)">
+        <p style="font-size:0.76rem;color:var(--muted);margin-top:4px;">Sans image, un décor floral doré par défaut sera utilisé.</p>
+      </div>
       <div class="field">
         <label>Type</label>
         <select id="newEventType" style="width:100%;padding:11px 13px;border:1px solid var(--line-strong);border-radius:8px;font-size:0.92rem;">
@@ -427,8 +478,11 @@ async function handleCreateEvent(){
       organizer_id: session.user.id,
       name, event_type: type, event_date: date,
       location_name: location || null, status: 'active',
+      hero_image_url: pendingHeroImageDataUrl || null,
     }),
   });
+
+  pendingHeroImageDataUrl = null;
 
   if(!res || !res.ok){
     errBox.textContent = "Impossible de créer l'événement. Réessayez.";
@@ -452,7 +506,28 @@ async function openEvent(eventId){
   const d = new Date(ev.event_date);
   document.getElementById('detailEventMeta').textContent =
     d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) + (ev.location_name ? ' · ' + ev.location_name : '');
+  const imgEl = document.getElementById('detailEventImage');
+  if(ev.hero_image_url){ imgEl.src = ev.hero_image_url; imgEl.style.display = ''; }
+  else { imgEl.style.display = 'none'; }
   await loadGuests();
+}
+
+async function handleChangeEventImage(inputEl){
+  const resized = await handleImagePick(inputEl, 'detailEventImage');
+  if(!resized) return;
+  const res = await authFetch(`${SUPA_URL}/rest/v1/invite_events?id=eq.${currentEventId}`, {
+    method: 'PATCH',
+    headers: { Prefer: 'return=representation' },
+    body: JSON.stringify({ hero_image_url: resized }),
+  });
+  if(!res || !res.ok){
+    toast("Impossible d'enregistrer l'image. Réessayez.");
+    return;
+  }
+  const [updated] = await res.json();
+  const ev = currentEvents.find(e => e.id === currentEventId);
+  if(ev) ev.hero_image_url = updated.hero_image_url;
+  toast('Image mise à jour.');
 }
 
 async function loadGuests(){
