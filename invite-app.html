@@ -396,7 +396,7 @@ function openCreateEventModal(){
       <div class="auth-error" id="eventModalError"></div>
       <div class="modal-actions">
         <button class="btn btn-outline" onclick="closeModal('eventModalOverlay')">Annuler</button>
-        <button class="btn btn-primary" onclick="createEvent()">Créer</button>
+        <button class="btn btn-primary" onclick="handleCreateEvent()">Créer</button>
       </div>
     </div>`;
   document.body.appendChild(overlay);
@@ -407,7 +407,7 @@ function closeModal(id){
   if(el) el.remove();
 }
 
-async function createEvent(){
+async function handleCreateEvent(){
   const name = document.getElementById('newEventName').value.trim();
   const type = document.getElementById('newEventType').value;
   const date = document.getElementById('newEventDate').value;
